@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html ng-app="assetApp" ng-controller="assetController">
+<head>
+    <title>MC Assets</title>
+    <link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>
+
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous">
+
+    <meta name=viewport content="width=device-width, initial-scale=1">
+
+    <base href="/">
+
+    <style>
+        .list-group-item-file {
+
+        }
+
+        .list-group-item-dir {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body ng-cloak>
+
+<div class="container-fluid" style="margin-bottom: 100px;">
+    <div class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-2">
+                    <img src="/img/mc-assets-2-256.png" class="img-responsive">
+                </div>
+                <div class="col-md-10">
+                    <h1>Minecraft Assets</h1>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-12">
+                    <p>
+                        A Browser for Minecraft Asset Files!<br/>
+                        Explore all <strong>Textures, Sounds, Models, Fonts, Shaders, and more</strong> from any Minecraft version, without having to extract the files yourself
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div>
+            <div ng-show="versions.versions.length > 0">
+                <fieldset>
+                    <legend>Minecraft Version</legend>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label" for="inputVersion">
+                            <strong>Minecraft Version</strong>
+                        </label>
+                        <div class="col-lg-10">
+                            <select id="inputVersion" ng-model="asset.version" class="form-control" ng-change="versionChanged()">
+                                <optgroup label="Releases">
+                                    <option ng-repeat="version in versions.versions" ng-if="version.type==='release'" value="{{version.id}}">{{version.id + (version.id === versions.latest.release ? " (latest)" : "")}}</option>
+                                </optgroup>
+                                <optgroup label="Snapshots">
+                                    <option ng-repeat="version in versions.versions" ng-if="version.type==='snapshot'" value="{{version.id}}">{{version.id + (version.id === versions.latest.snapshot ? " (latest)" : "")}}</option>
+                                </optgroup>
+
+                                <optgroup label="Old Beta" ng-if="showOldVersions">
+                                    <option ng-repeat="version in versions.versions" ng-if="showOldVersions && version.type==='old_beta'">{{version.id}}</option>
+                                </optgroup>
+                                <optgroup label="Old Alpha" ng-if="showOldVersions">
+                                    <option ng-repeat="version in versions.versions" ng-if="showOldVersions && version.type==='old_alpha'">{{version.id}}</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-2">
+                        </div>
+                        <div class="col-lg-10">
+                            <input type="checkbox" ng-model="showOldVersions">
+                            <label>Include old versions (beta/alpha)</label>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div ng-hide="versions.versions.length > 0">
+                <img src="img/loading.svg">
+                <strong>Loading Versions...</strong>
+            </div>
+        </div>
+        <br/>
+        <div>
+            <div ng-show="asset.version">
+                <ol class="breadcrumb">
+                    <a href="#" ng-if="asset.pathElements.length > 0" ng-click="goToPath(getJoinedPath(asset.pathElements.length-1))">
+                        <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                    </a>
+                    <li class="breadcrumb-item">
+                        <a href="#" ng-click="goToPath('/')">
+                            {{asset.version}}/assets
+                        </a>
+                    </li>
+
+                    <li class="breadcrumb-item" ng-repeat="element in asset.pathElements" ng-class="{'active': $last}">
+                        <a href="#" ng-click="goToPath(getJoinedPath($index+1))">
+                            {{element}}
+                        </a>
+                    </li>
+                </ol>
+
+                <div ng-show="assetIndex.length > 0">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="file in assetIndex" ng-class="{'list-group-item-dir': file.type==='dir'}">
+                            <a href="{{file.html_url}}" ng-click="file.type==='dir' ? goToPath(file.path, $event) : openFile(file, $event)">
+                                <i class="fa fa-folder-o fa-lg" aria-hidden="true" ng-if="file.type==='dir'"></i>
+                                <i class="fa fa-file-o fa-lg" aria-hidden="true" ng-if="file.type==='file'"></i>
+                                &nbsp;
+                                {{file.name}}
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div ng-show="asset.version && assetIndex.length <= 0">
+                <img src="/img/loading.svg">
+                <strong>Loading Assets...</strong>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer class="footer navbar-fixed-bottom" style="background-color: #f5f5f5; padding-top: 16px; padding-bottom: 16px;">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <span>Maintained by <a href="https://inventivetalent.org?ref=MCAssets" target="_blank">inventivetalent</a></span>
+            </div>
+            <div class="col-sm-6">
+                <span class="pull-right">
+                    <span class="text-muted" title="{{githubRequestsReset>0 ? 'Resets on ' + (githubRequestsReset*1000 | date : 'medium') : ''}}">{{githubRequestsRemaining}} GitHub requests remaining</span>
+
+                    <span ng-if="githubAccessToken" style="color: green;" title="GitHub authenticated! ({{githubUser.name}})"><i class="fa fa-check" aria-hidden="true"></i></span>
+                    <span ng-if="githubAccessToken == undefined" style="color: red;" title="GitHub not yet authenticated"><i class="fa fa-times" aria-hidden="true"></i></span>
+                </span>
+            </div>
+        </div>
+    </div>
+</footer>
+
+<!-- MODALS -->
+
+<div id="previewModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h1 class="modal-title">{{previewFile.name}}</h1>
+            </div>
+
+            <div class="modal-body">
+                <pre ng-if="previewFile._isText()">{{previewFile._content}}</pre>
+                <img class="img-responsive" ng-if="previewFile._isImage()" ng-src="{{previewFile.download_url}}">
+                <audio ng-if="previewFile._isAudio()" controls>
+                    <source ng-src="{{previewFile.download_url}}" type="{{previewFile._contentType}}">
+                </audio>
+
+                <div ng-if="previewFile._contentType && !previewFile._isText() && !previewFile._isImage() && !previewFile._isAudio()">
+                    <p>
+                        <strong>File cannot be displayed.</strong>
+                        <br/>
+                        Please use the links below to view/download the file directly.
+                    </p>
+                </div>
+                <div ng-if="!previewFile._contentType">
+                    <img src="/img/loading.svg">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <span class="text-muted pull-left">
+                    {{asset.version}}/{{previewFile.path}}
+                </span>
+                <span>
+                    <a href="{{previewFile.html_url}}" target="_blank"><i class="fa fa-github" aria-hidden="true"></i> View on GitHub</a>
+                    &nbsp;
+                    <a href="{{previewFile.download_url}}" target="_blank"><i class="fa fa-download" aria-hidden="true"></i> Download File</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="githubAuthModal" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h1 class="modal-title">GitHub authentication</h1>
+            </div>
+
+            <div class="modal-body">
+                <p>
+                    <strong>Hey! Please authenticate via GitHub to use this website.</strong>
+                    <br/>
+                    Non-authenticated requests to the GitHub API are limited to 60 per hour (see the bottom right corner),<br/>
+                    please click the button below to authenticate yourself for up to 5,000 requests per hour.
+                    <br/>
+                </p>
+                <div class="text-center">
+                    <a href="https://auth.mcassets.ga/github/index.php" class="btn btn-success">Authenticate via GitHub</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" integrity="sha256-cCueBR6CsyA4/9szpPfrX3s49M9vUU5BgtiJj06wt/s=" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.1/ui-bootstrap.min.js" integrity="sha384-wdLJc2YyjuluHF3HVyjY3+6XbqHKHmlryPgblRIwxza9hLmxD9YJtWs16lUOIJB0" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.1/ui-bootstrap-tpls.min.js" integrity="sha384-WtvotrktirgylB2PB0Rmy8GyjqcT3ho9v1cyvjNZYLj8KZC1bsjfE8S4pniiFqyZ" crossorigin="anonymous"></script>
+<script>
+    var assetApp = angular.module("assetApp", ["ngRoute", "ui.bootstrap", "ngCookies"]);
+
+    assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", function ($scope, $location, $http, $timeout, $routeParams, $cookies) {
+        $scope.asset = {
+            version: undefined,
+            path: "/",
+            pathElements: []
+        };
+        $scope.assetsLoading = false;
+        $scope.assetIndex = [];
+        $scope.githubRequestsRemaining = 60;
+        $scope.githubRequestsReset = 0;
+        $scope.githubAccessToken = undefined;
+        $scope.githubUser = undefined;
+        $scope.versionChanged = function () {
+            $scope.asset.path = "/";
+            $scope.refreshPath();
+        };
+        $scope.refreshPath = function () {
+            var split = $scope.asset.path.split("/");
+            $scope.asset.pathElements = [];
+            for (var i = 0; i < split.length; i++) {
+                if (split[i].length > 0) {// skip empty elements
+                    $scope.asset.pathElements.push(split[i]);
+                }
+            }
+
+            var trimmedPath = $scope.asset.path;
+            if (trimmedPath.endsWith("/")) {
+                trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
+            }
+            $scope.assetIndex = [];
+            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents/assets" + trimmedPath + "?ref=" + $scope.asset.version + "&per_page=100",
+                    function (response) {
+                        $scope.assetIndex = response.data;
+                    },
+                    function (error) {
+                    });
+        };
+        $scope.githubRequest = function (url, success, error) {
+            $http({
+                url: url + ($scope.githubAccessToken ? "&access_token=" + atob($scope.githubAccessToken) : "")
+            }).then(function (response) {
+                console.log(response);
+                $scope.githubRequestsRemaining = parseInt(response.headers("X-RateLimit-Remaining"));
+                $scope.githubRequestsReset = parseInt(response.headers("X-RateLimit-Reset"));
+                success(response);
+            }, function (response) {
+                console.log(response);
+                error(response);
+
+                if (response.status === 401) {
+                    if (response.data.message === "Bad credentials") {// OAuth token is no longer valid
+                        $cookies.remove("gh_access_token");
+                        $scope.githubAccessToken = undefined;
+                        $("#githubAuthModal").modal("show");
+                        return;
+                    }
+                }
+                alert("GitHub Error: " + response.data.message);
+            });
+        };
+        $scope.goToPath = function (path, $event) {
+            if ($event) {
+                $event.preventDefault();
+            }
+            if (path.indexOf("assets") === 0) {
+                path = path.substring("assets".length);
+            }
+            $scope.asset.path = path;
+            $scope.refreshPath();
+        };
+        $scope.getJoinedPath = function (untilPos) {
+            var path = "";
+            for (var i = 0; i < Math.min(untilPos, $scope.asset.pathElements.length); i++) {
+                path += "/" + $scope.asset.pathElements[i];
+            }
+            return path;
+        };
+
+        $scope.openFile = function (file, $event) {
+            if ($event) {
+                $event.preventDefault();
+            }
+            console.log(file.download_url);
+//            window.open(downloadUrl, "_blank");
+
+            $scope.previewFile = file;
+            $("#previewModal").modal("show");
+            $http({
+                url: file.download_url
+            }).then(function (response) {
+                $scope.previewFile._contentType = response.headers("Content-Type");
+                $scope.previewFile._isImage = function () {
+                    return $scope.previewFile._contentType.startsWith('image/')
+                };
+                $scope.previewFile._isText = function () {
+                    return $scope.previewFile._contentType.startsWith('text/')
+                };
+                $scope.previewFile._isAudio = function () {
+                    return $scope.previewFile._contentType.startsWith('audio/')
+                };
+
+                $scope.previewFile._content = response.data;
+
+                // Try to format JSON
+                try {
+                    if ($scope.previewFile._content.toString() === "[object Object]") {
+                        console.info("File is JSON")
+                        $scope.previewFile._content = JSON.stringify($scope.previewFile._content, null, 2);
+                    }
+                } catch (e) {
+                }
+            });
+        };
+
+        $scope.previewFile = undefined;
+
+        $scope.showOldVersions = false;
+        $scope.versions = {
+            latest: {
+                release: "",
+                snapshot: ""
+            },
+            versions: []
+        };
+
+
+        $timeout(function () {
+            // Load versions
+            $http({
+                url: "https://launchermeta.mojang.com/mc/game/version_manifest.json"
+            }).then(function (response) {
+                $scope.versions = response.data;
+                console.info("Latest Version: " + $scope.versions.latest.release + " (release) / " + $scope.versions.latest.snapshot + " (snapshot)")
+            });
+
+            // GitHub authentication
+            $scope.githubAccessToken = $cookies.get("gh_access_token");
+            if (!$scope.githubAccessToken) {
+                $scope.githubRequestsRemaining = 60;
+                $("#githubAuthModal").modal("show");
+            } else {
+                $scope.githubRequestsRemaining = 5000;
+                $scope.githubRequest("https://api.github.com/user?d=_",
+                        function (response) {
+                            $scope.githubUser = response.data;
+                            console.log($scope.githubUser);
+                        }, function (error) {
+
+                        })
+            }
+        }, 250);
+
+    }]);
+</script>
+</body>
+</html>
