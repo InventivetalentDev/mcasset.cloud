@@ -72,41 +72,39 @@
     <div class="container">
         <div>
             <div ng-show="versions.versions.length > 0">
-                <fieldset>
-                    <legend>Minecraft Version</legend>
-                    <div class="form-group">
-                        <label class="col-lg-2 control-label" for="inputVersion">
-                            <strong>Minecraft Version</strong>
-                        </label>
-                        <div class="col-lg-10">
-                            <select id="inputVersion" ng-model="asset.version" class="form-control" ng-change="versionChanged()">
-                                <optgroup label="Releases">
-                                    <option ng-repeat="version in versions.versions" ng-if="version.type==='release'" value="{{version.id}}">{{version.id + (version.id === versions.latest.release ? " (latest)" : "")}}</option>
-                                </optgroup>
-                                <optgroup label="Snapshots">
-                                    <option ng-repeat="version in versions.versions" ng-if="version.type==='snapshot'" value="{{version.id}}">{{version.id + (version.id === versions.latest.snapshot ? " (latest)" : "")}}</option>
-                                </optgroup>
+                <h4>Minecraft Version</h4>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label" for="inputVersion">
+                        <strong>Minecraft Version</strong>
+                    </label>
+                    <div class="col-lg-10">
+                        <select id="inputVersion" ng-model="asset.version" class="form-control" ng-change="versionChanged()">
+                            <optgroup label="Releases">
+                                <option ng-repeat="version in versions.versions" ng-if="version.type==='release'" value="{{version.id}}">{{version.id + (version.id === versions.latest.release ? " (latest)" : "")}}</option>
+                            </optgroup>
+                            <optgroup label="Snapshots">
+                                <option ng-repeat="version in versions.versions" ng-if="version.type==='snapshot'" value="{{version.id}}">{{version.id + (version.id === versions.latest.snapshot ? " (latest)" : "")}}</option>
+                            </optgroup>
 
-                                <optgroup label="Old Beta" ng-if="showOldVersions">
-                                    <option ng-repeat="version in versions.versions" ng-if="showOldVersions && version.type==='old_beta'">{{version.id}}</option>
-                                </optgroup>
-                                <optgroup label="Old Alpha" ng-if="showOldVersions">
-                                    <option ng-repeat="version in versions.versions" ng-if="showOldVersions && version.type==='old_alpha'">{{version.id}}</option>
-                                </optgroup>
-                            </select>
-                        </div>
+                            <optgroup label="Old Beta" ng-if="showOldVersions">
+                                <option ng-repeat="version in versions.versions" ng-if="showOldVersions && version.type==='old_beta'">{{version.id}}</option>
+                            </optgroup>
+                            <optgroup label="Old Alpha" ng-if="showOldVersions">
+                                <option ng-repeat="version in versions.versions" ng-if="showOldVersions && version.type==='old_alpha'">{{version.id}}</option>
+                            </optgroup>
+                        </select>
                     </div>
-                    <!--
-                    <div class="form-group">
-                        <div class="col-lg-2">
-                        </div>
-                        <div class="col-lg-10">
-                            <input type="checkbox" ng-model="showOldVersions">
-                            <label>Include old versions (beta/alpha)</label>
-                        </div>
+                </div>
+                <!--
+                <div class="form-group">
+                    <div class="col-lg-2">
                     </div>
-                    -->
-                </fieldset>
+                    <div class="col-lg-10">
+                        <input type="checkbox" ng-model="showOldVersions">
+                        <label>Include old versions (beta/alpha)</label>
+                    </div>
+                </div>
+                -->
             </div>
             <div ng-hide="versions.versions.length > 0">
                 <img src="img/loading.svg">
@@ -114,8 +112,10 @@
             </div>
         </div>
         <br/>
+        <br/>
         <div>
             <div ng-show="asset.version">
+                <h4>Browse Files</h4>
                 <ol class="breadcrumb">
                     <a href="#" ng-if="asset.pathElements.length > 0" ng-click="goToPath(getJoinedPath(asset.pathElements.length-1))">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
