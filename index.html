@@ -257,10 +257,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.1/ui-bootstrap.min.js" integrity="sha384-wdLJc2YyjuluHF3HVyjY3+6XbqHKHmlryPgblRIwxza9hLmxD9YJtWs16lUOIJB0" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.1.1/ui-bootstrap-tpls.min.js" integrity="sha384-WtvotrktirgylB2PB0Rmy8GyjqcT3ho9v1cyvjNZYLj8KZC1bsjfE8S4pniiFqyZ" crossorigin="anonymous"></script>
 <script>
-    var assetApp = angular.module("assetApp", ["ngRoute", "ui.bootstrap", "ngCookies"]);
+    var assetApp = angular.module("assetApp", ["ngRoute", "ngCookies"]);
 
     assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", function ($scope, $location, $http, $timeout, $routeParams, $cookies) {
         $scope.asset = {
