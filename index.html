@@ -133,7 +133,7 @@
                     </li>
                 </ol>
 
-                <div ng-show="assetIndex.length > 0">
+                <div ng-show="assetIndex.length > 0" style="margin-bottom: 20px;">
                     <ul class="list-group">
                         <li class="list-group-item" ng-repeat="file in assetIndex" ng-class="{'list-group-item-dir': file.type==='dir'}">
                             <a href="{{file.html_url}}" ng-click="file.type==='dir' ? goToPath(file.path, $event) : openFile(file, $event)">
@@ -144,6 +144,9 @@
                             </a>
                         </li>
                     </ul>
+                </div>
+                <div>
+                    <span class="pull-right"><span class="text-muted">Files last downloaded &amp; extracted on </span>{{versionInfo.downloadTimestamp | date: "medium"}}</span>
                 </div>
             </div>
             <div ng-show="asset.version && assetIndex.length <= 0">
@@ -258,6 +261,14 @@
             path: "/",
             pathElements: []
         };
+        $scope.versionInfo = {
+            id: "",
+            type: "",
+            url: "",
+            time: "",
+            releaseTime: "",
+            downloadTimestamp: 0
+        };
         $scope.assetsLoading = false;
         $scope.assetIndex = [];
         $scope.githubRequestsRemaining = 60;
@@ -267,6 +278,12 @@
         $scope.versionChanged = function () {
             $scope.asset.path = "/";
             $scope.refreshPath();
+
+            $http({
+                url: "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/" + $scope.asset.version + "/version.json"
+            }).then(function (response) {
+                $scope.versionInfo = response.data;
+            })
         };
         $scope.refreshPath = function () {
             var split = $scope.asset.path.split("/");
