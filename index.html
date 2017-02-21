@@ -79,6 +79,7 @@
                     </label>
                     <div class="col-lg-10">
                         <select id="inputVersion" ng-model="asset.version" class="form-control" ng-change="versionChanged()">
+                            <option value="" disabled selected>Please select a Minecraft Version</option>
                             <optgroup label="Releases">
                                 <option ng-repeat="version in versions.versions" ng-if="version.type==='release'" value="{{version.id}}">{{version.id + (version.id === versions.latest.release ? " (latest)" : "")}}</option>
                             </optgroup>
