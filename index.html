@@ -38,10 +38,10 @@
         }
     </style>
 
-    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css"/>
     <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
     <script>
-        window.addEventListener("load", function(){
+        window.addEventListener("load", function () {
             window.cookieconsent.initialise({
                 "palette": {
                     "popup": {
@@ -53,7 +53,8 @@
                     }
                 },
                 "position": "bottom-right"
-            })});
+            })
+        });
     </script>
 </head>
 <body ng-cloak>
@@ -136,7 +137,7 @@
             <div ng-show="asset.version">
                 <h4>Browse Files</h4>
                 <ol class="breadcrumb">
-                    <a href="#" ng-if="asset.pathElements.length > 0" ng-click="goToPath(getJoinedPath(asset.pathElements.length-1))">
+                    <a href="#" ng-if="asset.pathElements.length > 0" ng-click="goToPath(getJoinedPath(asset.pathElements.length-1))" style="padding-right: 6px;">
                         <i class="fa fa-arrow-left" aria-hidden="true"></i>
                     </a>
                     <li class="breadcrumb-item">
@@ -350,6 +351,14 @@
                         $cookies.remove("gh_access_token");
                         $scope.githubAccessToken = undefined;
                         $("#githubAuthModal").modal("show");
+                        return;
+                    }
+                }
+                if (response.status === 404) {
+                    console.log(response.data.message)
+                    if (response.data.message.startsWith("No commit found for the ref")) {
+                        alert("Assets for this version are not yet generated.\n" +
+                                "Please bug @Inventivtalent on twitter to get it updated ;)");
                         return;
                     }
                 }
