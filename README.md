@@ -1,3 +1,3 @@
-# mcassets.ga
+# mcasset.cloud
 
-Source for the [MCAssets.ga](https://mcassets.ga) website.
+Source for the [mcasset.cloud](https://mcasset.cloud) website.
