@@ -144,7 +144,7 @@
                     </a>
                     <li class="breadcrumb-item">
                         <a href="#" ng-click="goToPath('/')">
-                            {{asset.version}}/assets
+                            {{asset.version}}
                         </a>
                     </li>
 
@@ -329,7 +329,7 @@
                 trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
             }
             $scope.assetIndex = [];
-            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents/assets" + trimmedPath + "?ref=" + $scope.asset.version + "&per_page=100",
+            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version + "&per_page=100",
                     function (response) {
                         $scope.assetIndex = response.data;
                     },
@@ -370,9 +370,6 @@
         $scope.goToPath = function (path, $event) {
             if ($event) {
                 $event.preventDefault();
-            }
-            if (path.indexOf("assets") === 0) {
-                path = path.substring("assets".length);
             }
             $scope.asset.path = path;
             $scope.refreshPath();
