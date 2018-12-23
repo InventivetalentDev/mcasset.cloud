@@ -317,6 +317,10 @@
         <script>
             var assetApp = angular.module("assetApp", ["ngRoute", "ngCookies"]);
 
+            assetApp.config(function($locationProvider) {
+                $locationProvider.html5Mode(true);
+            });
+
             assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", "$window", function ($scope, $location, $http, $timeout, $routeParams, $cookies, $window) {
                 $scope.asset = {
                     version: undefined,
@@ -347,7 +351,7 @@
                         $scope.versionInfo = response.data;
                     })
                 };
-                $scope.refreshPath = function () {
+                $scope.refreshPath = function (skipUrlUpdate) {
                     var split = $scope.asset.path.split("/");
                     $scope.asset.pathElements = [];
                     for (var i = 0; i < split.length; i++) {
@@ -367,6 +371,9 @@
                         },
                         function (error) {
                         });
+
+                    if (!skipUrlUpdate)
+                        $location.path("/" + $scope.asset.version + "/" + trimmedPath);
                 };
                 $scope.githubRequest = function (url, success, error) {
                     $http({
@@ -418,6 +425,7 @@
                     if ($event) {
                         $event.preventDefault();
                     }
+                    console.log(file);
                     console.log(file.download_url);
 //            window.open(downloadUrl, "_blank");
 
@@ -448,6 +456,8 @@
                         } catch (e) {
                         }
                     });
+
+                    $location.path("/" + $scope.asset.version + "/" + file.path);
                 };
 
                 String.prototype.endsWith = function (suffix) {
@@ -513,6 +523,44 @@
                     }
                 }, 250);
 
+                $timeout(function () {
+                    // Redirect to URL path
+                    var path = $location.path();
+                    console.log(path);
+                    var pathSplit = path.split("\/").filter(function (value) {
+                        return value.length > 0;
+                    });
+                    console.log(pathSplit);
+                    if (pathSplit.length > 0) {
+                        $scope.asset.version = pathSplit[0];
+                        console.log("URL version:" + pathSplit[0]);
+                        if (pathSplit.length > 1) {
+                            pathSplit.shift();
+                            $scope.asset.path = pathSplit.join("/");
+                            console.log("URL path:" + $scope.asset.path);
+
+                            var trimmedPath = $scope.asset.path;
+                            if (trimmedPath.endsWith("/")) {
+                                trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
+                            }
+                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath  + "?ref=" + $scope.asset.version + "&per_page=10",
+                                function (response) {
+                                    console.log(response);
+                                    if (!Array.isArray(response.data)) {
+                                        // Probably a file
+                                        $scope.openFile(response.data);
+
+                                        pathSplit.pop();
+                                        $scope.asset.path = pathSplit.join("/");
+                                    }
+
+                                    $scope.refreshPath(true);
+                                },
+                                function (error) {
+                                });
+                        }
+                    }
+                }, 1000);
             }]);
         </script>
     </body>
