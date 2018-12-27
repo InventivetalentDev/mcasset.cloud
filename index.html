@@ -317,7 +317,7 @@
         <script>
             var assetApp = angular.module("assetApp", ["ngRoute", "ngCookies"]);
 
-            assetApp.config(function($locationProvider) {
+            assetApp.config(function ($locationProvider) {
                 $locationProvider.html5Mode(true);
             });
 
@@ -523,8 +523,7 @@
                     }
                 }, 250);
 
-                $timeout(function () {
-                    // Redirect to URL path
+                function handleHistoryChange(){
                     var path = $location.path();
                     console.log(path);
                     var pathSplit = path.split("\/").filter(function (value) {
@@ -543,7 +542,7 @@
                             if (trimmedPath.endsWith("/")) {
                                 trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
                             }
-                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath  + "?ref=" + $scope.asset.version + "&per_page=10",
+                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version + "&per_page=10",
                                 function (response) {
                                     console.log(response);
                                     if (!Array.isArray(response.data)) {
@@ -558,9 +557,22 @@
                                 },
                                 function (error) {
                                 });
+                        }else{
+                            $scope.asset.path = "/";
+                            $scope.refreshPath(true);
                         }
                     }
-                }, 1000);
+                }
+
+                $timeout(handleHistoryChange, 1000);
+
+                $scope.$on('$locationChangeSuccess', function (event, newUrl, oldUrl) {
+                    console.log("$locationChangeSuccess");
+                    console.log(oldUrl,"->",newUrl)
+                    if (newUrl !== oldUrl) {
+                        handleHistoryChange();
+                    }
+                });
             }]);
         </script>
     </body>
