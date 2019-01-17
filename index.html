@@ -315,6 +315,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
         <script>
+            var isCrawler = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
+
             var assetApp = angular.module("assetApp", ["ngRoute", "ngCookies"]);
 
             assetApp.config(function ($locationProvider) {
@@ -391,7 +393,8 @@
                             if (response.data.message === "Bad credentials") {// OAuth token is no longer valid
                                 $cookies.remove("gh_access_token");
                                 $scope.githubAccessToken = undefined;
-                                $("#githubAuthModal").modal("show");
+                                if(!isCrawler)
+                                    $("#githubAuthModal").modal("show");
                                 return;
                             }
                         }
@@ -510,7 +513,8 @@
                     $scope.githubAccessToken = $cookies.get("gh_access_token");
                     if (!$scope.githubAccessToken) {
                         $scope.githubRequestsRemaining = 60;
-                        $("#githubAuthModal").modal("show");
+                        if(!isCrawler)
+                            $("#githubAuthModal").modal("show");
                     } else {
                         $scope.githubRequestsRemaining = 5000;
                         $scope.githubRequest("https://api.github.com/user?d=_",
