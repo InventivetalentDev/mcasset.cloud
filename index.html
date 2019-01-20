@@ -187,7 +187,7 @@
                         <div ng-show="assetIndex.length > 0" style="margin-bottom: 20px;">
                             <ul class="list-group">
                                 <li class="list-group-item" ng-repeat="file in assetIndex" ng-class="{'list-group-item-dir': file.type==='dir'}">
-                                    <a href="{{file.html_url}}" ng-click="file.type==='dir' ? goToPath(file.path, $event) : openFile(file, $event)">
+                                    <a href="{{ asset.version + '/' + file.path }}" ng-click="file.type==='dir' ? goToPath(file.path, $event) : openFile(file, $event)">
                                         <i class="far fa-folder" aria-hidden="true" ng-if="file.type==='dir'"></i>
                                         <i class="far fa-file" aria-hidden="true" ng-if="file.type==='file' && !isJsonFile(file.name) && !isImageFile(file.name) && !isAudioFile(file.name)"></i>
                                         <i class="far fa-file-code" aria-hidden="true" ng-if="file.type==='file' && isJsonFile(file.name)"></i>
