@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html ng-app="assetApp" ng-controller="assetController">
     <head>
-        <title>MC Assets - Browser for Minecraft Asset Files</title>
+        <title ng-bind="ngMeta.title">MC Assets - Browser for Minecraft Asset Files</title>
         <link id="favicon" rel="shortcut icon" type="image/png" href="/favicon.png"/>
 
         <meta name="description" content="MC Assets is a browser for Minecraft asset files. Explore all Textures, Sounds, Models, Fonts, Shaders, and more from any Minecraft version, without having to extract the files yourself">
@@ -9,12 +9,12 @@
         <meta name="author" content="inventivetalent">
 
         <meta property="og:type" content="website">
-        <meta property="og:title" content="Minecraft Assets">
-        <meta property="og:image" content="https://mcasset.cloud/img/mc-assets-2-512.png">
+        <meta property="og:title" content="{{ ngMeta['title'] || 'Minecraft Assets' }}">
+        <meta property="og:image" content="{{ ngMeta['image'] || 'https://mcasset.cloud/img/mc-assets-2-512.png' }}">
         <meta property="og:description" content="MC Assets is a browser for Minecraft asset files. Explore all Textures, Sounds, Models, Fonts, Shaders, and more from any Minecraft version, without having to extract the files yourself">
 
-        <meta property="twitter:title" content="Minecraft Assets">
-        <meta property="twitter:image" content="https://mcasset.cloud/img/mc-assets-2-512.png">
+        <meta property="twitter:title" content="{{ ngMeta['title'] || 'Minecraft Assets' }}">
+        <meta property="twitter:image" content="{{ ngMeta['image'] || 'https://mcasset.cloud/img/mc-assets-2-512.png' }}">
         <meta property="twitter:description" content="MC Assets is a browser for Minecraft asset files. Explore all Textures, Sounds, Models, Fonts, Shaders, and more from any Minecraft version, without having to extract the files yourself">
         <meta property="twitter:creator" content="@Inventivtalent">
         <meta property="twitter:card" content="summary">
@@ -314,16 +314,30 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.8/angular.min.js" integrity="sha384-V6/dyDFv85/V/Ktq3ez5B80/c9ZY7jV9c/319rqwNOz3h9CIPdd2Eve0UQBYMMr/" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-meta/1.0.3/ngMeta.min.js"></script>
         <script>
             var isCrawler = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
 
-            var assetApp = angular.module("assetApp", ["ngRoute", "ngCookies"]);
+            var assetApp = angular.module("assetApp", ["ngRoute", "ngCookies", "ngMeta"]);
 
-            assetApp.config(function ($locationProvider) {
+            assetApp.config(function ($locationProvider, ngMetaProvider) {
                 $locationProvider.html5Mode(true);
+
+                ngMetaProvider.useTitleSuffix(true);
+                ngMetaProvider.setDefaultTitleSuffix(" | Minecraft Assets");
+                ngMetaProvider.setDefaultTitle("MC Assets - Browser for Minecraft Asset Files");
+                ngMetaProvider.setDefaultTag("image", "https://mcasset.cloud/img/mc-assets-2-512.png");
+
             });
 
-            assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", "$window", function ($scope, $location, $http, $timeout, $routeParams, $cookies, $window) {
+            assetApp.run(['ngMeta', function (ngMeta) {
+                ngMeta.init();
+            }]);
+
+            assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", "$window", "ngMeta", function ($scope, $location, $http, $timeout, $routeParams, $cookies, $window, ngMeta) {
+                ngMeta.setTitle("MC Assets - Browser for Minecraft Asset Files", "");
+
+
                 $scope.asset = {
                     version: undefined,
                     path: "/",
@@ -366,6 +380,7 @@
                     if (trimmedPath.endsWith("/")) {
                         trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
                     }
+
                     $scope.assetIndex = [];
                     $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version + "&per_page=100",
                         function (response) {
@@ -393,7 +408,7 @@
                             if (response.data.message === "Bad credentials") {// OAuth token is no longer valid
                                 $cookies.remove("gh_access_token");
                                 $scope.githubAccessToken = undefined;
-                                if(!isCrawler)
+                                if (!isCrawler)
                                     $("#githubAuthModal").modal("show");
                                 return;
                             }
@@ -431,6 +446,8 @@
                     console.log(file);
                     console.log(file.download_url);
 //            window.open(downloadUrl, "_blank");
+
+                    ngMeta.setTitle(file.name);
 
                     $scope.previewFile = file;
                     $("#previewModal").modal("show");
@@ -513,7 +530,7 @@
                     $scope.githubAccessToken = $cookies.get("gh_access_token");
                     if (!$scope.githubAccessToken) {
                         $scope.githubRequestsRemaining = 60;
-                        if(!isCrawler)
+                        if (!isCrawler)
                             $("#githubAuthModal").modal("show");
                     } else {
                         $scope.githubRequestsRemaining = 5000;
@@ -527,7 +544,7 @@
                     }
                 }, 250);
 
-                function handleHistoryChange(){
+                function handleHistoryChange() {
                     var path = $location.path();
                     console.log(path);
                     var pathSplit = path.split("\/").filter(function (value) {
@@ -535,6 +552,9 @@
                     });
                     console.log(pathSplit);
                     if (pathSplit.length > 0) {
+                        if (pathSplit[0].startsWith("index.html")) {
+                            return;
+                        }
                         $scope.asset.version = pathSplit[0];
                         console.log("URL version:" + pathSplit[0]);
                         if (pathSplit.length > 1) {
@@ -561,7 +581,7 @@
                                 },
                                 function (error) {
                                 });
-                        }else{
+                        } else {
                             $scope.asset.path = "/";
                             $scope.refreshPath(true);
                         }
@@ -572,7 +592,7 @@
 
                 $scope.$on('$locationChangeSuccess', function (event, newUrl, oldUrl) {
                     console.log("$locationChangeSuccess");
-                    console.log(oldUrl,"->",newUrl)
+                    console.log(oldUrl, "->", newUrl)
                     if (newUrl !== oldUrl) {
                         handleHistoryChange();
                     }
