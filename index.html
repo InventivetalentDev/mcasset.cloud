@@ -378,7 +378,7 @@
                     $scope.refreshPath();
 
                     $http({
-                        url: "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/" + $scope.asset.version.replace("__","_").replace(" ","_") + "/version.json"
+                        url: "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/" + $scope.asset.version.replace(/__/g,"_").replace(/ /g,"_") + "/version.json"
                     }).then(function (response) {
                         $scope.versionInfo = response.data;
                     })
@@ -398,7 +398,7 @@
                     }
 
                     $scope.assetIndex = [];
-                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version.replace("__","_").replace(" ","_") + "&per_page=100",
+                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version.replace(/__/g,"_").replace(/ /g,"_") + "&per_page=100",
                         function (response) {
                             $scope.assetIndex = response.data;
                         },
@@ -406,7 +406,7 @@
                         });
 
                     if (!skipUrlUpdate)
-                        $location.path("/" + $scope.asset.version.replace("__","_").replace(" ","_") + "/" + trimmedPath);
+                        $location.path("/" + $scope.asset.version.replace(/__/g,"_").replace(/ /g,"_") + "/" + trimmedPath);
                 };
                 $scope.githubRequest = function (url, success, error) {
                     $http({
@@ -493,7 +493,7 @@
                         }
                     });
 
-                    $location.path("/" + $scope.asset.version.replace("__","_").replace(" ","_") + "/" + file.path);
+                    $location.path("/" + $scope.asset.version.replace(/__/g,"_").replace(/ /g,"_") + "/" + file.path);
                 };
 
                 String.prototype.endsWith = function (suffix) {
@@ -571,7 +571,7 @@
                         if (pathSplit[0].startsWith("index.html")) {
                             return;
                         }
-                        $scope.asset.version = pathSplit[0];
+                        $scope.asset.version = pathSplit[0].replace(/__/g,"_").replace(/ /g,"_");
                         console.log("URL version:" + pathSplit[0]);
                         if (pathSplit.length > 1) {
                             pathSplit.shift();
@@ -582,7 +582,7 @@
                             if (trimmedPath.endsWith("/")) {
                                 trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
                             }
-                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version.replace("__","_").replace(" ","_") + "&per_page=10",
+                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version.replace(/__/g,"_").replace(/ /g,"_") + "&per_page=10",
                                 function (response) {
                                     console.log(response);
                                     if (!Array.isArray(response.data)) {
