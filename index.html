@@ -417,8 +417,13 @@
                         $location.path("/" + $scope.asset.version.replace(/__/g,"_").replace(/ /g,"_") + "/" + trimmedPath);
                 };
                 $scope.githubRequest = function (url, success, error) {
+                    var headers = {};
+                    if ($scope.githubAccessToken) {
+                        headers["Authorization"] = "token " + atob($scope.githubAccessToken);
+                    }
                     $http({
-                        url: url + ($scope.githubAccessToken ? "&access_token=" + atob($scope.githubAccessToken) : "")
+                        url: url,
+                        headers: headers
                     }).then(function (response) {
                         console.log(response);
                         $scope.githubRequestsRemaining = parseInt(response.headers("X-RateLimit-Remaining"));
