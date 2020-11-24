@@ -208,12 +208,15 @@
                             </ul>
                         </div>
                         <div>
-                   <span>
-                        Download &nbsp;
-                        <a href="https://api.github.com/repos/InventivetalentDev/minecraft-assets/zipball/{{asset.version}}" title="Download .zip archive"><i class="fa fa-download" aria-hidden="true"></i> .zip</a>
-                        &nbsp;
-                        <a href="https://api.github.com/repos/InventivetalentDev/minecraft-assets/tarball/{{asset.version}}" title="Download .tar.gz archive"><i class="fa fa-download" aria-hidden="true"></i> .tar.gz</a>
-                   </span>
+                           <span>
+                                Download &nbsp;
+                                <a href="https://api.github.com/repos/InventivetalentDev/minecraft-assets/zipball/{{asset.version}}" title="Download .zip archive"><i class="fa fa-download" aria-hidden="true"></i> .zip</a>
+                                &nbsp;
+                                <a href="https://api.github.com/repos/InventivetalentDev/minecraft-assets/tarball/{{asset.version}}" title="Download .tar.gz archive"><i class="fa fa-download" aria-hidden="true"></i> .tar.gz</a>
+                           </span>
+                            <span ng-show="assetIndex.length === 1000">
+                                &nbsp;&nbsp;&nbsp; This list has been truncated. <a href="#" ng-click="loadMore()">Load more</a>
+                            </span>
 
                             <span class="pull-right"><span class="text-muted">Files last downloaded &amp; extracted on </span>{{versionInfo.downloadTimestamp | date: "medium"}}</span>
                         </div>
@@ -378,6 +381,9 @@
                 };
                 $scope.assetsLoading = false;
                 $scope.assetIndex = [];
+                $scope.dirShas = {};
+                $scope.currentDir = "/";
+                $scope.parentDir = "/";
                 $scope.githubRequestsRemaining = 60;
                 $scope.githubRequestsReset = 0;
                 $scope.githubAccessToken = undefined;
@@ -401,15 +407,30 @@
                         }
                     }
 
+                    let pathWithoutLast = $scope.asset.pathElements.slice(0, $scope.asset.pathElements.length);
+                    if (pathWithoutLast.length > 0) {
+                        pathWithoutLast.pop();
+                    }
+                    $scope.parentDir = pathWithoutLast.join("/");
+
+
                     var trimmedPath = $scope.asset.path;
                     if (trimmedPath.endsWith("/")) {
                         trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
                     }
 
+                    if (trimmedPath) {
+                        $scope.currentDir = trimmedPath;
+                    }
+                    console.log("Current Dir: " + $scope.asset.path);
+                    console.log("Parent Dir:  " + $scope.parentDir);
+
+
                     $scope.assetIndex = [];
-                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "&per_page=100",
+                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.getRef() + "&per_page=100",
                         function (response) {
                             $scope.assetIndex = response.data;
+                            $scope.updateShas();
                         },
                         function (error) {
                         });
@@ -417,6 +438,64 @@
                     if (!skipUrlUpdate)
                         $location.path("/" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "/" + trimmedPath);
                 };
+                $scope.getRef = function () {
+                    return $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_");
+                }
+                $scope.loadMore = function () {
+                    $scope.getCurrentDirSha(function (currentDirSha) {
+                        console.log("Current Dir Sha: " + currentDirSha);
+                        if (currentDirSha) {
+                            $scope.assetIndex = [];
+                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/git/trees/" + currentDirSha,
+                                function (response) {
+                                    let tempIndex = response.data.tree;
+                                    for (let asset of tempIndex) {
+                                        asset._type = asset.type;
+                                        if (asset.type === "tree") {
+                                            asset.type = "dir";
+                                        }
+                                        if (asset.type === "blob") {
+                                            asset.type = "file";
+                                        }
+
+                                        asset.name = asset.path;
+
+                                        asset._path = asset.path;
+                                        asset.path = $scope.currentDir + "/" + asset.path;
+
+                                        asset.url = "https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents/" + asset.path + "?ref=" + $scope.getRef();
+                                        asset.html_url = "https://github.com/InventivetalentDev/minecraft-assets/tree/" + $scope.getRef() + "/" + asset.path;
+                                        asset.git_url = asset.url;
+                                        asset.download_url = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/" + $scope.getRef() + "/" + asset.path;
+
+                                        $scope.assetIndex.push(asset);
+                                    }
+                                },
+                                function (error) {
+                                });
+                        }
+                    })
+                };
+                $scope.updateShas = function (source = $scope.assetIndex) {
+                    for (let asset of source) {
+                        if (asset.type === "dir") {
+                            $scope.dirShas[asset.path] = asset.sha;
+                        }
+                    }
+                };
+                $scope.getCurrentDirSha = function (cb) {
+                    if ($scope.dirShas.hasOwnProperty($scope.currentDir)) {
+                        cb($scope.dirShas[$scope.currentDir]);
+                        return;
+                    }
+                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + $scope.parentDir + "?ref=" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "&per_page=1",
+                        function (response) {
+                            $scope.updateShas(response.data);
+                            cb($scope.dirShas[$scope.currentDir]);
+                        },
+                        function (error) {
+                        });
+                }
                 $scope.githubRequest = function (url, success, error) {
                     var headers = {};
                     if ($scope.githubAccessToken) {
