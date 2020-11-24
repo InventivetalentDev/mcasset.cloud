@@ -384,6 +384,7 @@
                 $scope.dirShas = {};
                 $scope.currentDir = "/";
                 $scope.parentDir = "/";
+                $scope.cachedResponses = {};
                 $scope.githubRequestsRemaining = 60;
                 $scope.githubRequestsReset = 0;
                 $scope.githubAccessToken = undefined;
@@ -393,7 +394,7 @@
                     $scope.refreshPath();
 
                     $http({
-                        url: "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "/version.json"
+                        url: "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/" + $scope.getRef() + "/version.json"
                     }).then(function (response) {
                         $scope.versionInfo = response.data;
                     })
@@ -497,6 +498,11 @@
                         });
                 }
                 $scope.githubRequest = function (url, success, error) {
+                    if ($scope.cachedResponses.hasOwnProperty(url)) {
+                        success($scope.cachedResponses[url]);
+                        return;
+                    }
+
                     var headers = {};
                     if ($scope.githubAccessToken) {
                         headers["Authorization"] = "token " + atob($scope.githubAccessToken);
@@ -508,6 +514,7 @@
                         console.log(response);
                         $scope.githubRequestsRemaining = parseInt(response.headers("X-RateLimit-Remaining"));
                         $scope.githubRequestsReset = parseInt(response.headers("X-RateLimit-Reset"));
+                        $scope.cachedResponses[url] = response;
                         success(response);
                     }, function (response) {
                         console.log(response);
