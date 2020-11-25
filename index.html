@@ -365,6 +365,7 @@
             assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", "$window", "ngMeta", function ($scope, $location, $http, $timeout, $routeParams, $cookies, $window, ngMeta) {
                 ngMeta.setTitle("MC Assets - Browser for Minecraft Asset Files", "");
 
+                window._$scope = $scope;
 
                 $scope.asset = {
                     version: undefined,
@@ -385,6 +386,7 @@
                 $scope.currentDir = "/";
                 $scope.parentDir = "/";
                 $scope.cachedResponses = {};
+                $scope.shouldLoadMore = false;
                 $scope.githubRequestsRemaining = 60;
                 $scope.githubRequestsReset = 0;
                 $scope.githubAccessToken = undefined;
@@ -420,29 +422,45 @@
                         trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
                     }
 
+                    let dirChanged = false;
                     if (trimmedPath) {
+                        if (trimmedPath !== $scope.currentDir) {
+                            dirChanged = true;
+                        }
                         $scope.currentDir = trimmedPath;
                     }
                     console.log("Current Dir: " + $scope.asset.path);
                     console.log("Parent Dir:  " + $scope.parentDir);
 
+                    if (dirChanged) {
+                        $scope.shouldLoadMore = false;
+                    }
 
+                    if ($scope.shouldLoadMore) {
+                        $scope.loadMore();
+                    } else {
+                        $scope.load();
+                    }
+
+                    if (!skipUrlUpdate) {
+                    }
+                    $location.path("/" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "/" + trimmedPath);
+                };
+                $scope.getRef = function () {
+                    return $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_");
+                }
+                $scope.load = function () {
                     $scope.assetIndex = [];
-                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.getRef() + "&per_page=100",
+                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + ($scope.currentDir || "") + "?ref=" + $scope.getRef(),
                         function (response) {
                             $scope.assetIndex = response.data;
                             $scope.updateShas();
                         },
                         function (error) {
                         });
-
-                    if (!skipUrlUpdate)
-                        $location.path("/" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "/" + trimmedPath);
                 };
-                $scope.getRef = function () {
-                    return $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_");
-                }
                 $scope.loadMore = function () {
+                    $scope.shouldLoadMore = true;
                     $scope.getCurrentDirSha(function (currentDirSha) {
                         console.log("Current Dir Sha: " + currentDirSha);
                         if (currentDirSha) {
@@ -459,10 +477,12 @@
                                             asset.type = "file";
                                         }
 
-                                        asset.name = asset.path;
+                                        if (!asset.name) { // avoid using path as name again on cached responses
+                                            asset.name = asset.path;
 
-                                        asset._path = asset.path;
-                                        asset.path = $scope.currentDir + "/" + asset.path;
+                                            asset._path = asset.path;
+                                            asset.path = $scope.currentDir + "/" + asset.path;
+                                        }
 
                                         asset.url = "https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents/" + asset.path + "?ref=" + $scope.getRef();
                                         asset.html_url = "https://github.com/InventivetalentDev/minecraft-assets/tree/" + $scope.getRef() + "/" + asset.path;
@@ -489,14 +509,14 @@
                         cb($scope.dirShas[$scope.currentDir]);
                         return;
                     }
-                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + $scope.parentDir + "?ref=" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "&per_page=1",
+                    $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + $scope.parentDir + "?ref=" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_"),
                         function (response) {
                             $scope.updateShas(response.data);
                             cb($scope.dirShas[$scope.currentDir]);
                         },
                         function (error) {
                         });
-                }
+                };
                 $scope.githubRequest = function (url, success, error) {
                     if ($scope.cachedResponses.hasOwnProperty(url)) {
                         success($scope.cachedResponses[url]);
@@ -682,7 +702,7 @@
                             if (trimmedPath.endsWith("/")) {
                                 trimmedPath = trimmedPath.substring(0, trimmedPath.length - 1);
                             }
-                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_") + "&per_page=10",
+                            $scope.githubRequest("https://api.github.com/repos/InventivetalentDev/minecraft-assets/contents" + trimmedPath + "?ref=" + $scope.asset.version.replace(/__/g, "_").replace(/ /g, "_"),
                                 function (response) {
                                     console.log(response);
                                     if (!Array.isArray(response.data)) {
