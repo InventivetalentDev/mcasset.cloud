@@ -656,7 +656,7 @@
                 $timeout(function () {
                     // Load versions
                     $http({
-                        url: "/CORSpipe.php?url=https://launchermeta.mojang.com/mc/game/version_manifest.json"
+                        url: "https://inventive-cors-anywhere.herokuapp.com/https://launchermeta.mojang.com/mc/game/version_manifest.json"
                     }).then(function (response) {
                         $scope.versions = response.data;
                         console.info("Latest Version: " + $scope.versions.latest.release + " (release) / " + $scope.versions.latest.snapshot + " (snapshot)")
