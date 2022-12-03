@@ -656,7 +656,7 @@
                 $timeout(function () {
                     // Load versions
                     $http({
-                        url: "https://inventive-cors-anywhere.herokuapp.com/https://launchermeta.mojang.com/mc/game/version_manifest.json"
+                        url: "https://cloudflare-worker-cors.inventive.workers.dev/?url=https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
                     }).then(function (response) {
                         $scope.versions = response.data;
                         console.info("Latest Version: " + $scope.versions.latest.release + " (release) / " + $scope.versions.latest.snapshot + " (snapshot)")
