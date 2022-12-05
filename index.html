@@ -237,13 +237,16 @@
         <footer class="footer navbar-fixed-bottom" style="background-color: #f5f5f5; padding-top: 16px; padding-bottom: 16px;">
             <div class="container">
                 <div class="row">
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                         <span>Maintained by <a href="https://inventivetalent.org/?utm_source=mcassets&utm_medium=author_link" target="_blank">inventivetalent</a></span>
-                        &nbsp;
+                        <br/>
+                        <span>More projects: <span class="pageref"></span></span>
+                    </div>
+                    <div class="col-sm-4">
                         &nbsp;
                         Not affiliated with Minecraft / Mojang AB.
                     </div>
-                    <div class="col-sm-6">
+                    <div class="col-sm-4">
                 <span class="pull-right">
                     <span class="text-muted" title="{{githubRequestsReset>0 ? 'Resets on ' + (githubRequestsReset*1000 | date : 'medium') : ''}}">{{githubRequestsRemaining}} GitHub requests remaining</span>
 
@@ -331,6 +334,8 @@
         <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-route.js" integrity="sha384-k+Qp/8rZxoiiYGVjOBiZwkEp5yv6clgl2EmwNaE1oUMlfmEYgCWazxf4CyxfZiWG" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular-cookies.min.js" integrity="sha384-4Rqc4WCYcTgQGo7N/eJANj8VFLYiS0J/XRW6ThAPed/9YJmlNO7iD+ZdbeKi1Eqx" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/ng-meta/1.0.3/ngMeta.min.js"></script>
+
+        <script async src="https://pageref.inventive.workers.dev/script.js"></script>
 
         <script>
             window.DOP_config = {
