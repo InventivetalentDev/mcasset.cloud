@@ -270,9 +270,9 @@
 
                     <div class="modal-body">
                         <pre ng-if="previewFile._isText()">{{previewFile._content}}</pre>
-                        <img class="img-responsive" ng-if="previewFile._isImage()" ng-src="{{previewFile.download_url}}" style="width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges;">
+                        <img class="img-responsive" ng-if="previewFile._isImage()" ng-src="https://assets.mcasset.cloud/{{asset.version}}/{{previewFile.path}}" style="width: 100%; height: 100%; image-rendering: pixelated; image-rendering: crisp-edges;">
                         <audio ng-if="previewFile._isAudio()" controls>
-                            <source ng-src="{{previewFile.download_url}}" type="{{previewFile._contentType}}">
+                            <source ng-src="https://assets.mcasset.cloud/{{asset.version}}/{{previewFile.path}}" type="{{previewFile._contentType}}">
                         </audio>
 
                         <div ng-if="previewFile._contentType && !previewFile._isText() && !previewFile._isImage() && !previewFile._isAudio()">
@@ -493,6 +493,7 @@
                                         asset.html_url = "https://github.com/InventivetalentDev/minecraft-assets/tree/" + $scope.getRef() + "/" + asset.path;
                                         asset.git_url = asset.url;
                                         asset.download_url = "https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/" + $scope.getRef() + "/" + asset.path;
+                                        asset.proxy_url = "https://assets.mcasset.cloud/"+ $scope.getRef() + "/" + asset.path;
 
                                         $scope.assetIndex.push(asset);
                                     }
