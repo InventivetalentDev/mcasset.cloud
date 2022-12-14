@@ -16,10 +16,18 @@ assetApp.run(['ngMeta', function (ngMeta) {
     ngMeta.init();
 }]);
 
-assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", "$window", "ngMeta", "$sce", function ($scope, $location, $http, $timeout, $routeParams, $cookies, $window, ngMeta,$sce) {
+assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeout", "$routeParams", "$cookies", "$window", "ngMeta", "$sce", function ($scope, $location, $http, $timeout, $routeParams, $cookies, $window, ngMeta, $sce) {
     ngMeta.setTitle("MC Assets - Browser for Minecraft Asset Files", "");
 
     window._$scope = $scope;
+
+    let visitCount = Number($cookies.get("visitCount")) || 0;
+    visitCount += 1;
+    let expiration = new Date();
+    expiration.setDate(expiration.getDate() + 30);
+    $cookies.put("visitCount", "" + visitCount, {
+        expires: expiration
+    });
 
     $scope.asset = {
         version: undefined,
@@ -205,7 +213,7 @@ assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeou
                 if (response.data.message === "Bad credentials") {// OAuth token is no longer valid
                     $cookies.remove("gh_access_token");
                     $scope.githubAccessToken = undefined;
-                    if (!isCrawler)
+                    if (!isCrawler && visitCount > 2)
                         $("#githubAuthModal").modal("show");
                     return;
                 }
@@ -331,7 +339,7 @@ assetApp.controller("assetController", ["$scope", "$location", "$http", "$timeou
         $scope.githubAccessToken = $cookies.get("gh_access_token");
         if (!$scope.githubAccessToken) {
             $scope.githubRequestsRemaining = 60;
-            if (!isCrawler)
+            if (!isCrawler && visitCount > 2)
                 $("#githubAuthModal").modal("show");
         } else {
             $scope.githubRequestsRemaining = 5000;
