@@ -248,7 +248,7 @@
                     </div>
                     <div class="col-sm-4">
                 <span class="pull-right">
-                    <span class="text-muted" title="{{githubRequestsReset>0 ? 'Resets on ' + (githubRequestsReset*1000 | date : 'medium') : ''}}">{{githubRequestsRemaining}} GitHub requests remaining</span>
+                    <a style="cursor: pointer" data-toggle="modal" data-target="#githubAuthModal" class="text-muted" title="{{githubRequestsReset>0 ? 'Resets on ' + (githubRequestsReset*1000 | date : 'medium') : ''}}">{{githubRequestsRemaining}} GitHub requests remaining</a>
 
                     <span ng-if="githubAccessToken" style="color: green;" title="GitHub authenticated! ({{githubUser.name}})"><i class="fa fa-check" aria-hidden="true"></i></span>
                     <span ng-if="githubAccessToken == undefined" style="color: red;" title="GitHub not yet authenticated"><i class="fa fa-times" aria-hidden="true"></i></span>
