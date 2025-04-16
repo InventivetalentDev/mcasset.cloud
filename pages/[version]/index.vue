@@ -1,13 +1,8 @@
-<style scoped></style>
 <template>
-    <NuxtLayout>
-      <div>hi</div>
-
-      <VersionSelect v-model="version"/>
-      <dbg :data="{version}"/>
-      Root 0
-      <NuxtPage></NuxtPage>
-    </NuxtLayout>
+      <div>
+        Root 1 index
+        <NuxtPage></NuxtPage>
+      </div>
 </template>
 <script setup lang="ts">
 import {useGitHubUser} from "~/query/github";
@@ -28,6 +23,6 @@ const {
 
 const version = ref(router.currentRoute.value.params.version);
 watch(version, () => {
-  router.push({path:`/${version.value}`})
+  router.push(`/${version.value}`)
 })
 </script>
