@@ -1,7 +1,7 @@
 <template>
       <div>
         Root 1 index
-        <NuxtPage></NuxtPage>
+        <AssetList v-if="version" :version="version" path="/"></AssetList>
       </div>
 </template>
 <script setup lang="ts">
@@ -9,6 +9,7 @@ import {useGitHubUser} from "~/query/github";
 import {useVersionManifest} from "~/query/misc";
 import VersionSelect from "~/components/VersionSelect.vue";
 import {useRouter} from "#app";
+import AssetListOrView from "~/components/AssetListOrView.vue";
 
 const router = useRouter();
 
