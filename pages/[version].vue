@@ -8,7 +8,6 @@ div {
     <div>hi</div>
 
     <VersionSelect v-model="version"/>
-    <dbg :data="{version}"/>
     [version].vue
     <NuxtPage></NuxtPage>
   </div>
@@ -30,8 +29,10 @@ const {
   versionManifest
 } = useVersionManifest();
 
-const version = ref(router.currentRoute.value.params.version);
+const version = ref<string>(router.currentRoute.value.params.version as string);
+const path = ref<string[]>(router.currentRoute.value.params.path as string[]);
 watch(version, () => {
-  router.push({path: `/${version.value}`})
+  const p = path.value.filter(p => p.length > 0).join("/");
+  router.push({path: `/${version.value}/${p}`})
 })
 </script>

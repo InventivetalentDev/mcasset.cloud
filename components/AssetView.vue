@@ -18,13 +18,14 @@ img {
 </template>
 <script setup lang="ts">
 import {useAssets} from "~/query/assets";
+import {useAssetPath} from "~/composables/useAssetPath";
 
 const props = defineProps<{
   version: string,
   path: string[]
 }>();
 
-const assetDir = computed(() => [props.version, ...props.path].join('/'));
+const assetDir = useAssetPath(props.version, props.path);
 const assetRawUrl = computed(() => 'https://assets.mcasset.cloud/' + assetDir.value);
 const assetName = computed(() => {
   return props.path[props.path.length - 1];

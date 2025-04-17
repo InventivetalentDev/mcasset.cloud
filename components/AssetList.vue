@@ -19,17 +19,19 @@
 <script setup lang="ts">
 import {useAssets} from "~/query/assets";
 import type {AssetIndex} from "~/types/assets";
+import {useAssetPath} from "~/composables/useAssetPath";
 
 const props = defineProps<{
   version: string,
   path: string[]
 }>();
 
-const assetDir = computed(() => [props.version, ...props.path].join('/'));
+const assetDir = useAssetPath(props.version, props.path);
 
 const {
   data: assetIndex,
-  path: assetIndexPath
+  path: assetIndexPath,
+    asset
 } = useAssets();
 watch([props.version, props.path], () => {
   assetIndexPath.value = assetDir.value + '/_list.json';

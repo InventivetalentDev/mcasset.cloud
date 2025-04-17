@@ -4,7 +4,6 @@
       <div>hi</div>
 
       <VersionSelect v-model="version"/>
-      <dbg :data="{version}"/>
       Root 0
       <NuxtPage></NuxtPage>
     </NuxtLayout>
