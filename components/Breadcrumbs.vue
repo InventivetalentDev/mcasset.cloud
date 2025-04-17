@@ -1,14 +1,18 @@
 <template>
-  <v-breadcrumbs :items="breadcrumbs">
-    <template v-slot:item="{item,index}">
-      <v-breadcrumbs-item :key="index" :disabled="item.disabled">
-        <NuxtLink :to="item.href" class="text-decoration-none">
-          {{ item.title }}
-        </NuxtLink>
-      </v-breadcrumbs-item>
-    </template>
-  </v-breadcrumbs>
-<!--  <dbg :data="{assetPath,breadcrumbs}"/>-->
+  <div>
+    <v-sheet color="grey-lighten-2">
+      <v-breadcrumbs :items="breadcrumbs">
+        <template v-slot:item="{item,index}">
+          <v-breadcrumbs-item :key="index" :disabled="item.disabled">
+            <NuxtLink :to="item.href" class="text-decoration-none">
+              {{ item.title }}
+            </NuxtLink>
+          </v-breadcrumbs-item>
+        </template>
+      </v-breadcrumbs>
+    </v-sheet>
+  </div>
+  <!--  <dbg :data="{assetPath,breadcrumbs}"/>-->
 </template>
 <script setup lang="ts">
 import {useAssetPath, useAssetPathParts} from "~/composables/useAssetPath";
@@ -19,7 +23,7 @@ const props = defineProps<{
 }>();
 
 const assetPath = useAssetPathParts(props.version, props.path);
-const breadcrumbs = computed(()=>{
+const breadcrumbs = computed(() => {
   return assetPath.value.map((part, index) => {
     return {
       title: part,

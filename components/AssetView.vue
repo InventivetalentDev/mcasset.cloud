@@ -75,8 +75,8 @@ const {
   status: assetContentStatus,
     error:assetContentError
 } = await useLazyAsyncData(async () => {
-  return await $fetch<VersionManifest>(assetContentPath.value, {
-    responseType: assetContentType
+  return await $fetch<VersionManifest>('https://assets.mcasset.cloud/' + assetContentPath.value, {
+    responseType: assetContentType.value
   });
 })
 
