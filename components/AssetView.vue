@@ -6,7 +6,7 @@ img {
 <template>
   <div>
     <h3 v-if="isNotFound">File Not Found</h3>
-    <div v-else-if="assetContentLoading">
+    <div v-else-if="assetContentStatus==='pending'">
       <v-skeleton-loader type="card"/>
     </div>
     <div v-else>
