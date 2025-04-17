@@ -1,11 +1,12 @@
 <style scoped>
-div {
-  border: 2px dashed #f36d33;
-}
 </style>
 <template>
-  <v-container>
-    <VersionSelect v-model="version"/>
+    <v-container>
+    <v-row>
+      <v-col>
+        <VersionSelect v-model="version"/>
+      </v-col>
+    </v-row>
     <Suspense>
       <NuxtPage></NuxtPage>
       <template #fallback>
@@ -32,7 +33,7 @@ const {
   versionManifest
 } = useVersionManifest();
 
-const {version,path} = useVersionPath();
+const {version, path} = useVersionPath();
 // watch(version, () => {
 //   const p = (path.value || []).filter(p => p !== '' && p !== '/').join("/");
 //   router.push({path: `/${version.value}/${p}`})

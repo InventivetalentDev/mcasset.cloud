@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <AssetView v-if="assetIsFile" :version="version" :path="path"/>
-    <AssetList v-else :version="version" :path="path"/>
-  </div>
+  <AssetView v-if="assetIsFile" :version="version" :path="path"/>
+  <AssetList v-else :version="version" :path="path"/>
 </template>
 <script setup lang="ts">
 import AssetView from "~/components/AssetView.vue";

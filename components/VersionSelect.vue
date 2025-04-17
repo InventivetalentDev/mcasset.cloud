@@ -1,11 +1,13 @@
 <template>
   <ClientOnly>
-    <v-select :items="versions" item-value="id" item-title="id" v-model="model">
+    <v-select label="Minecraft Version"
+              :items="versions" item-value="id" item-title="id"
+              v-model="model">
 
     </v-select>
     <v-btn @click="useLatestRelease">Latest Release ({{ latestRelease }})</v-btn>
     <v-btn @click="useLatestSnapshot">Latest Snapshot ({{ latestSnapshot }})</v-btn>
-    <dbg :data="{model,latestRelease,latestSnapshot,manifest}"></dbg>
+    <!--    <dbg :data="{model,latestRelease,latestSnapshot,manifest}"></dbg>-->
   </ClientOnly>
 </template>
 <script setup lang="ts">

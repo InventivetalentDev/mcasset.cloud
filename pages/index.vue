@@ -1,13 +1,17 @@
 <style scoped></style>
 <template>
   <v-container>
-    <NuxtLayout>
-      <div>Index</div>
-
-      <VersionSelect v-model="version"/>
-      Root 0
-      <NuxtPage></NuxtPage>
-    </NuxtLayout>
+    <v-row>
+      <v-col>
+        <VersionSelect v-model="version"/>
+      </v-col>
+    </v-row>
+    Root 0
+    <v-row>
+      <v-col>
+        Please select a version
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script setup lang="ts">
@@ -28,7 +32,7 @@ const {
   versionManifest
 } = useVersionManifest();
 
-const {version,path} = useVersionPath();
+const {version, path} = useVersionPath();
 // watch(version, () => {
 //   const p = (path.value || []).filter(p => p !== '' && p !== '/').join("/");
 //   router.push({path: `/${version.value}/${p}`})

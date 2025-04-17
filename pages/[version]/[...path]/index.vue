@@ -1,14 +1,17 @@
 <style scoped>
-div {
-  border: 2px dashed #40cd18;
-}
 </style>
 <template>
-  <v-container>
-    <Breadcrumbs v-if="version&&path" :version="version" :path="path"></Breadcrumbs>
-    <AssetListOrView v-if="version&&path" :version="version" :path="path"></AssetListOrView>
-    <!--    <p>{{path}}</p>-->
-  </v-container>
+  <v-row>
+    <v-col>
+      <Breadcrumbs v-if="version&&path" :version="version" :path="path"></Breadcrumbs>
+    </v-col>
+  </v-row>
+  <v-row>
+    <v-col>
+      <AssetListOrView v-if="version&&path" :version="version" :path="path"></AssetListOrView>
+    </v-col>
+  </v-row>
+  <!--    <p>{{path}}</p>-->
 </template>
 <script setup lang="ts">
 import {useRoute} from 'vue-router';

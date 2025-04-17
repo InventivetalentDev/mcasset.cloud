@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!--    <dbg :data="{assetStatus,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
+      <!--    <dbg :data="{assetStatus,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
     <h3 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h3>
     <div v-else-if="assetIndexLoading">
       <v-skeleton-loader type="list-item-avatar@16"/>
@@ -11,6 +11,7 @@
           <template v-slot:prepend>
             <v-avatar color="grey-lighten-1">
               <v-icon v-if="asset.type==='dir'" color="white">mdi-folder</v-icon>
+              <v-icon v-else color="white">mdi-file</v-icon>
             </v-avatar>
           </template>
           <template v-slot:title>
