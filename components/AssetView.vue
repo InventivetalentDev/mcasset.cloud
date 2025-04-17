@@ -25,6 +25,7 @@ img {
 <script setup lang="ts">
 import {useAssets} from "~/query/assets";
 import {useAssetPath} from "~/composables/useAssetPath";
+import type {VersionManifest} from "~/types";
 
 const props = defineProps<{
   version: string,
@@ -53,30 +54,57 @@ const isText = computed(() => {
   return assetExtension.value && ['json', 'txt'].includes(assetExtension.value);
 });
 
+const assetContentPath = computed<string>(() => {
+  return assetDir.value;
+});
+const assetContentType = computed(() => {
+  if (isImage.value) {
+    return 'blob';
+  } else if (isAudio.value) {
+    return 'blob';
+  } else if (isJson.value) {
+    return 'json';
+  } else if (isText.value) {
+    return 'text';
+  } else {
+    return 'text';
+  }
+})
 const {
   data: assetContent,
-  path: assetContentPath,
-  responseType: assetContentType,
-  isLoading: assetContentLoading,
-  asset: assetContentStatus,
-  error: assetContentError
-} = useAssets();
-watch(assetExtension, () => {
-  if (isImage.value) {
-    assetContentType.value = 'blob';
-  } else if (isAudio.value) {
-    assetContentType.value = 'blob';
-  } else if (isJson.value) {
-    assetContentType.value = 'json';
-  } else if (isText.value) {
-    assetContentType.value = 'text';
-  } else {
-    assetContentType.value = 'text';
-  }
-}, {immediate: true});
-watch([props.version, props.path], () => {
-  assetContentPath.value = assetDir.value;
-}, {immediate: true});
+  status: assetContentStatus,
+    error:assetContentError
+} = await useLazyAsyncData(async () => {
+  return await $fetch<VersionManifest>(assetContentPath.value, {
+    responseType: assetContentType
+  });
+})
+
+// const {
+//   data: assetContent,
+//   path: assetContentPath,
+//   responseType: assetContentType,
+//   isLoading: assetContentLoading,
+//   asset: assetContentStatus,
+//   error: assetContentError
+// } = useAssets();
+// watch(assetExtension, () => {
+//   if (isImage.value) {
+//     assetContentType.value = 'blob';
+//   } else if (isAudio.value) {
+//     assetContentType.value = 'blob';
+//   } else if (isJson.value) {
+//     assetContentType.value = 'json';
+//   } else if (isText.value) {
+//     assetContentType.value = 'text';
+//   } else {
+//     assetContentType.value = 'text';
+//   }
+// }, {immediate: true});
+
+// watch([props.version, props.path], () => {
+//   assetContentPath.value = assetDir.value;
+// }, {immediate: true});
 
 const isNotFound = computed(() => {
   if (!assetContentError.value) return false;

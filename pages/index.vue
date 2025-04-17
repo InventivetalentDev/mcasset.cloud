@@ -33,6 +33,11 @@ const {
 } = useVersionManifest();
 
 const {version, path} = useVersionPath();
+onMounted(()=>{
+  if (!version.value && !path.value) {
+    router.push({path: '/latest'})
+  }
+})
 // watch(version, () => {
 //   const p = (path.value || []).filter(p => p !== '' && p !== '/').join("/");
 //   router.push({path: `/${version.value}/${p}`})

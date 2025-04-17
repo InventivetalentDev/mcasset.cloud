@@ -1,8 +1,8 @@
 <template>
   <div>
-      <!--    <dbg :data="{assetStatus,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
+<!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
     <h3 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h3>
-    <div v-else-if="assetIndexLoading">
+    <div v-else-if="assetStatus==='pending'">
       <v-skeleton-loader type="list-item-avatar@16"/>
     </div>
     <div v-else>
@@ -25,9 +25,9 @@
   </div>
 </template>
 <script setup lang="ts">
-import {useAssets} from "~/query/assets";
 import type {AssetIndex} from "~/types/assets";
 import {useAssetPath} from "~/composables/useAssetPath";
+import {useAsyncData, useLazyAsyncData} from "#app";
 
 const props = defineProps<{
   version: string,
@@ -36,16 +36,39 @@ const props = defineProps<{
 
 const assetDir = useAssetPath(props.version, props.path);
 
+const assetIndexPath = computed<string>(() => {
+  return assetDir.value + '/_list.json';
+});
+const assetKey = computed(() => {
+  return 'asset-index-' + assetIndexPath.value;
+})
+
+onMounted(() => {
+  console.log(assetKey);
+})
+
 const {
   data: assetIndex,
-  path: assetIndexPath,
-  isLoading: assetIndexLoading,
-  asset: assetStatus,
-  error: assetError
-} = useAssets();
-watch([props.version, props.path], () => {
-  assetIndexPath.value = assetDir.value + '/_list.json';
-}, {immediate: true});
+  error: assetError,
+  status: assetStatus
+} = await useLazyAsyncData(async () => {
+  return await $fetch('https://assets.mcasset.cloud/' + assetIndexPath.value, {
+    responseType: 'json'
+  })
+})
+
+// const {
+//   data: assetIndex,
+//   path: assetIndexPath,
+//   isLoading: assetIndexLoading,
+//   asset: assetStatus,
+//   error: assetError
+// } = useAssets();
+
+
+// watch([props.version, props.path], () => {
+//   assetIndexPath.value = assetDir.value + '/_list.json';
+// }, {immediate: true});
 
 const isNotFound = computed(() => {
   if (!assetError.value) return false;
@@ -54,14 +77,15 @@ const isNotFound = computed(() => {
 
 const assetList = computed(() => {
   if (!assetIndex.value) return [];
+  console.log(assetIndex.value)
   const {directories, files} = (assetIndex.value as AssetIndex);
   return [
-    ...directories.map(dir => ({
+    ...(directories || []).map(dir => ({
       type: 'dir',
       name: dir,
       path: `/${assetDir.value}/${dir}`
     })),
-    ...files.map(file => ({
+    ...(files || []).map(file => ({
       type: 'file',
       name: file,
       path: `/${assetDir.value}/${file}`
