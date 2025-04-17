@@ -5,7 +5,7 @@ export const useAssetPathParts = (version: string | ComputedRef<string>, path: s
     const p = unref(path);
     return computed(() => {
         if (!v || !p) return [];
-        return [v, ...p].filter(p => p.length > 0)
+        return [v, ...p].filter(p => p!==''&&p!=='/')
     });
 }
 

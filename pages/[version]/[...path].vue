@@ -4,10 +4,14 @@ div {
 }
 </style>
 <template>
-  <div>
-    [...path].vue
-    <NuxtPage/>
-  </div>
+  <v-container>
+    <Suspense >
+      <NuxtPage/>
+      <template #fallback>
+        Loading Path...
+      </template>
+    </Suspense>
+  </v-container>
 </template>
 <script setup lang="ts">
 </script>

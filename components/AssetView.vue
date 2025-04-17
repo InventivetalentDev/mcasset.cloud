@@ -5,14 +5,20 @@ img {
 </style>
 <template>
   <div>
-    <div>{{ assetExtension }}</div>
-    <v-img v-if="isImage" :src="assetRawUrl" :alt="assetName"/>
-    <audio v-if="isAudio" :src="assetRawUrl" controls>
-      Your browser does not support the audio element.
-    </audio>
-    <div v-if="isText">
-      <p>Text file: {{ assetName }}</p>
-      <pre><code>{{ assetContent }}</code></pre>
+    <h3 v-if="isNotFound">File Not Found</h3>
+    <div v-else-if="assetContentLoading">
+      <v-skeleton-loader type="card"/>
+    </div>
+    <div v-else>
+      <div>{{ assetExtension }}</div>
+      <v-img v-if="isImage" :src="assetRawUrl" :alt="assetName"/>
+      <audio v-if="isAudio" :src="assetRawUrl" controls>
+        Your browser does not support the audio element.
+      </audio>
+      <div v-if="isText">
+        <p>Text file: {{ assetName }}</p>
+        <pre><code>{{ assetContent }}</code></pre>
+      </div>
     </div>
   </div>
 </template>
@@ -50,7 +56,10 @@ const isText = computed(() => {
 const {
   data: assetContent,
   path: assetContentPath,
-  responseType: assetContentType
+  responseType: assetContentType,
+  isLoading: assetContentLoading,
+  asset: assetContentStatus,
+  error: assetContentError
 } = useAssets();
 watch(assetExtension, () => {
   if (isImage.value) {
@@ -68,4 +77,9 @@ watch(assetExtension, () => {
 watch([props.version, props.path], () => {
   assetContentPath.value = assetDir.value;
 }, {immediate: true});
+
+const isNotFound = computed(() => {
+  if (!assetContentError.value) return false;
+  return assetContentError.value.statusCode === 404;
+});
 </script>

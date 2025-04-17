@@ -8,6 +8,7 @@
       </v-breadcrumbs-item>
     </template>
   </v-breadcrumbs>
+  <dbg :data="{assetPath,breadcrumbs}"/>
 </template>
 <script setup lang="ts">
 import {useAssetPath, useAssetPathParts} from "~/composables/useAssetPath";
