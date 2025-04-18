@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <v-sheet color="grey-lighten-2">
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{item,index}">
           <v-breadcrumbs-item :key="index" :disabled="item.disabled">
@@ -10,8 +8,6 @@
           </v-breadcrumbs-item>
         </template>
       </v-breadcrumbs>
-    </v-sheet>
-  </div>
   <!--  <dbg :data="{assetPath,breadcrumbs}"/>-->
 </template>
 <script setup lang="ts">

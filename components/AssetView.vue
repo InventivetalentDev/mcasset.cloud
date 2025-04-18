@@ -4,23 +4,27 @@ img {
 }
 </style>
 <template>
-  <div>
-    <h3 v-if="isNotFound">File Not Found</h3>
-    <div v-else-if="assetContentStatus==='pending'">
-      <v-skeleton-loader type="card"/>
-    </div>
-    <div v-else>
-      <div>{{ assetExtension }}</div>
-      <v-img v-if="isImage" :src="assetRawUrl" :alt="assetName"/>
-      <audio v-if="isAudio" :src="assetRawUrl" controls>
-        Your browser does not support the audio element.
-      </audio>
-      <div v-if="isText">
-        <p>Text file: {{ assetName }}</p>
-        <pre><code>{{ assetContent }}</code></pre>
+  <v-row>
+    <v-col>
+      <h3>{{ assetName }} {{ assetContentType }}</h3>
+      <h4 v-if="isNotFound">File Not Found</h4>
+      <div v-else-if="assetContentStatus==='pending'">
+        <v-skeleton-loader type="card"/>
       </div>
-    </div>
-  </div>
+      <div v-else>
+        <v-sheet color="grey-lighten-4" class="pa-2">
+          <img v-if="isImage" :src="assetRawUrl" :alt="assetName"/>
+          <audio v-else-if="isAudio" :src="assetRawUrl" controls>
+            Your browser does not support the audio element.
+          </audio>
+          <div v-else>
+              <pre><code>{{ assetContent }}</code></pre>
+            <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
+          </div>
+        </v-sheet>
+      </div>
+    </v-col>
+  </v-row>
 </template>
 <script setup lang="ts">
 import {useAssets} from "~/query/assets";
@@ -51,7 +55,7 @@ const isJson = computed(() => {
   return assetExtension.value && ['json'].includes(assetExtension.value);
 });
 const isText = computed(() => {
-  return assetExtension.value && ['json', 'txt'].includes(assetExtension.value);
+  return assetExtension.value && ['json', 'txt', 'mcmeta'].includes(assetExtension.value);
 });
 
 const assetContentPath = computed<string>(() => {
@@ -69,16 +73,30 @@ const assetContentType = computed(() => {
   } else {
     return 'text';
   }
-})
+});
+
+const cdnUrl = computed(() => {
+  return 'https://assets.mcasset.cloud/' + assetContentPath.value
+});
+
+
+const githubUrl = computed(() => {
+  return 'https://github.com/InventivetalentDev/minecraft-assets/blob/' + assetContentPath.value
+});
+const embedUrl = computed(() => {
+  return `https://emgithub.com/iframe.html?target=${githubUrl.value}&style=default&type=code&showBorder=on&showLineNumbers=on&showFileMeta=on&showFullPath=on&showCopy=on"`
+});
+
 const {
   data: assetContent,
   status: assetContentStatus,
-    error:assetContentError
+  error: assetContentError
 } = await useLazyAsyncData(async () => {
-  return await $fetch<VersionManifest>('https://assets.mcasset.cloud/' + assetContentPath.value, {
+  return await $fetch<VersionManifest>(cdnUrl.value, {
     responseType: assetContentType.value
   });
 })
+
 
 // const {
 //   data: assetContent,

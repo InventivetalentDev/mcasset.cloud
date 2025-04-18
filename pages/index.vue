@@ -1,11 +1,11 @@
 <style scoped></style>
 <template>
   <v-container>
-    <v-row>
-      <v-col>
-        <VersionSelect v-model="version"/>
-      </v-col>
-    </v-row>
+<!--    <v-row>-->
+<!--      <v-col>-->
+<!--        <VersionSelect v-model="version"/>-->
+<!--      </v-col>-->
+<!--    </v-row>-->
     Root 0
     <v-row>
       <v-col>

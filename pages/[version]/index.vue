@@ -1,12 +1,13 @@
 <template>
   <v-row>
     <v-col>
-      <Breadcrumbs v-if="version" :version="version" path="/"></Breadcrumbs>
+<!--      <BreadcrumbsNav v-if="version" :version="version" path="/"></BreadcrumbsNav>-->
+      <VersionSelectWithBreadcrumbs v-if="version"  v-model="version" :path="[]"/>
     </v-col>
   </v-row>
   <v-row>
     <v-col>
-      <AssetList v-if="version" :version="version" path="/"></AssetList>
+      <AssetList v-if="version" :version="version" :path="[]"></AssetList>
     </v-col>
   </v-row>
 </template>
@@ -16,7 +17,9 @@ import {useVersionManifest} from "~/query/misc";
 import VersionSelect from "~/components/VersionSelect.vue";
 import {useRouter} from "#app";
 import AssetListOrView from "~/components/AssetListOrView.vue";
+import BreadcrumbsNav from "~/components/BreadcrumbsNav.vue";
+import {useVersionPath} from "~/composables/useVersionPath";
 
 const router = useRouter();
-const version = ref(router.currentRoute.value.params.version as string);
+const {version,path} =useVersionPath();
 </script>

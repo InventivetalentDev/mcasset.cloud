@@ -1,14 +1,14 @@
 <style scoped>
 </style>
 <template>
-    <v-container>
-    <v-row>
-      <v-col>
-        <VersionSelect v-model="version"/>
-      </v-col>
-    </v-row>
+  <v-container>
+    <!--    <v-row>-->
+    <!--      <v-col>-->
+    <!--        <VersionSelect v-model="version"/>-->
+    <!--      </v-col>-->
+    <!--    </v-row>-->
     <Suspense>
-      <NuxtPage></NuxtPage>
+      <NuxtPage/>
       <template #fallback>
         Loading Version...
       </template>

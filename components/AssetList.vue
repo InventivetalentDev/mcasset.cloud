@@ -1,7 +1,8 @@
 <template>
   <div>
+    <h3>{{ dirName }}/</h3>
 <!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
-    <h3 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h3>
+    <h4 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h4>
     <div v-else-if="assetStatus==='pending'">
       <v-skeleton-loader type="list-item-avatar@16"/>
     </div>
@@ -35,6 +36,10 @@ const props = defineProps<{
 }>();
 
 const assetDir = useAssetPath(props.version, props.path);
+
+const dirName = computed(() => {
+  return props.path[props.path.length - 1];
+});
 
 const assetIndexPath = computed<string>(() => {
   return assetDir.value + '/_list.json';

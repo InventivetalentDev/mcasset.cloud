@@ -19,7 +19,11 @@ export default defineNuxtConfig({
                 viewportSize: true
             }
         },
-        vuetifyOptions: {}
+        vuetifyOptions: {
+            theme:{
+                // defaultTheme:'dark'
+            }
+        }
 
     },
     runtimeConfig: {
