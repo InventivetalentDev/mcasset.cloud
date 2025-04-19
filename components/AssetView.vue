@@ -32,6 +32,12 @@ img.zoomed {
             <v-icon icon="mdi-magnify-plus-outline"/>
           </v-btn>
         </v-col>
+        <v-spacer/>
+        <v-col class="text-end">
+          <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" target="_blank" append-icon="mdi-open-in-new">Raw</v-btn>
+          <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl" target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub</v-btn>
+          <v-btn variant="outlined" size="small" color="secondary" class="mx-1" @click="downloadFile" prepend-icon="mdi-download">Download File</v-btn>
+        </v-col>
       </v-row>
       <v-row>
         <v-col class="pt-0">
@@ -154,6 +160,18 @@ const {
 // watch([props.version, props.path], () => {
 //   assetContentPath.value = assetDir.value;
 // }, {immediate: true});
+
+const downloadFile = () => {
+  const blob = new Blob([assetContent.value], {type: assetContentType.value});
+  const url = URL.createObjectURL(blob);
+  const el = document.createElement('a');
+  el.href = url;
+  el.download = assetName.value;
+  document.body.appendChild(el);
+  el.click();
+  document.body.removeChild(el);
+  URL.revokeObjectURL(url);
+};
 
 const isNotFound = computed(() => {
   if (!assetContentError.value) return false;

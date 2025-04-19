@@ -14,6 +14,14 @@
             <code>{{ dirName }}</code>/
           </h3>
         </v-col>
+        <v-spacer/>
+        <v-col class="text-end">
+          <span class="mx-1"><v-icon icon="mdi-folder"/> {{ dirCount }}</span>
+          <span class="mx-1"><v-icon icon="mdi-file"/> {{ fileCount }}</span>
+          <span class="text-medium-emphasis mx-2">|</span>
+          <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl" target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub</v-btn>
+          <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="dirDownloadUrl" target="_blank" prepend-icon="mdi-folder-download">Download Folder</v-btn>
+        </v-col>
       </v-row>
       <v-row>
         <v-col class="pt-0">
@@ -116,5 +124,28 @@ const assetList = computed(() => {
       path: `/${assetDir.value}/${file}`
     }))
   ];
-})
+});
+
+const fileCount = computed(() => {
+  if (!assetIndex.value) return 0;
+  const {directories, files} = (assetIndex.value as AssetIndex);
+  return (files || []).length;
+});
+const dirCount = computed(() => {
+  if (!assetIndex.value) return 0;
+  const {directories, files} = (assetIndex.value as AssetIndex);
+  return (directories || []).length;
+});
+
+const cdnUrl = computed(() => {
+  return 'https://assets.mcasset.cloud/' + assetDir.value
+});
+const githubUrl = computed(() => {
+  return 'https://github.com/InventivetalentDev/minecraft-assets/tree/' + assetDir.value
+});
+
+
+const dirDownloadUrl = computed(() => {
+  return 'https://download-directory.github.io/?url=' + githubUrl.value;
+});
 </script>
