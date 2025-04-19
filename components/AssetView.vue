@@ -6,7 +6,7 @@ img {
 <template>
   <v-row>
     <v-col>
-      <h3><BackBtn/> <code>{{ assetName }}</code></h3>
+      <h3  class="mb-1"><BackBtn/> <code>{{ assetName }}</code></h3>
       <h4 v-if="isNotFound">File Not Found</h4>
       <div v-else-if="assetContentStatus==='pending'">
         <v-skeleton-loader type="card"/>

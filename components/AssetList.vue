@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>
+    <h3 class="mb-1">
       <BackBtn/>
       <code>{{ dirName }}</code>/
     </h3>
