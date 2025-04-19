@@ -47,7 +47,10 @@ img.zoomed {
           </div>
           <div v-else>
             <v-sheet color="grey-darken-3" class="pa-2 asset-sheet">
-              <img v-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
+              <div v-if="contentTooLarge">
+                <a :href="cdnUrl" target="_blank">View Raw</a>
+              </div>
+              <img v-else-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
               <audio v-else-if="isAudio" :src="assetRawUrl" controls>
                 Your browser does not support the audio element.
               </audio>
@@ -108,7 +111,7 @@ const assetContentType = computed(() => {
   } else if (isText.value) {
     return 'text';
   } else {
-    return 'text';
+    return 'blob';
   }
 });
 
@@ -129,10 +132,18 @@ const {
   status: assetContentStatus,
   error: assetContentError
 } = await useLazyAsyncData(async () => {
-  return await $fetch<VersionManifest>(cdnUrl.value, {
-    responseType: assetContentType.value
+  return await $fetch(cdnUrl.value, {
+    responseType: assetContentType.value,
   });
-})
+});
+
+const contentTooLarge = computed(() => {
+  if (!assetContent.value) return false;
+  if (assetContent.value instanceof Blob) {
+    return assetContent.value.size > 1024 * 32;
+  }
+  return false;
+});
 
 
 // const {
