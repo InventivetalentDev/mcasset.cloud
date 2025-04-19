@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>{{ dirName }}/</h3>
+    <h3><BackBtn/> <span>{{ dirName }}</span>/</h3>
 <!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
     <h4 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h4>
     <div v-else-if="assetStatus==='pending'">
@@ -16,8 +16,8 @@
             </v-avatar>
           </template>
           <template v-slot:title>
-            <NuxtLink :to="asset.path">
-              {{ asset.name }}
+            <NuxtLink :to="asset.path" class="text-decoration-none">
+              <span>{{ asset.name }}</span>
             </NuxtLink>
           </template>
         </v-list-item>
@@ -29,6 +29,7 @@
 import type {AssetIndex} from "~/types/assets";
 import {useAssetPath} from "~/composables/useAssetPath";
 import {useAsyncData, useLazyAsyncData} from "#app";
+import BackBtn from "~/components/BackBtn.vue";
 
 const props = defineProps<{
   version: string,

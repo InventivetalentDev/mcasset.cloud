@@ -6,7 +6,7 @@ img {
 <template>
   <v-row>
     <v-col>
-      <h3>{{ assetName }} {{ assetContentType }}</h3>
+      <h3><BackBtn/> <span>{{ assetName }}</span></h3>
       <h4 v-if="isNotFound">File Not Found</h4>
       <div v-else-if="assetContentStatus==='pending'">
         <v-skeleton-loader type="card"/>
@@ -30,6 +30,7 @@ img {
 import {useAssets} from "~/query/assets";
 import {useAssetPath} from "~/composables/useAssetPath";
 import type {VersionManifest} from "~/types";
+import BackBtn from "~/components/BackBtn.vue";
 
 const props = defineProps<{
   version: string,
