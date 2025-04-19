@@ -3,13 +3,13 @@
 <template>
   <v-row>
     <v-col>
-      <VersionSelectWithBreadcrumbs v-model="version" :path="path"></VersionSelectWithBreadcrumbs>
-<!--      <VersionSelect v-model="version" :path="path"/>-->
+      <VersionCard v-model="version" :path="path"/>
+      <!--      <VersionSelect v-model="version" :path="path"/>-->
     </v-col>
   </v-row>
   <v-row>
     <v-col>
-      <AssetListOrView v-if="version&&path" :version="version" :path="path"></AssetListOrView>
+      <AssetBrowserCard :version="version" :path="path"/>
     </v-col>
   </v-row>
   <!--    <p>{{path}}</p>-->
@@ -19,6 +19,7 @@ import {useRoute} from 'vue-router';
 import AssetListOrView from "~/components/AssetListOrView.vue";
 import {useVersionPath} from "~/composables/useVersionPath";
 import BreadcrumbsNav from "~/components/BreadcrumbsNav.vue";
+import VersionCard from "~/components/VersionCard.vue";
 
 const route = useRoute();
 

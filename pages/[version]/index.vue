@@ -2,12 +2,12 @@
   <v-row>
     <v-col>
 <!--      <BreadcrumbsNav v-if="version" :version="version" path="/"></BreadcrumbsNav>-->
-      <VersionSelectWithBreadcrumbs v-if="version"  v-model="version" :path="[]"/>
+      <VersionCard v-if="version"  v-model="version" :path="[]"/>
     </v-col>
   </v-row>
   <v-row>
     <v-col>
-      <AssetList v-if="version" :version="version" :path="[]"></AssetList>
+      <AssetBrowserCard v-if="version" :version="version" :path="[]"/>
     </v-col>
   </v-row>
 </template>
@@ -19,6 +19,7 @@ import {useRouter} from "#app";
 import AssetListOrView from "~/components/AssetListOrView.vue";
 import BreadcrumbsNav from "~/components/BreadcrumbsNav.vue";
 import {useVersionPath} from "~/composables/useVersionPath";
+import VersionCard from "~/components/VersionCard.vue";
 
 const router = useRouter();
 const {version,path} =useVersionPath();
