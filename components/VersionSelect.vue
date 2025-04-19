@@ -2,7 +2,8 @@
   <v-autocomplete label="Minecraft Version"
                   :loading="manifestStatus === 'pending'"
                   :items="items"
-                  v-model="model">
+                  v-model="model"
+                  hide-details>
 
   </v-autocomplete>
 </template>

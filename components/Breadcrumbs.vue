@@ -1,9 +1,9 @@
 <template>
       <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{item,index}">
-          <v-breadcrumbs-item :key="index" :disabled="item.disabled">
-            <NuxtLink :to="item.href" class="text-decoration-none">
-              {{ item.title }}
+          <v-breadcrumbs-item :key="index">
+            <NuxtLink :to="item.href" class="text-decoration-none text-high-emphasis text-body-1">
+              <code>{{ item.title }}</code>
             </NuxtLink>
           </v-breadcrumbs-item>
         </template>

@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h3><BackBtn/> <span>{{ dirName }}</span>/</h3>
-<!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
+    <h3>
+      <BackBtn/>
+      <code>{{ dirName }}</code>/
+    </h3>
+    <!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
     <h4 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h4>
     <div v-else-if="assetStatus==='pending'">
       <v-skeleton-loader type="list-item-avatar@16"/>
@@ -17,7 +20,7 @@
           </template>
           <template v-slot:title>
             <NuxtLink :to="asset.path" class="text-decoration-none">
-              <span>{{ asset.name }}</span>
+              <code>{{ asset.name }}</code>
             </NuxtLink>
           </template>
         </v-list-item>
