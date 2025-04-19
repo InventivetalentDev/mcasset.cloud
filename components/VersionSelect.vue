@@ -1,10 +1,10 @@
 <template>
-    <v-select label="Minecraft Version"
-              :loading="manifestStatus === 'pending'"
-              :items="versions" item-value="id" item-title="id"
-              v-model="model">
+  <v-autocomplete label="Minecraft Version"
+                  :loading="manifestStatus === 'pending'"
+                  :items="items"
+                  v-model="model">
 
-    </v-select>
+  </v-autocomplete>
 </template>
 <script setup lang="ts">
 import type {VersionManifest} from "~/types";
@@ -19,7 +19,17 @@ const {
   latestSnapshot
 } = await useVersionManifest();
 
-const model = defineModel<string>({required:true});
+const items = computed(() => {
+  return (versions.value || []).map(v => ({
+    id: v.id,
+    title: v.id,
+    props: {
+      subtitle: v.type
+    }
+  }))
+});
+
+const model = defineModel<string>({required: true});
 watch(model, () => {
   console.log("version changed");
   resolveLatest();

@@ -7,6 +7,7 @@
 import {useRouter} from "#app";
 
 const router = useRouter();
+
 const goBack = () => {
   router.back();
 };
