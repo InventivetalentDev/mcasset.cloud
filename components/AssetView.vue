@@ -3,6 +3,11 @@ img {
   image-rendering: pixelated;
 }
 
+img.zoomed {
+  cursor: pointer;
+  width: min(50vw, 256px);
+}
+
 .asset-sheet {
   overflow-y: auto;
   max-height: 70vh;
@@ -12,11 +17,20 @@ img {
   <v-row>
     <v-col>
       <v-row>
-        <v-col class="pb-0">
+        <v-col cols="auto">
           <h3>
             <BackBtn/>
             <code>{{ assetName }}</code>
           </h3>
+        </v-col>
+        <v-col v-if="isImage" cols="auto">
+          <v-btn
+              icon
+              @click="toggleZoom"
+              :class="{'zoomed': zoomed}"
+          >
+            <v-icon icon="mdi-magnify-plus-outline"/>
+          </v-btn>
         </v-col>
       </v-row>
       <v-row>
@@ -27,7 +41,7 @@ img {
           </div>
           <div v-else>
             <v-sheet color="grey-darken-3" class="pa-2 asset-sheet">
-              <img v-if="isImage" :src="assetRawUrl" :alt="assetName"/>
+              <img v-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
               <audio v-else-if="isAudio" :src="assetRawUrl" controls>
                 Your browser does not support the audio element.
               </audio>
@@ -145,4 +159,9 @@ const isNotFound = computed(() => {
   if (!assetContentError.value) return false;
   return assetContentError.value.statusCode === 404;
 });
+
+const zoomed = ref(false);
+const toggleZoom = () => {
+  zoomed.value = !zoomed.value;
+};
 </script>
