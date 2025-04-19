@@ -2,27 +2,43 @@
 img {
   image-rendering: pixelated;
 }
+
+.asset-sheet {
+  overflow-y: auto;
+  max-height: 70vh;
+}
 </style>
 <template>
   <v-row>
     <v-col>
-      <h3  class="mb-1"><BackBtn/> <code>{{ assetName }}</code></h3>
-      <h4 v-if="isNotFound">File Not Found</h4>
-      <div v-else-if="assetContentStatus==='pending'">
-        <v-skeleton-loader type="card"/>
-      </div>
-      <div v-else>
-        <v-sheet color="grey-lighten-4" class="pa-2">
-          <img v-if="isImage" :src="assetRawUrl" :alt="assetName"/>
-          <audio v-else-if="isAudio" :src="assetRawUrl" controls>
-            Your browser does not support the audio element.
-          </audio>
-          <div v-else>
-              <pre><code>{{ assetContent }}</code></pre>
-            <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
+      <v-row>
+        <v-col class="pb-0">
+          <h3>
+            <BackBtn/>
+            <code>{{ assetName }}</code>
+          </h3>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="pt-0">
+          <h4 v-if="isNotFound">File Not Found</h4>
+          <div v-else-if="assetContentStatus==='pending'">
+            <v-skeleton-loader type="card"/>
           </div>
-        </v-sheet>
-      </div>
+          <div v-else>
+            <v-sheet color="grey-darken-3" class="pa-2 asset-sheet">
+              <img v-if="isImage" :src="assetRawUrl" :alt="assetName"/>
+              <audio v-else-if="isAudio" :src="assetRawUrl" controls>
+                Your browser does not support the audio element.
+              </audio>
+              <div v-else>
+                <pre><code>{{ assetContent }}</code></pre>
+                <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
+              </div>
+            </v-sheet>
+          </div>
+        </v-col>
+      </v-row>
     </v-col>
   </v-row>
 </template>

@@ -1,32 +1,48 @@
+<style scoped>
+.asset-list {
+  overflow-y: auto;
+  max-height: 70vh
+}
+</style>
 <template>
-  <div>
-    <h3 class="mb-1">
-      <BackBtn/>
-      <code>{{ dirName }}</code>/
-    </h3>
-    <!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
-    <h4 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h4>
-    <div v-else-if="assetStatus==='pending'">
-      <v-skeleton-loader type="list-item-avatar@16"/>
-    </div>
-    <div v-else>
-      <v-list>
-        <v-list-item v-for="asset in assetList" :key="asset.name">
-          <template v-slot:prepend>
-            <v-avatar color="grey-lighten-1">
-              <v-icon v-if="asset.type==='dir'" color="white">mdi-folder</v-icon>
-              <v-icon v-else color="white">mdi-file</v-icon>
-            </v-avatar>
-          </template>
-          <template v-slot:title>
-            <NuxtLink :to="asset.path" class="text-decoration-none">
-              <code>{{ asset.name }}</code>
-            </NuxtLink>
-          </template>
-        </v-list-item>
-      </v-list>
-    </div>
-  </div>
+  <v-row>
+    <v-col>
+      <v-row>
+        <v-col class="pb-0">
+          <h3>
+            <BackBtn/>
+            <code>{{ dirName }}</code>/
+          </h3>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="pt-0">
+          <!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
+          <h4 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h4>
+          <div v-else-if="assetStatus==='pending'">
+            <v-skeleton-loader type="list-item-avatar@16"/>
+          </div>
+          <div v-else>
+            <v-list class="asset-list">
+              <v-list-item v-for="asset in assetList" :key="asset.name">
+                <template v-slot:prepend>
+                  <v-avatar color="grey-lighten-1">
+                    <v-icon v-if="asset.type==='dir'" color="white">mdi-folder</v-icon>
+                    <v-icon v-else color="white">mdi-file</v-icon>
+                  </v-avatar>
+                </template>
+                <template v-slot:title>
+                  <NuxtLink :to="asset.path" class="text-decoration-none">
+                    <code>{{ asset.name }}</code>
+                  </NuxtLink>
+                </template>
+              </v-list-item>
+            </v-list>
+          </div>
+        </v-col>
+      </v-row>
+    </v-col>
+  </v-row>
 </template>
 <script setup lang="ts">
 import type {AssetIndex} from "~/types/assets";
