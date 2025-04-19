@@ -12,6 +12,13 @@
       <AssetBrowserCard :version="version" :path="path"/>
     </v-col>
   </v-row>
+  <v-row>
+    <v-col>
+      <AdInfoWrapper>
+        <AdWrappper ad-slot="6046448840"/>
+      </AdInfoWrapper>
+    </v-col>
+  </v-row>
   <!--    <p>{{path}}</p>-->
 </template>
 <script setup lang="ts">

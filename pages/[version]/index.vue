@@ -10,6 +10,13 @@
       <AssetBrowserCard v-if="version" :version="version" :path="[]"/>
     </v-col>
   </v-row>
+  <v-row>
+    <v-col>
+      <AdInfoWrapper>
+        <AdWrappper ad-slot="6046448840"/>
+      </AdInfoWrapper>
+    </v-col>
+  </v-row>
 </template>
 <script setup lang="ts">
 import {useGitHubUser} from "~/query/github";
