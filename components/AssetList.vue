@@ -3,6 +3,7 @@
   overflow-y: auto;
   max-height: 70vh
 }
+
 </style>
 <template>
   <v-row>
@@ -34,9 +35,12 @@
             <v-list class="asset-list">
               <v-list-item v-for="asset in assetList" :key="asset.name">
                 <template v-slot:prepend>
-                  <v-avatar color="grey-lighten-1">
-                    <v-icon v-if="asset.type==='dir'" color="white">mdi-folder</v-icon>
-                    <v-icon v-else color="white">mdi-file</v-icon>
+                  <v-avatar :color="asset.type==='dir'?'secondary':'primary'">
+                    <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
+                    <span v-else-if="asset.extension?.length<=4" class="text-uppercase extension-icon">
+                      <code>{{ getExtension(asset.name) }}</code>
+                    </span>
+                    <v-icon v-else>mdi-file</v-icon>
                   </v-avatar>
                 </template>
                 <template v-slot:title>
@@ -121,10 +125,17 @@ const assetList = computed(() => {
     ...(files || []).map(file => ({
       type: 'file',
       name: file,
-      path: `/${assetDir.value}/${file}`
+      path: `/${assetDir.value}/${file}`,
+      extension: getExtension(file)
     }))
   ];
 });
+
+const getExtension = (fileName: string) => {
+  const parts = fileName.split('.');
+  if (parts.length < 2) return '';
+  return parts[parts.length - 1];
+};
 
 const fileCount = computed(() => {
   if (!assetIndex.value) return 0;
