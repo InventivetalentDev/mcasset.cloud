@@ -8,13 +8,13 @@
   <v-row>
     <v-col>
       <v-row>
-        <v-col class="pb-0">
+        <v-col class="pb-0" cols="12" md="auto">
           <h3>
             <BackBtn/>
             <code>{{ dirName }}</code>/
           </h3>
         </v-col>
-        <v-col class="text-end">
+        <v-col class="text-end" cols="12" md="auto">
           <span class="mx-1"><v-icon icon="mdi-folder"/> {{ dirCount }}</span>
           <span class="mx-1"><v-icon icon="mdi-file"/> {{ fileCount }}</span>
           <span class="text-medium-emphasis mx-2">|</span>
