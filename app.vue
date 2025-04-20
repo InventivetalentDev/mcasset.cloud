@@ -1,9 +1,11 @@
 <template>
   <NuxtLayout>
     <v-app>
+      <Jumbotron/>
       <v-main>
         <NuxtPage/>
       </v-main>
+      <Footer/>
     </v-app>
   </NuxtLayout>
 </template>

@@ -1,11 +1,6 @@
 <template>
   <v-row>
     <v-col>
-      <Jumbotron/>
-    </v-col>
-  </v-row>
-  <v-row>
-    <v-col>
       <!--      <BreadcrumbsNav v-if="version" :version="version" path="/"></BreadcrumbsNav>-->
       <VersionCard v-if="version" v-model="version" :path="path ||[]"/>
     </v-col>
