@@ -5,12 +5,12 @@
       <VersionCard v-if="version" v-model="version" :path="path ||[]"/>
     </v-col>
   </v-row>
-  <v-row>
+  <v-row class="mt-0">
     <v-col>
       <AssetBrowserCard v-if="version" :version="version" :path="path||[]"/>
     </v-col>
   </v-row>
-  <v-row>
+  <v-row class="mt-1">
     <v-col>
       <AdInfoWrapper>
         <AdWrappper ad-slot="6046448840"/>
