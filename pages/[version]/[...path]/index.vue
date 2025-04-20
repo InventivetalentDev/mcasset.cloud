@@ -1,5 +1,3 @@
-<style scoped>
-</style>
 <template>
   <v-row>
     <v-col>
