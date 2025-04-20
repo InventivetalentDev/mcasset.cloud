@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" md="1">
+    <v-col cols="12" md="2" xl="1" >
       <VersionSelect v-model="model"/>
     </v-col>
     <v-col cols="auto">
@@ -12,6 +12,8 @@
 const model = defineModel<string>({required: true});
 
 const theme = useTheme();
+
+const {name} = useDisplay();
 
 const props = defineProps<{
   path: string[]

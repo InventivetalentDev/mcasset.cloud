@@ -14,7 +14,6 @@
             <code>{{ dirName }}</code>/
           </h3>
         </v-col>
-        <v-spacer/>
         <v-col class="text-end">
           <span class="mx-1"><v-icon icon="mdi-folder"/> {{ dirCount }}</span>
           <span class="mx-1"><v-icon icon="mdi-file"/> {{ fileCount }}</span>
