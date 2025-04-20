@@ -32,6 +32,7 @@ img.zoomed {
             <v-icon icon="mdi-magnify-plus-outline"/>
           </v-btn>
         </v-col>
+        <v-spacer/>
         <v-col class="text-end" cols="8" md="auto">
           <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" target="_blank" append-icon="mdi-open-in-new">Raw</v-btn>
           <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl" target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub</v-btn>
