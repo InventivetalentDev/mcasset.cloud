@@ -42,6 +42,9 @@ img.zoomed {
       <v-row>
         <v-col class="pt-0">
           <h4 v-if="isNotFound">File Not Found</h4>
+          <h4 v-else-if="assetContentStatus==='error'">
+            Failed to load file content
+          </h4>
           <div v-else-if="assetContentStatus==='pending'">
             <v-skeleton-loader type="card"/>
           </div>

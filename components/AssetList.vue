@@ -28,6 +28,9 @@
         <v-col class="pt-0">
           <!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
           <h4 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h4>
+          <h4 v-else-if="assetStatus==='error'">
+            Failed to load asset list
+          </h4>
           <div v-else-if="assetStatus==='pending'">
             <v-skeleton-loader type="list-item-avatar@16"/>
           </div>
