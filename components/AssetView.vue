@@ -148,11 +148,24 @@ const contentTooLarge = computed(() => {
   return false;
 });
 
-
+const ogImage = computed(() => {
+  if (isImage.value) {
+    return cdnUrl.value;
+  }
+  return null;
+});
+const ogAudio = computed(() => {
+  if (isAudio.value) {
+    return cdnUrl.value;
+  }
+  return null;
+});
 useSeoMeta({
   title: assetName,
   ogTitle: assetName,
-  twitterTitle: assetName
+  twitterTitle: assetName,
+  ogImage: ogImage,
+  ogAudio: ogAudio,
 });
 
 // const {
