@@ -1,11 +1,16 @@
 <template>
-  <v-autocomplete label="Minecraft Version"
-                  :loading="manifestStatus === 'pending'"
-                  :items="items"
-                  v-model="model"
-                  hide-details>
+  <div>
+    <v-autocomplete label="Minecraft Version"
+                    :loading="manifestStatus === 'pending'"
+                    :items="items"
+                    v-model="model"
+                    hide-details>
 
-  </v-autocomplete>
+    </v-autocomplete>
+    <div class="px-2 text-center">
+      <a @click.prevent="useLatestRelease" href="/latest">Latest Release</a> | <a @click.prevent="useLatestSnapshot" href="/snapshot">Latest Snapshot</a>
+    </div>
+  </div>
 </template>
 <script setup lang="ts">
 import type {VersionManifest} from "~/types";
