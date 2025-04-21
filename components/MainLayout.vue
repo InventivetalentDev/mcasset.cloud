@@ -10,7 +10,7 @@
       <AssetBrowserCard v-if="version" :version="version" :path="path||[]"/>
     </v-col>
   </v-row>
-  <v-row class="mt-1">
+  <v-row class="mt-1" style="min-height: 30vh">
     <v-col>
       <AdInfoWrapper>
         <AdWrappper ad-slot="6046448840"/>
