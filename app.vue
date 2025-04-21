@@ -11,8 +11,20 @@
 </template>
 <script setup lang="ts">
 
+import { useSeoMeta } from "#imports";
+
 const description = "MC Assets is a browser for Minecraft asset files. Explore all Textures, Sounds, Models, Fonts, Shaders, and more from any Minecraft version";
 
+useSeoMeta({
+    titleTemplate: (titleChunk) => {
+        return titleChunk ? `${ titleChunk } - MC Assets` : 'MC Assets - Browser for Minecraft Asset Files';
+    },
+    ogSiteName: 'MC Assets',
+    description: description,
+    ogDescription: description,
+    twitterDescription: description,
+    author: 'inventivetalent',
+});
 useHead({
   link: [
     {

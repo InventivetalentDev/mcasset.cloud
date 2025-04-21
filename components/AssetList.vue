@@ -97,6 +97,16 @@ const {
   })
 })
 
+const metaTitle = computed(() => {
+  if (!dirName.value || dirName.value?.length < 1) return null;
+  return dirName.value + "/";
+});
+useSeoMeta({
+  title: metaTitle,
+  ogTitle: metaTitle,
+  twitterTitle: metaTitle
+})
+
 // const {
 //   data: assetIndex,
 //   path: assetIndexPath,

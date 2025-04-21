@@ -149,6 +149,12 @@ const contentTooLarge = computed(() => {
 });
 
 
+useSeoMeta({
+  title: assetName,
+  ogTitle: assetName,
+  twitterTitle: assetName
+});
+
 // const {
 //   data: assetContent,
 //   path: assetContentPath,
