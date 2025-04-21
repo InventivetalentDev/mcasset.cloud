@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col cols="12" md="2" xl="1" >
+    <v-col cols="12" md="2" >
       <VersionSelect v-model="model"/>
     </v-col>
     <v-col cols="auto">
