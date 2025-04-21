@@ -3,13 +3,20 @@ export interface VersionManifest {
         release: string;
         snapshot: string;
     };
-    versions: {
-        id: string;
-        type: string;
-        url: string;
-        time: string;
-        releaseTime: string;
-        sha1: string;
-        complianceLevel: number;
-    }[];
+    versions: ManifestVersion[];
 }
+
+export interface ManifestVersion {
+    id: string;
+    type: string;
+    url: string;
+    time: string;
+    releaseTime: string;
+    sha1: string;
+    complianceLevel: number;
+}
+
+export interface AvailableVersion {
+    name: string;
+}
+export type AvailableVersions = {versions:AvailableVersion[]};

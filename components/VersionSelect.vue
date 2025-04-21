@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-autocomplete label="Minecraft Version"
-                    :loading="manifestStatus === 'pending'"
+                    :loading="manifestStatus === 'pending' || availableStatus === 'pending'"
                     :items="items"
                     v-model="model"
                     hide-details>
@@ -13,8 +13,8 @@
   </div>
 </template>
 <script setup lang="ts">
-import type {VersionManifest} from "~/types";
-import {useAsyncData} from "#app";
+import type {AvailableVersions, ManifestVersion, VersionManifest} from "~/types";
+import {useAsyncData, useLazyAsyncData} from "#app";
 import {useVersionManifest} from "~/composables/useVersionManifest";
 
 const {
@@ -25,12 +25,29 @@ const {
   latestSnapshot
 } = await useVersionManifest();
 
+const {
+  data: availableVersions,
+  status: availableStatus
+} = await useLazyAsyncData('version-list', async () => {
+  return await $fetch<AvailableVersions>('https://assets.mcasset.cloud/versions.json', {
+    responseType: 'json'
+  })
+});
+const availableVersionNames = computed<string[]>(() => {
+  return availableVersions.value?.versions?.map(version => version.name) || [];
+});
+
+const isAvailable = (version: string) => {
+  return availableVersionNames.value?.includes(version);
+}
+
 const items = computed(() => {
   return (versions.value || []).map(v => ({
     id: v.id,
     title: v.id,
     props: {
-      subtitle: v.type
+      subtitle: v.type,
+      appendIcon: isAvailable(v.id) ? null : 'mdi-close',
     }
   }))
 });
