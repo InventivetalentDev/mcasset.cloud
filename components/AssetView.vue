@@ -70,7 +70,7 @@ img.zoomed {
 </template>
 <script setup lang="ts">
 import {useAssets} from "~/query/assets";
-import {useAssetPath} from "~/composables/useAssetPath";
+import {useAssetPath, useAssetPathParts} from "~/composables/useAssetPath";
 import type {VersionManifest} from "~/types";
 import BackBtn from "~/components/BackBtn.vue";
 
@@ -80,6 +80,7 @@ const props = defineProps<{
 }>();
 
 const assetDir = useAssetPath(props.version, props.path);
+const assetPathParts = useAssetPathParts(props.version, props.path);
 const assetRawUrl = computed(() => 'https://assets.mcasset.cloud/' + assetDir.value);
 const assetName = computed(() => {
   return props.path[props.path.length - 1];
@@ -152,21 +153,70 @@ const ogImage = computed(() => {
   if (isImage.value) {
     return cdnUrl.value;
   }
-  return null;
+  return undefined;
 });
 const ogAudio = computed(() => {
   if (isAudio.value) {
     return cdnUrl.value;
   }
-  return null;
+  return undefined;
 });
+const metaTitle = computed(() => assetName.value);
 useSeoMeta({
-  title: assetName,
-  ogTitle: assetName,
-  twitterTitle: assetName,
+  title: metaTitle,
+  ogTitle: metaTitle,
+  twitterTitle: metaTitle,
   ogImage: ogImage,
   ogAudio: ogAudio,
 });
+
+const ldJsonContent = computed(() => {
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": metaTitle.value,
+    "url": `https://mcasset.cloud/${assetDir.value}`,
+    "image": ogImage.value
+    //TODO: date published
+  });
+});
+const ldBreadcrumbContent = computed(() => {
+  const items = [];
+  for (let i = 0; i < assetPathParts.value.length; i++) {
+    items.push({
+      "@type": "ListItem",
+      "position": i + 1,
+      "name": assetPathParts.value[i],
+      "item": `https://mcasset.cloud/${assetPathParts.value.slice(0, i + 1).join('/')}`
+    });
+  }
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": items
+  })
+})
+
+useHead({
+  link: [
+    {
+      rel: 'canonical',
+      href: `https://mcasset.cloud/${assetDir}`
+    }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      'data-ld-id': 'asset-webpage',
+      innerHTML: ldJsonContent
+    },
+    {
+      type: 'application/ld+json',
+      'data-ld-id': 'asset-breadcrumb',
+      innerHTML: ldBreadcrumbContent
+    }
+  ]
+})
 
 // const {
 //   data: assetContent,
