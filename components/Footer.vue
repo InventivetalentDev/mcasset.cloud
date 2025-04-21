@@ -1,10 +1,20 @@
 <template>
   <v-footer>
     <v-container>
-      <v-row>
+      <v-row no-gutters justify="center">
+        <v-col>
+          <v-btn variant="text" href="https://legal.inventivetalent.org/imprint">Imprint</v-btn>
+          <v-btn variant="text" href="https://legal.inventivetalent.org/privacy/mineskin">Privacy</v-btn>
+          <v-btn variant="text" href="https://legal.inventivetalent.org/terms/mineskin">Terms</v-btn>
+          <a href="#" id="open_preferences_center">Cookie preferences</a>
+        </v-col>
         <v-col class="text-center">
-          <p>Made by <a href="https://inventivetalent.org" target="_blank">inventivetalent</a></p>
-          <p>Not affiliated with Minecraft / Mojang AB / Microsoft</p>
+          <div class="my-1">Made by <a
+              href="https://inventivetalent.org"
+              target="_blank">inventivetalent</a></div>
+        </v-col>
+        <v-col class="text-right">
+          Not affiliated with Minecraft / Mojang AB / Microsoft.
         </v-col>
       </v-row>
     </v-container>
