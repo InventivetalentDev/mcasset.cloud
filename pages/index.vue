@@ -1,17 +1,7 @@
 <style scoped></style>
 <template>
   <v-container>
-<!--    <v-row>-->
-<!--      <v-col>-->
-<!--        <VersionSelect v-model="version"/>-->
-<!--      </v-col>-->
-<!--    </v-row>-->
-    Root 0
-    <v-row>
-      <v-col>
-        Please select a version
-      </v-col>
-    </v-row>
+    Loading...
   </v-container>
 </template>
 <script setup lang="ts">
@@ -20,6 +10,7 @@ import {useVersionManifest} from "~/query/misc";
 import VersionSelect from "~/components/VersionSelect.vue";
 import {useRouter} from "#app";
 import {useVersionPath} from "~/composables/useVersionPath";
+import MainLayout from "~/components/MainLayout.vue";
 
 const router = useRouter();
 
@@ -33,7 +24,7 @@ const {
 } = useVersionManifest();
 
 const {version, path} = useVersionPath();
-onMounted(()=>{
+onMounted(() => {
   if (!version.value && !path.value) {
     router.push({path: '/latest'})
   }

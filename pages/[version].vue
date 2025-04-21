@@ -9,9 +9,6 @@
     <!--    </v-row>-->
     <Suspense>
       <NuxtPage/>
-      <template #fallback>
-        Loading Version...
-      </template>
     </Suspense>
   </v-container>
 </template>
