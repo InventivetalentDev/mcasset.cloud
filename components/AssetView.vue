@@ -65,7 +65,7 @@ img.zoomed {
                                 Your browser does not support the audio element.
                             </audio>
                             <div v-else>
-                                <pre><code>{{ assetContent }}</code></pre>
+                                <BlobAsText :blob="assetContent"/>
                                 <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
                             </div>
                             <dbg :data="{assetContentType}"/>
@@ -81,6 +81,7 @@ import { useAssets } from "~/query/assets";
 import { useAssetPath, useAssetPathParts } from "~/composables/useAssetPath";
 import type { VersionManifest } from "~/types";
 import BackBtn from "~/components/BackBtn.vue";
+import BlobAsText from "~/components/BlobAsText.vue";
 
 const props = defineProps<{
     version: string,
@@ -117,17 +118,18 @@ const assetContentPath = computed<string>(() => {
     return assetDir.value;
 });
 const assetContentType = computed(() => {
-    if (isImage.value) {
-        return 'blob';
-    } else if (isAudio.value) {
-        return 'blob';
-    } else if (isJson.value) {
-        return 'json';
-    } else if (isText.value) {
-        return 'text';
-    } else {
-        return 'blob';
-    }
+    // if (isImage.value) {
+    //     return 'blob';
+    // } else if (isAudio.value) {
+    //     return 'blob';
+    // } else if (isJson.value) {
+    //     return 'json';
+    // } else if (isText.value) {
+    //     return 'text';
+    // } else {
+    //     return 'blob';
+    // }
+    return 'blob';
 });
 
 const cdnUrl = computed(() => {
@@ -174,6 +176,26 @@ const contentSizeText = computed(() => {
 
 const contentTooLarge = computed(() => {
     return contentSizeBytes.value > 1024 * 32;
+});
+
+const asText = (blob: Blob) => {
+    return new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            resolve(reader.result as string);
+        };
+        reader.onerror = (e) => {
+            reject(e);
+        };
+        reader.readAsText(blob);
+    });
+};
+
+const textContent = computed(() => {
+    if (assetContent.value instanceof Blob) {
+        return asText(assetContent.value);
+    }
+    return '';
 });
 
 const ogImage = computed(() => {
