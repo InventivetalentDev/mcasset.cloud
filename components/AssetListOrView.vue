@@ -1,21 +1,24 @@
 <template>
-  <AssetView v-if="assetIsFile" :version="version" :path="path"/>
-  <AssetList v-else :version="version" :path="path"/>
+    <v-row v-if="assetIsFile">
+        <AssetView :version="version" :path="path"/>
+        <AssetView v-if="compareWith" :version="compareWith" :path="path"/>
+    </v-row>
+    <v-row v-else>
+        <AssetList :version="version" :path="path"/>
+        <AssetList v-if="compareWith" :version="compareWith" :path="path"/>
+    </v-row>
 </template>
 <script setup lang="ts">
 import AssetView from "~/components/AssetView.vue";
 import AssetList from "~/components/AssetList.vue";
 
 const props = defineProps<{
-  version: string,
-  path: string[]
+    version: string,
+    path: string[],
+    compareWith?: string
 }>();
 
-const assetDir = computed(() => [props.version, ...props.path].join('/'));
-const assetName = computed(() => {
-  return props.path[props.path.length - 1];
-});
 const assetIsFile = computed(() => {
-  return props.path.length > 0 && props.path[props.path.length - 1].includes('.');
+    return props.path.length > 0 && props.path[props.path.length - 1].includes('.');
 });
 </script>

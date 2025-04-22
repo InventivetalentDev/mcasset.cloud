@@ -14,68 +14,66 @@ img.zoomed {
 }
 </style>
 <template>
-    <v-row>
-        <v-col>
-            <v-row>
-                <v-col cols="12" md="auto">
-                    <h3>
-                        <BackBtn/>
-                        <code>{{ assetName }}</code>
-                        <span class="text-medium-emphasis text-body-2 mx-2">{{ contentSizeText }}</span>
-                    </h3>
-                </v-col>
-                <v-col v-if="isImage" cols="4" md="auto">
-                    <v-btn
-                        icon
-                        @click="toggleZoom"
-                        :class="{'zoomed': zoomed}"
-                    >
-                        <v-icon icon="mdi-magnify-plus-outline"/>
-                    </v-btn>
-                </v-col>
-                <v-spacer/>
-                <v-col class="text-end" cols="8" md="auto">
-                    <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" target="_blank"
-                           append-icon="mdi-open-in-new">Raw
-                    </v-btn>
-                    <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl"
-                           target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub
-                    </v-btn>
-                    <v-btn variant="outlined" size="small" color="secondary" class="mx-1" @click="downloadFile"
-                           prepend-icon="mdi-download">Download File
-                    </v-btn>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col class="pt-0">
-                    <h4 v-if="isNotFound">File Not Found</h4>
-                    <h4 v-else-if="assetContentStatus==='error'">
-                        Failed to load file content
-                    </h4>
-                    <div v-else-if="assetContentStatus==='pending'">
-                        <v-skeleton-loader type="card"/>
-                    </div>
-                    <div v-else>
-                        <v-sheet color="grey-darken-3" class="pa-2 asset-sheet">
-                            <div v-if="contentTooLarge || forceRaw">
-                                <a :href="cdnUrl" target="_blank">View Raw</a>
-                            </div>
-                            <img v-else-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
-                            <audio v-else-if="isAudio" :src="assetRawUrl" controls>
-                                Your browser does not support the audio element.
-                            </audio>
-                            <div v-else>
-                                <span v-if="contentSizeBytes<=0"><i>Empty File</i></span>
-                                <BlobAsText :blob="assetContent"/>
-                                <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
-                            </div>
-                            <dbg :data="{assetContentType}"/>
-                        </v-sheet>
-                    </div>
-                </v-col>
-            </v-row>
-        </v-col>
-    </v-row>
+    <v-col>
+        <v-row>
+            <v-col cols="12" md="auto">
+                <h3>
+                    <BackBtn/>
+                    <code>{{ assetName }}</code>
+                    <span class="text-medium-emphasis text-body-2 mx-2">{{ contentSizeText }}</span>
+                </h3>
+            </v-col>
+            <v-col v-if="isImage" cols="4" md="auto">
+                <v-btn
+                    icon
+                    @click="toggleZoom"
+                    :class="{'zoomed': zoomed}"
+                >
+                    <v-icon icon="mdi-magnify-plus-outline"/>
+                </v-btn>
+            </v-col>
+            <v-spacer/>
+            <v-col class="text-end" cols="8" md="auto">
+                <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" target="_blank"
+                       append-icon="mdi-open-in-new">Raw
+                </v-btn>
+                <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl"
+                       target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub
+                </v-btn>
+                <v-btn variant="outlined" size="small" color="secondary" class="mx-1" @click="downloadFile"
+                       prepend-icon="mdi-download">Download File
+                </v-btn>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col class="pt-0">
+                <h4 v-if="isNotFound">File Not Found</h4>
+                <h4 v-else-if="assetContentStatus==='error'">
+                    Failed to load file content
+                </h4>
+                <div v-else-if="assetContentStatus==='pending'">
+                    <v-skeleton-loader type="card"/>
+                </div>
+                <div v-else>
+                    <v-sheet color="grey-darken-3" class="pa-2 asset-sheet">
+                        <div v-if="contentTooLarge || forceRaw">
+                            <a :href="cdnUrl" target="_blank">View Raw</a>
+                        </div>
+                        <img v-else-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
+                        <audio v-else-if="isAudio" :src="assetRawUrl" controls>
+                            Your browser does not support the audio element.
+                        </audio>
+                        <div v-else>
+                            <span v-if="contentSizeBytes<=0"><i>Empty File</i></span>
+                            <BlobAsText :blob="assetContent"/>
+                            <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
+                        </div>
+                        <dbg :data="{assetContentType}"/>
+                    </v-sheet>
+                </div>
+            </v-col>
+        </v-row>
+    </v-col>
 </template>
 <script setup lang="ts">
 import { useAssets } from "~/query/assets";

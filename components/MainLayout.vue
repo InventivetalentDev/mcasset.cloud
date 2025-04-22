@@ -2,12 +2,12 @@
   <v-row>
     <v-col>
       <!--      <BreadcrumbsNav v-if="version" :version="version" path="/"></BreadcrumbsNav>-->
-      <VersionCard v-if="version" v-model="version" :path="path ||[]"/>
+      <VersionCard v-if="version" v-model="version" v-model:compare-with="compareWith" :path="path ||[]"/>
     </v-col>
   </v-row>
   <v-row class="mt-0">
     <v-col>
-      <AssetBrowserCard v-if="version" :version="version" :path="path||[]"/>
+      <AssetBrowserCard v-if="version" :version="version" v-model:compare-with="compareWith" :path="path||[]"/>
     </v-col>
   </v-row>
   <v-row class="mt-1" style="min-height: 30vh">
@@ -30,4 +30,5 @@ import VersionCard from "~/components/VersionCard.vue";
 
 const router = useRouter();
 const {version, path} = useVersionPath();
+const compareWith = ref('');
 </script>

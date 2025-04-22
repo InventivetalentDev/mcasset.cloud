@@ -6,7 +6,6 @@
 
 </style>
 <template>
-  <v-row>
     <v-col>
       <v-row>
         <v-col class="pb-0" cols="12" md="auto">
@@ -57,7 +56,6 @@
         </v-col>
       </v-row>
     </v-col>
-  </v-row>
 </template>
 <script setup lang="ts">
 import type {AssetIndex} from "~/types/assets";
