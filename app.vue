@@ -39,7 +39,7 @@ useHead({
       tagPosition: 'head'
     },
     {
-      src: 'https://www.googletagmanager.com/gtag/js?id=G-HBJZL7F0XS',
+      src: 'https://www.googletagmanager.com/gtag/js?id=G-BMM1E58V7M',
       async: true,
       'data-cookie-consent': 'tracking',
       tagPosition: 'head'
@@ -50,7 +50,7 @@ useHead({
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
 
-            gtag('config', 'G-HBJZL7F0XS');
+            gtag('config', 'G-BMM1E58V7M');
             `,
       'data-cookie-consent': 'tracking',
       tagPosition: 'head'
