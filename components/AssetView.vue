@@ -65,6 +65,7 @@ img.zoomed {
                                 Your browser does not support the audio element.
                             </audio>
                             <div v-else>
+                                <span v-if="contentSizeBytes<=0"><i>Empty File</i></span>
                                 <BlobAsText :blob="assetContent"/>
                                 <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
                             </div>
