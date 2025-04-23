@@ -1,33 +1,36 @@
 <style scoped>
 </style>
 <template>
-  <v-container>
-    <!--    <v-row>-->
-    <!--      <v-col>-->
-    <!--        <VersionSelect v-model="version"/>-->
-    <!--      </v-col>-->
-    <!--    </v-row>-->
-    <Suspense>
-      <NuxtPage/>
-    </Suspense>
-  </v-container>
+    <v-container>
+        <!--    <v-row>-->
+        <!--      <v-col>-->
+        <!--        <VersionSelect v-model="version"/>-->
+        <!--      </v-col>-->
+        <!--    </v-row>-->
+        <Suspense>
+            <NuxtPage/>
+            <template #fallback>
+                <v-skeleton-loader type="card"/>
+            </template>
+        </Suspense>
+    </v-container>
 </template>
 <script setup lang="ts">
-import {useGitHubUser} from "~/query/github";
-import {useVersionManifest} from "~/query/misc";
+import { useGitHubUser } from "~/query/github";
+import { useVersionManifest } from "~/query/misc";
 import VersionSelect from "~/components/VersionSelect.vue";
-import {useRouter} from "#app";
-import {useVersionPath} from "~/composables/useVersionPath";
+import { useRouter } from "#app";
+import { useVersionPath } from "~/composables/useVersionPath";
 
 const router = useRouter();
 
 const {
-  data: githubUser
+    data: githubUser
 } = useGitHubUser();
 
 const {
-  data: versions,
-  versionManifest
+    data: versions,
+    versionManifest
 } = useVersionManifest();
 
 const {version, path} = useVersionPath();

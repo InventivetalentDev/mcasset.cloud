@@ -1,33 +1,33 @@
 <style scoped></style>
 <template>
-  <v-container>
-    Loading...
-  </v-container>
+    <v-container>
+        <v-skeleton-loader type="card"/>
+    </v-container>
 </template>
 <script setup lang="ts">
-import {useGitHubUser} from "~/query/github";
-import {useVersionManifest} from "~/query/misc";
+import { useGitHubUser } from "~/query/github";
+import { useVersionManifest } from "~/query/misc";
 import VersionSelect from "~/components/VersionSelect.vue";
-import {useRouter} from "#app";
-import {useVersionPath} from "~/composables/useVersionPath";
+import { useRouter } from "#app";
+import { useVersionPath } from "~/composables/useVersionPath";
 import MainLayout from "~/components/MainLayout.vue";
 
 const router = useRouter();
 
 const {
-  data: githubUser
+    data: githubUser
 } = useGitHubUser();
 
 const {
-  data: versions,
-  versionManifest
+    data: versions,
+    versionManifest
 } = useVersionManifest();
 
 const {version, path} = useVersionPath();
 onMounted(() => {
-  if (!version.value && !path.value) {
-    router.push({path: '/latest'})
-  }
+    if (!version.value && !path.value) {
+        router.push({path: '/latest'})
+    }
 })
 // watch(version, () => {
 //   const p = (path.value || []).filter(p => p !== '' && p !== '/').join("/");
