@@ -4,7 +4,7 @@
         <AssetView v-if="compareWith" :version="compareWith" :path="path"/>
     </v-row>
     <v-row v-else>
-        <AssetList :version="version" :path="path" :base-version="version"/>
+        <AssetList :version="version" :path="path" :base-version="version" :compare-with="compareWith"/>
         <AssetList v-if="compareWith" :version="compareWith" :path="path" :base-version="version" :compare-with="compareWith"/>
     </v-row>
 </template>
