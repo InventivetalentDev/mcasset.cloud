@@ -4,11 +4,11 @@
             <VersionSelect v-model="model"/>
         </v-col>
         <v-col cols="auto">
-            <Breadcrumbs :version="model" :path="path"/>
+            <Breadcrumbs :version="model" :path="path" :compare="compareWith"/>
         </v-col>
         <v-spacer></v-spacer>
          <v-col cols="12" md="2">
-            <VersionSelect v-model="compareWith"/>
+            <VersionSelect v-model="compareWith" compare/>
         </v-col>
     </v-row>
 </template>

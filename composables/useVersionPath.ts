@@ -1,5 +1,5 @@
-import {useRoute} from "#vue-router";
-import {useRouter} from "#app";
+import { useRoute } from "#vue-router";
+import { useRouter } from "#app";
 
 export const useVersionPath = () => {
     const router = useRouter();
@@ -26,24 +26,45 @@ export const useVersionPath = () => {
     //     path.value = (p as string[])?.filter(p => p !== '' && p !== '/') || [];
     // });
 
-    const version = computed<string>({
+    const routeVersion = computed<string>({
         get: () => {
             return route.params.version as string;
         },
         set: (v: string) => {
             console.debug('set version', v);
-            router.push({path: `/${v}/${(path.value || []).join('/')}`})
+            router.push({path: `/${ v }/${ (path.value || []).join('/') }`})
         }
     });
+    const version = computed<string>({
+        get: () => {
+            return routeVersion.value?.split('...')[0];
+        },
+        set: (v: string) => {
+            routeVersion.value = compare.value ? `${ v }...${ compare.value }` : v;
+        }
+    });
+    const compare = computed<string>({
+        get: () => {
+            return routeVersion.value?.includes('...') ? routeVersion.value?.split('...')[1] : '';
+        },
+        set: (v: string) => {
+            if (v) {
+                routeVersion.value = `${ version.value }...${ v }`;
+            } else {
+                routeVersion.value = version.value;
+            }
+        }
+    });
+
     const path = computed<string[]>({
         get: () => {
             return (route.params.path as string[])?.filter(p => p !== '' && p !== '/');
         },
         set: (p: string[]) => {
             console.debug('set path', p);
-            router.push({path: `/${version.value}/${(p || []).join('/')}`})
+            router.push({path: `/${ version.value }/${ (p || []).join('/') }`})
         }
     });
 
-    return {version, path}
+    return {version, path, compare}
 }

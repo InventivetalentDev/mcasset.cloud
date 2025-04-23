@@ -10,6 +10,7 @@ import Breadcrumbs from "~/components/Breadcrumbs.vue";
 
 const props = defineProps<{
   version: string,
-  path: string[]
+  path: string[],
+    compare?:string
 }>();
 </script>
