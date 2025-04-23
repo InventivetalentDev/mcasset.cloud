@@ -147,7 +147,7 @@ const {
     data: assetContent,
     status: assetContentStatus,
     error: assetContentError
-} = await useLazyAsyncData(async () => {
+} = await useLazyAsyncData('asset-content-' + assetDir.value, async () => {
     return await $fetch(cdnUrl.value, {
         responseType: assetContentType.value,
     });

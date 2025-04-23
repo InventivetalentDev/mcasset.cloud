@@ -50,7 +50,8 @@
                                 </v-avatar>
                             </template>
                             <template v-slot:title>
-                                <NuxtLink :to="asset.path" prefetch prefetch-on="interaction" class="text-decoration-none">
+                                <NuxtLink :to="asset.path" prefetch prefetch-on="interaction"
+                                          class="text-decoration-none">
                                     <code>{{ asset.name }}</code>
                                 </NuxtLink>
                             </template>
@@ -70,7 +71,7 @@ import BackBtn from "~/components/BackBtn.vue";
 const props = defineProps<{
     version: string,
     path: string[],
-    baseVersion?:string,
+    baseVersion?: string,
     compareWith?: string
 }>();
 
@@ -96,7 +97,7 @@ const {
     data: assetIndex,
     error: assetError,
     status: assetStatus
-} = await useLazyAsyncData(async () => {
+} = await useLazyAsyncData('asset-index-' + props.version, async () => {
     return await $fetch('https://assets.mcasset.cloud/' + assetIndexPath.value, {
         responseType: 'json'
     })
