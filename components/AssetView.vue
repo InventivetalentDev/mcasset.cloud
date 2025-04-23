@@ -40,7 +40,7 @@ img.zoomed {
                 <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl"
                        target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub
                 </v-btn>
-                <v-btn variant="outlined" size="small" color="secondary" class="mx-1" @click="downloadFile"
+                <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" @click="downloadFile"
                        prepend-icon="mdi-download">Download File
                 </v-btn>
             </v-col>
