@@ -33,7 +33,7 @@ img.zoomed {
                 </v-btn>
             </v-col>
             <v-spacer/>
-            <v-col class="text-end" cols="8" md="auto">
+            <v-col class="text-end" cols="12" md="auto">
                 <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" target="_blank"
                        append-icon="mdi-open-in-new">Raw
                 </v-btn>
