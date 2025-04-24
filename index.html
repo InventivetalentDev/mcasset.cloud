@@ -177,7 +177,7 @@
                 <br/>
                 <div>
                     <div ng-show="asset.version">
-                        <h4>Browse Files <small>- <a href="https://new.mcasset.cloud" target="_blank">Try the new Browser <i class="fa fa-external-link-alt" aria-hidden="true"></i></a></small></h4>
+                        <h4>Browse Files <small>- <a href="https://new.mcasset.cloud/{{ asset.version + '/' + asset.path }}" target="_blank" class="new-browser-link">Try the new Browser <i class="fa fa-external-link-alt" aria-hidden="true"></i></a></small></h4>
                         <ol class="breadcrumb">
                             <a href="#" ng-if="asset.pathElements.length > 0" ng-click="goToPath(getJoinedPath(asset.pathElements.length-1))" style="padding-right: 6px;">
                                 <i class="fa fa-arrow-left" aria-hidden="true"></i>
