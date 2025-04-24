@@ -1,3 +1,10 @@
+<style scoped>
+@media (max-width: 800px) {
+    .v-breadcrumbs {
+        overflow-x: auto;
+    }
+}
+</style>
 <template>
     <v-breadcrumbs :items="breadcrumbs">
         <template v-slot:item="{item,index}">
