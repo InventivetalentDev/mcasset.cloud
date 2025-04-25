@@ -21,6 +21,7 @@
                                 v-model="query"
                                 @keyup="updateSearch"
                                 @change="updateSearch"
+                                hide-details
                             ></v-text-field>
                         </v-col>
                     </v-row>
