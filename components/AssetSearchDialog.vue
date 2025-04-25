@@ -28,6 +28,11 @@
                     <v-row>
                         <v-col>
                             <v-list density="compact" lines="one">
+                                <v-list-item v-if="searchResults.length === 0">
+                                    <template v-slot:title>
+                                        <span class="text-center">No results found</span>
+                                    </template>
+                                </v-list-item>
                                 <v-list-item v-for="result in searchResults" :key="result.path">
                                     <template v-slot:title>
                                         <NuxtLink :to="result.href">
@@ -85,7 +90,7 @@ const searchResults = ref<(AssetIndexEntry & { href: string; dir: string; })[]>(
 
 const updateSearch = useDebounceFn(() => {
     searchResults.value = searchAssets();
-}, 1000);
+}, 700);
 
 const searchAssets = () => {
     const query_ = query.value.toLowerCase();
