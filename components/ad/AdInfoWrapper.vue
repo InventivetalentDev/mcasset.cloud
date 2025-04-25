@@ -49,7 +49,6 @@
 </template>
 <script setup lang="ts">
 import {useNuxtApp} from "nuxt/app";
-import {computed} from "vue";
 
 const {smAndUp, mdAndUp, lgAndUp} = useDisplay();
 

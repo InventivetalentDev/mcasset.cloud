@@ -6428,6 +6428,7 @@ __metadata:
     "@pinia/nuxt": "npm:^0.11.0"
     nuxt: "npm:^3.16.2"
     pinia: "npm:^3.0.2"
+    pinia-plugin-persistedstate: "npm:^4.2.0"
     typescript: "npm:^5.8.3"
     vite-plugin-vuetify: "npm:^2.1.1"
     vue: "npm:^3.5.13"
@@ -6888,7 +6889,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pinia-plugin-persistedstate@npm:>=3.2.1":
+"pinia-plugin-persistedstate@npm:>=3.2.1, pinia-plugin-persistedstate@npm:^4.2.0":
   version: 4.2.0
   resolution: "pinia-plugin-persistedstate@npm:4.2.0"
   dependencies:

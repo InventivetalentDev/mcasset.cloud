@@ -42,8 +42,6 @@
     </ClientOnly>
 </template>
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth";
-import { storeToRefs } from "pinia";
 
 const runtimeConfig = useRuntimeConfig();
 const isDev = runtimeConfig.public.isDev;
@@ -56,8 +54,6 @@ const props = defineProps<{
     responsive?: boolean;
     noFallback?: boolean
 }>();
-
-const authStore = useAuthStore();
 
 const ready = ref(false);
 onMounted(() => {

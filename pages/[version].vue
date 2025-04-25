@@ -13,6 +13,7 @@
                 <v-skeleton-loader type="card"/>
             </template>
         </Suspense>
+        <NewWebsiteBanner/>
     </v-container>
 </template>
 <script setup lang="ts">

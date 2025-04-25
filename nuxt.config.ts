@@ -2,7 +2,7 @@
 export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
     devtools: {enabled: true},
-     ssr: false,
+    ssr: false,
     experimental: {
         renderJsonPayloads: true
     },
@@ -10,7 +10,7 @@ export default defineNuxtConfig({
         'vuetify-nuxt-module',
         '@pinia/nuxt',
         '@pinia/colada-nuxt',
-        '@pinia-plugin-persistedstate/nuxt',
+        'pinia-plugin-persistedstate/nuxt',
     ],
     vuetify: {
         moduleOptions: {
@@ -20,8 +20,8 @@ export default defineNuxtConfig({
             }
         },
         vuetifyOptions: {
-            theme:{
-                defaultTheme:'dark'
+            theme: {
+                defaultTheme: 'dark'
             }
         }
 
