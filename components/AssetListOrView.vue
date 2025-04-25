@@ -5,7 +5,15 @@
     </v-row>
     <v-row v-else>
         <AssetList :version="version" :path="path" :base-version="version" :compare-with="compareWith"/>
-        <AssetList v-if="compareWith" :version="compareWith" :path="path" :base-version="version" :compare-with="compareWith"/>
+        <AssetList v-if="compareWith" :version="compareWith" :path="path" :base-version="version"
+                   :compare-with="compareWith"/>
+    </v-row>
+    <v-row class="text-right">
+        <v-col>
+            <a href="https://forms.gle/1P7vMomYP16zC5ix5" target="_blank">Give Feedback
+                <v-icon icon="mdi-open-in-new"></v-icon>
+            </a>
+        </v-col>
     </v-row>
 </template>
 <script setup lang="ts">
