@@ -110,7 +110,7 @@ const isText = computed(() => {
     return assetExtension.value && ['json', 'txt', 'mcmeta'].includes(assetExtension.value);
 });
 const forceRaw = computed(() => {
-    return assetExtension.value && ['nbt'].includes(assetExtension.value);
+    return assetExtension.value && ['nbt', 'zip'].includes(assetExtension.value);
 });
 
 const assetContentPath = computed<string>(() => {
