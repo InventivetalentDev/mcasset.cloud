@@ -11,8 +11,11 @@
             <v-col class="pb-0" cols="12" md="auto">
                 <h3>
                     <BackBtn/>
-                    <code>{{ dirName }}</code>/
+                    <code>{{ dirName }}/</code>
                 </h3>
+            </v-col>
+             <v-col cols="4" md="auto">
+                <AssetSearchDialog :version="version"/>
             </v-col>
             <v-spacer/>
             <v-col class="text-end" cols="12" md="auto">
@@ -63,7 +66,7 @@
     </v-col>
 </template>
 <script setup lang="ts">
-import type { AssetIndex } from "~/types/assets";
+import type { AssetList } from "~/types/assets";
 import { useAssetPath } from "~/composables/useAssetPath";
 import { useAsyncData, useLazyAsyncData } from "#app";
 import BackBtn from "~/components/BackBtn.vue";
@@ -82,11 +85,11 @@ const dirName = computed(() => {
     return props.path[props.path.length - 1];
 });
 
-const assetIndexPath = computed<string>(() => {
+const assetListPath = computed<string>(() => {
     return assetDir.value + '/_list.json';
 });
 const assetKey = computed(() => {
-    return 'asset-index-' + assetIndexPath.value;
+    return 'asset-list-' + assetListPath.value;
 })
 
 onMounted(() => {
@@ -97,8 +100,8 @@ const {
     data: assetIndex,
     error: assetError,
     status: assetStatus
-} = await useLazyAsyncData('asset-index-' + props.version, async () => {
-    return await $fetch('https://assets.mcasset.cloud/' + assetIndexPath.value, {
+} = await useLazyAsyncData('asset-list-' + props.version, async () => {
+    return await $fetch('https://assets.mcasset.cloud/' + assetListPath.value, {
         responseType: 'json'
     })
 })
@@ -134,7 +137,7 @@ const isNotFound = computed(() => {
 const assetList = computed(() => {
     if (!assetIndex.value) return [];
     console.log(assetIndex.value)
-    const {directories, files} = (assetIndex.value as AssetIndex);
+    const {directories, files} = (assetIndex.value as AssetList);
     return [
         ...(directories || []).map(dir => ({
             type: 'dir',
@@ -158,12 +161,12 @@ const getExtension = (fileName: string) => {
 
 const fileCount = computed(() => {
     if (!assetIndex.value) return 0;
-    const {directories, files} = (assetIndex.value as AssetIndex);
+    const {directories, files} = (assetIndex.value as AssetList);
     return (files || []).length;
 });
 const dirCount = computed(() => {
     if (!assetIndex.value) return 0;
-    const {directories, files} = (assetIndex.value as AssetIndex);
+    const {directories, files} = (assetIndex.value as AssetList);
     return (directories || []).length;
 });
 
