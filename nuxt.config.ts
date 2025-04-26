@@ -1,8 +1,11 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+const CACHE_VARIES = ['host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-height', 'sec-ch-viewport-width'];
+
 export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
     devtools: {enabled: true},
-    ssr: false,
+    ssr: true,
     experimental: {
         renderJsonPayloads: true
     },
@@ -12,6 +15,9 @@ export default defineNuxtConfig({
         '@pinia/colada-nuxt',
         'pinia-plugin-persistedstate/nuxt',
     ],
+    routeRules: {
+        '/': {redirect: {to: '/latest', statusCode: 301}},
+    },
     vuetify: {
         moduleOptions: {
             ssrClientHints: {
