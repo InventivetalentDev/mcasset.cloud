@@ -41,7 +41,7 @@ img.zoomed {
                        target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub
                 </v-btn>
                 <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl"
-                       @click="downloadFile"
+                       @click.prevent="downloadFile"
                        prepend-icon="mdi-download">Download File
                 </v-btn>
             </v-col>
@@ -66,7 +66,8 @@ img.zoomed {
                         </audio>
                         <div v-else>
                             <span v-if="contentSizeBytes<=0"><i>Empty File</i></span>
-                            <BlobAsText :blob="assetContent"/>
+                            <!--                            <BlobAsText :blob="assetContent"/>-->
+                            <TextContent :url="assetRawUrl"></TextContent>
                             <!--          <iframe frameborder="0" scrolling="no" style="width:100%; height:115px;" allow="clipboard-write" :src="embedUrl"></iframe>-->
                         </div>
                         <dbg :data="{assetContentType}"/>
@@ -81,7 +82,8 @@ import { useAssets } from "~/query/assets";
 import { useAssetPath, useAssetPathParts } from "~/composables/useAssetPath";
 import type { VersionManifest } from "~/types";
 import BackBtn from "~/components/BackBtn.vue";
-import BlobAsText from "~/components/BlobAsText.vue";
+// import BlobAsText from "~/components/BlobAsText.vue";
+import TextContent from "~/components/TextContent.vue";
 
 const props = defineProps<{
     version: string,
