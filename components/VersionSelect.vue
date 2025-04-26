@@ -16,7 +16,7 @@
 </template>
 <script setup lang="ts">
 import type { AvailableVersions, ManifestVersion, VersionManifest } from "~/types";
-import { useAsyncData, useLazyAsyncData } from "#app";
+import { useAsyncData, useLazyAsyncData, useRouter } from "#app";
 import { useVersionManifest } from "~/composables/useVersionManifest";
 
 const props = defineProps<{
@@ -101,4 +101,10 @@ const resolveLatest = () => {
     //     model.value = '';
     // }
 }
+
+onMounted(() => {
+    resolveLatest();
+})
+
+
 </script>
