@@ -40,7 +40,8 @@ img.zoomed {
                 <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl"
                        target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub
                 </v-btn>
-                <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" @click="downloadFile"
+                <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl"
+                       @click="downloadFile"
                        prepend-icon="mdi-download">Download File
                 </v-btn>
             </v-col>
@@ -146,31 +147,49 @@ const embedUrl = computed(() => {
 const {
     data: assetContent,
     status: assetContentStatus,
-    error: assetContentError
+    error: assetContentError,
+    execute: assetContentExecute,
 } = await useLazyAsyncData('asset-content-' + assetDir.value, async () => {
     return await $fetch(cdnUrl.value, {
         responseType: assetContentType.value,
     });
+}, {immediate: false});
+
+const {
+    data: assetContentHeaders,
+    status: assetContentHeadersStatus,
+    error: assetContentHeadersError
+} = await useLazyAsyncData('asset-content-head-' + assetDir.value, async () => {
+    return $fetch.raw(cdnUrl.value, {
+        method: 'HEAD',
+
+    }).then(r => r.headers)
+        .then(h => {
+            // convert to json
+            const json: Record<string, string> = {};
+            h.forEach((v, k) => {
+                json[`${ k }`] = `${ v }`;
+            });
+            return json;
+        });
 });
 
 const contentSizeBytes = computed(() => {
-    if (!assetContent.value) return 0;
-    if (assetContent.value instanceof Blob) {
-        return assetContent.value.size;
-    }
-    return 0;
+    // if (!assetContent.value) return 0;
+    // if (assetContent.value instanceof Blob) {
+    //     return assetContent.value.size;
+    // }
+    // return 0;
+    return Number(assetContentHeaders.value?.['content-length']) || 0;
 });
 
 const contentSizeText = computed(() => {
-    if (!assetContent.value) return '0 B';
-    if (assetContent.value instanceof Blob) {
-        const size = assetContent.value.size;
-        if (size < 1024) return size + ' B';
-        if (size < 1024 * 1024) return Math.round(size / 1024) + ' KB';
-        if (size < 1024 * 1024 * 1024) return Math.round(size / (1024 * 1024)) + ' MB';
-        return Math.round(size / (1024 * 1024 * 1024)) + ' GB';
-    }
-    return '0 B';
+    if (!contentSizeBytes.value) return '0 B';
+    const size = contentSizeBytes.value;
+    if (size < 1024) return size + ' B';
+    if (size < 1024 * 1024) return Math.round(size / 1024) + ' KB';
+    if (size < 1024 * 1024 * 1024) return Math.round(size / (1024 * 1024)) + ' MB';
+    return Math.round(size / (1024 * 1024 * 1024)) + ' GB';
 });
 
 const contentTooLarge = computed(() => {
@@ -292,7 +311,10 @@ useHead({
 //   assetContentPath.value = assetDir.value;
 // }, {immediate: true});
 
-const downloadFile = () => {
+const downloadFile = async () => {
+    if (assetContentStatus.value !== 'success') {
+        await assetContentExecute();
+    }
     const blob = new Blob([assetContent.value], {type: assetContentType.value});
     const url = URL.createObjectURL(blob);
     const el = document.createElement('a');
