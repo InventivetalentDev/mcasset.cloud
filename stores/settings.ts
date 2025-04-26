@@ -10,6 +10,9 @@ export const useSettingsStore = defineStore('settings', () => {
 
 }, {
     persist: {
-        storage: piniaPluginPersistedstate.cookies()
+        storage: piniaPluginPersistedstate.cookies({
+            domain: '.mcasset.cloud',
+            maxAge: 60 * 60 * 24 * 7
+        })
     }
 })
