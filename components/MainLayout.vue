@@ -19,7 +19,6 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import {useGitHubUser} from "~/query/github";
 import {useVersionManifest} from "~/query/misc";
 import VersionSelect from "~/components/VersionSelect.vue";
 import {useRouter} from "#app";
