@@ -16,8 +16,9 @@
 </template>
 <script setup lang="ts">
 import type { AvailableVersions, ManifestVersion, VersionManifest } from "~/types";
-import { useAsyncData, useLazyAsyncData } from "#app";
+import { useAsyncData, useLazyAsyncData, useRouter } from "#app";
 import { useVersionManifest } from "~/composables/useVersionManifest";
+import router from "#app/plugins/router";
 
 const props = defineProps<{
     compare?: boolean
@@ -66,14 +67,7 @@ const items = computed(() => {
 });
 
 const model = defineModel<string>({required: true});
-watch(model, () => {
-    console.log("version changed");
-    resolveLatest();
-}, {immediate: false});
 
-watch(manifest, () => {
-    resolveLatest();
-}, {immediate: false});
 
 
 const useLatestRelease = () => {
@@ -101,4 +95,13 @@ const resolveLatest = () => {
     //     model.value = '';
     // }
 }
+
+watch(model, () => {
+    console.log("version changed");
+    resolveLatest();
+}, {immediate: true});
+
+watch(manifest, () => {
+    resolveLatest();
+}, {immediate: false});
 </script>
