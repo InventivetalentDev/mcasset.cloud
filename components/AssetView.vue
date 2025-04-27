@@ -153,9 +153,15 @@ const {
     execute: assetContentExecute,
 } = await useLazyAsyncData('asset-content-' + assetDir.value, async () => {
     return await $fetch(cdnUrl.value, {
-        responseType: assetContentType.value,
+        responseType: 'blob'
     });
 }, {immediate: false});
+
+onMounted(()=>{
+    if (process.client) {
+        assetContentExecute();
+    }
+})
 
 const {
     data: assetContentHeaders,
@@ -177,11 +183,10 @@ const {
 });
 
 const contentSizeBytes = computed(() => {
-    // if (!assetContent.value) return 0;
-    // if (assetContent.value instanceof Blob) {
-    //     return assetContent.value.size;
-    // }
-    // return 0;
+    if (!assetContent.value) return 0;
+    if (assetContent.value instanceof Blob) {
+        return assetContent.value.size;
+    }
     return Number(assetContentHeaders.value?.['content-length']) || 0;
 });
 
