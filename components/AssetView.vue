@@ -338,7 +338,7 @@ const isNotFound = computed(() => {
     return assetContentError.value.statusCode === 404;
 });
 
-const zoomed = ref(false);
+const zoomed = ref(true);
 const toggleZoom = () => {
     zoomed.value = !zoomed.value;
 };
