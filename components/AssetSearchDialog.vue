@@ -36,7 +36,7 @@
                                 <v-list-item v-for="result in searchResults" :key="result.path">
                                     <template v-slot:title>
                                         <NuxtLink :to="result.href">
-                                            <code>{{ result.path }}</code>
+                                            <code>{{ result.path }}</code> {{ result.score }}
                                         </NuxtLink>
                                     </template>
                                     <template v-slot:append>
@@ -66,6 +66,7 @@
 import { useLazyAsyncData } from "#app";
 import { useDebounceFn } from "@vueuse/core";
 import type { AssetIndex, AssetIndexEntry } from "~/types/assets";
+import MiniSearch, { type SearchResult } from 'minisearch'
 
 const props = defineProps<{
     version: string,
@@ -85,27 +86,54 @@ const {
     })
 });
 
+type AssetIndexEntryWithMeta = AssetIndexEntry & { href?: string; dir?: string; };
+
+const assetIndexList = computed(() => {
+    if (!assetIndex.value) return [];
+    return assetIndex.value.tree.map(v => ({
+        ...v,
+        href: `/${ props.version }/${ v.path }`,
+        dir: '/' + props.version + '/' + (v.type === 'blob' ? v.path.split('/').slice(0, -1).join('/') : v.path),
+    }))
+})
+
+const miniSearch = computed(() => {
+    if (!assetIndex.value) return null;
+    const search = new MiniSearch<AssetIndexEntryWithMeta>({
+        fields: ['path'],
+        storeFields: ['path', 'type', 'size', 'href', 'dir'],
+        idField: 'path',
+
+    });
+    search.addAll(assetIndexList.value);
+    return search;
+})
+
+
 const query = ref<string>('');
-const searchResults = ref<(AssetIndexEntry & { href: string; dir: string; })[]>([]);
+const searchResults = ref<(SearchResult & AssetIndexEntryWithMeta)[]>([]);
 
 const updateSearch = useDebounceFn(() => {
-    searchResults.value = searchAssets();
-}, 700);
+    // searchResults.value = searchAssets();
+    const search = miniSearch.value;
+    if (!search) return;
+    searchResults.value = search.search(query.value);
+}, 300);
 
-const searchAssets = () => {
-    const query_ = query.value.toLowerCase();
-    if (!query_) {
-        return [];
-    }
-    return (assetIndex.value?.tree || [])
-        .filter(a => {
-            return a.path.toLowerCase().includes(query_)
-        })
-        .slice(0, 20)
-        .map(a => ({
-            ...a,
-            href: `/${ props.version }/${ a.path }`,
-            dir: '/' + props.version + '/' + (a.type === 'blob' ? a.path.split('/').slice(0, -1).join('/') : a.path),
-        }))
-}
+// const searchAssets = () => {
+//     const query_ = query.value.toLowerCase();
+//     if (!query_) {
+//         return [];
+//     }
+//     return (assetIndex.value?.tree || [])
+//         .filter(a => {
+//             return a.path.toLowerCase().includes(query_)
+//         })
+//         .slice(0, 20)
+//         .map(a => ({
+//             ...a,
+//             href: `/${ props.version }/${ a.path }`,
+//             dir: '/' + props.version + '/' + (a.type === 'blob' ? a.path.split('/').slice(0, -1).join('/') : a.path),
+//         }))
+// }
 </script>

@@ -6012,6 +6012,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minisearch@npm:^7.1.2":
+  version: 7.1.2
+  resolution: "minisearch@npm:7.1.2"
+  checksum: 10c0/039f494927a4a932c168654ba8ff434d2be6af8e3393b29577d54da64cd64d6ae9bfbf33b7cd7bdc1783cb354d67c5dc99bac1305599d8d653933676f2d1a355
+  languageName: node
+  linkType: hard
+
 "minizlib@npm:^2.1.1":
   version: 2.1.2
   resolution: "minizlib@npm:2.1.2"
@@ -6463,6 +6470,7 @@ __metadata:
     "@pinia/colada-nuxt": "npm:^0.1.1"
     "@pinia/nuxt": "npm:^0.11.0"
     "@vueuse/core": "npm:^13.1.0"
+    minisearch: "npm:^7.1.2"
     nuxt: "npm:^3.16.2"
     pinia: "npm:^3.0.2"
     pinia-plugin-persistedstate: "npm:^4.2.0"
