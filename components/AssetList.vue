@@ -14,7 +14,7 @@
                     <code>{{ dirName }}/</code>
                 </h3>
             </v-col>
-             <v-col cols="4" md="auto">
+            <v-col cols="4" md="auto">
                 <AssetSearchDialog :version="version"/>
             </v-col>
             <v-spacer/>
@@ -47,8 +47,8 @@
                                 <v-avatar :color="asset.type==='dir'?'secondary':'primary'" rounded="lg">
                                     <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
                                     <span v-else-if="asset.extension?.length<=4" class="text-uppercase extension-icon">
-                      <code>{{ getExtension(asset.name) }}</code>
-                    </span>
+                                      <code>{{ getExtension(asset.name) }}</code>
+                                    </span>
                                     <v-icon v-else>mdi-file</v-icon>
                                 </v-avatar>
                             </template>
