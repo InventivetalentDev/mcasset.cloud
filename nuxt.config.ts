@@ -24,6 +24,14 @@ export default defineNuxtConfig({
     ],
     routeRules: {
         '/': {redirect: {to: '/latest', statusCode: 301}},
+
+        '/**': {
+            isr: 60 * 60,
+            cache: {
+                maxAge: 60 * 60 * 24,
+                varies: CACHE_VARIES
+            }
+        }
     },
     vuetify: {
         moduleOptions: {
