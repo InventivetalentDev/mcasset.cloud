@@ -53,6 +53,7 @@ const items = computed(() => {
         title: v.id,
         props: {
             subtitle: v.type,
+            prependIcon: v.type === 'release' ? 'mdi-package' : 'mdi-test-tube',
             appendIcon: isAvailable(v.id) ? null : 'mdi-close',
         }
     }));
