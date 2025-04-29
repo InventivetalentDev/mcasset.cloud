@@ -157,7 +157,7 @@ const {
     });
 }, {immediate: false});
 
-onMounted(()=>{
+onMounted(() => {
     if (process.client) {
         assetContentExecute();
     }
@@ -235,7 +235,9 @@ const ogAudio = computed(() => {
     }
     return undefined;
 });
-const metaTitle = computed(() => assetName.value);
+const metaTitle = computed(() => {
+    return assetName.value + " - " + props.version;
+});
 useSeoMeta({
     title: metaTitle,
     ogTitle: metaTitle,

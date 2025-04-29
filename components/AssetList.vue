@@ -108,7 +108,7 @@ const {
 
 const metaTitle = computed(() => {
     if (!dirName.value || dirName.value?.length < 1) return null;
-    return dirName.value + "/";
+    return dirName.value + "/ - " + props.version;
 });
 useSeoMeta({
     title: metaTitle,
