@@ -4,10 +4,10 @@
             <v-btn
                 v-bind="activatorProps"
                 variant="flat"
-                icon
-                size="small"
+                prepend-icon="mdi-magnify"
+                class=""
             >
-                <v-icon icon="mdi-magnify"/>
+                Search
             </v-btn>
         </template>
 

@@ -14,7 +14,7 @@
                     <code>{{ dirName }}/</code>
                 </h3>
             </v-col>
-            <v-col cols="4" md="auto">
+            <v-col cols="4" md="auto" class="pt-3 pb-0">
                 <AssetSearchDialog :version="version"/>
             </v-col>
             <v-spacer/>
