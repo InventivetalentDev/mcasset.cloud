@@ -44,10 +44,17 @@
                     <v-list class="asset-list">
                         <v-list-item v-for="asset in assetList" :key="asset.name">
                             <template v-slot:prepend>
-                                <v-avatar :color="asset.type==='dir'?'secondary':'primary'" rounded="lg">
+                                <v-avatar :color="asset.type==='dir'?'secondary': asset.image ? 'surface-variant': 'primary'" rounded="sm">
                                     <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
+                                    <v-img v-else-if="asset.image" :src="'https://assets.mcasset.cloud' + asset.path" :aspect-ratio="1"  >
+                                        <template #placeholder>
+                                             <span class="text-uppercase extension-icon">
+                                              <code>{{ asset.extension }}</code>
+                                            </span>
+                                        </template>
+                                    </v-img>
                                     <span v-else-if="asset.extension?.length<=4" class="text-uppercase extension-icon">
-                                      <code>{{ getExtension(asset.name) }}</code>
+                                      <code>{{ asset.extension }}</code>
                                     </span>
                                     <v-icon v-else>mdi-file</v-icon>
                                 </v-avatar>
@@ -142,13 +149,16 @@ const assetList = computed(() => {
         ...(directories || []).map(dir => ({
             type: 'dir',
             name: dir,
-            path: `/${ assetDirWithCompare.value }/${ dir }`
+            path: `/${ assetDirWithCompare.value }/${ dir }`,
+            extension: null,
+            image: false
         })),
         ...(files || []).map(file => ({
             type: 'file',
             name: file,
             path: `/${ assetDirWithCompare.value }/${ file }`,
-            extension: getExtension(file)
+            extension: getExtension(file),
+            image: getExtension(file) === 'png'
         }))
     ];
 });
