@@ -44,7 +44,7 @@
                     <v-list class="asset-list">
                         <v-list-item v-for="asset in assetList" :key="asset.name">
                             <template v-slot:prepend>
-                                <v-avatar :color="asset.type==='dir'?'secondary':'primary'">
+                                <v-avatar :color="asset.type==='dir'?'secondary':'primary'" rounded="lg">
                                     <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
                                     <span v-else-if="asset.extension?.length<=4" class="text-uppercase extension-icon">
                       <code>{{ getExtension(asset.name) }}</code>
