@@ -200,7 +200,7 @@ const contentSizeText = computed(() => {
 });
 
 const contentTooLarge = computed(() => {
-    return contentSizeBytes.value > 1024 * 64;
+    return contentSizeBytes.value > 1024 * 1024;
 });
 
 const asText = (blob: Blob) => {
