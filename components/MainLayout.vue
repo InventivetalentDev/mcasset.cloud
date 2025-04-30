@@ -5,7 +5,7 @@
       <VersionCard v-if="version" v-model="version" v-model:compare-with="compare" :path="path ||[]"/>
     </v-col>
   </v-row>
-  <v-row class="mt-0">
+  <v-row class="mt-0"  style="min-height: 50vh">
     <v-col>
       <AssetBrowserCard v-if="version" :version="version" v-model:compare-with="compare" :path="path||[]"/>
     </v-col>

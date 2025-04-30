@@ -38,7 +38,7 @@
                     Failed to load asset list
                 </h4>
                 <div v-else-if="assetStatus==='pending'">
-                    <v-skeleton-loader type="list-item-avatar@16"/>
+                    <v-skeleton-loader type="list-item-avatar@8"/>
                 </div>
                 <div v-else>
                     <v-list class="asset-list">
