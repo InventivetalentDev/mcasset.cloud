@@ -5,7 +5,7 @@ export const useVersionManifest = async () => {
         data: manifest,
         status: manifestStatus
     } = useLazyAsyncData('version-manifest', async () => {
-        return await $fetch<VersionManifest>('https://cloudflare-worker-cors.inventive.workers.dev/?url=https://piston-meta.mojang.com/mc/game/version_manifest_v2.json', {
+        return await $fetch<VersionManifest>('https://assets.mcasset.cloud/manifest.json', {
             responseType: 'json'
         });
     });
