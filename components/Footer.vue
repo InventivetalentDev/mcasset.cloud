@@ -14,6 +14,8 @@
                     <a href="https://github.com/InventivetalentDev/mcasset.cloud" target="_blank">GitHub</a><br/>
                     <a href="https://yeleha.co/discord" target="_blank">Discord</a><br/>
                     <a href="https://www.patreon.com/inventivetalent" target="_blank">Patreon</a><br/>
+                      <a href="https://classic.mcasset.cloud?utm_source=website_v2&utm_medium=link&utm_campaign=footer_link">Classic
+                                Website</a><br/>
                 </v-col>
             </v-row>
             <v-divider class="my-2"/>
