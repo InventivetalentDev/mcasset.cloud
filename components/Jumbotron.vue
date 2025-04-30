@@ -4,7 +4,7 @@
 }
 
 .jumbotron .mcasset-logo img {
-    filter: drop-shadow(0 0 2px rgba(255,255,255, 0.4));
+    filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.4));
 }
 
 .jumbotron .v-card__image img {
@@ -13,7 +13,7 @@
 }
 
 .jumbotron h1, span {
-    text-shadow: 0 0  4px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
 }
 </style>
 <template>
@@ -45,8 +45,8 @@ import { useVersionPath } from "~/composables/useVersionPath";
 const {version, path} = useVersionPath();
 const image = computed(() => {
     if (!version.value) return undefined;
-    // select a random image (1-5)
-    const random = Math.floor(Math.random() * 5) + 1;
+    const panoramas = [0, 1, 2, 3, 5]; // skip 5 since that's usually sky
+    const random = panoramas[Math.floor(Math.random() * panoramas.length)];
     return `https://assets.mcasset.cloud/${ version.value }/assets/minecraft/textures/gui/title/background/panorama_${ random }.png`;
 })
 </script>
