@@ -10,6 +10,11 @@
                         </v-col>
                     </v-row>
                 </v-col>
+                <v-col cols="12" md="6">
+                    <a href="https://github.com/InventivetalentDev/mcasset.cloud" target="_blank">GitHub</a><br/>
+                    <a href="https://yeleha.co/discord" target="_blank">Discord</a><br/>
+                    <a href="https://www.patreon.com/inventivetalent" target="_blank">Patreon</a><br/>
+                </v-col>
             </v-row>
             <v-divider class="my-2"/>
             <v-row no-gutters justify="center">
@@ -30,3 +35,5 @@
         </v-container>
     </v-footer>
 </template>
+<script setup lang="ts">
+</script>
