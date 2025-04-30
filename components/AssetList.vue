@@ -33,7 +33,23 @@
         <v-row>
             <v-col class="pt-0">
                 <!--    <dbg :data="{assetStatus,assetIndex,assetListPath:assetIndexPath,assetList,isNotFound}"/>-->
-                <h4 v-if="isNotFound">{{ path.length <= 1 ? 'Version Not Found' : 'Folder Not Found' }}</h4>
+                <div v-if="isNotFound">
+                    <span v-if="path.length<=1">
+                        <v-icon icon="mdi-alert-circle-outline" class="me-2"/>
+                        <b>Version not found</b><br/>
+                        <a href="#" @click.prevent="requestVersion" v-if="!versionRequested">Request this version</a>
+                        <v-alert v-if="showRequestedNotice" type="success" width="400" class="ma-2">
+                            <template #text>
+                                <b>Version requested</b><br/>
+                                Assets will be downloaded as soon as possible.
+                            </template>
+                        </v-alert>
+                    </span>
+                    <span v-else>
+                        <v-icon icon="mdi-alert-circle-outline" class="me-2"/>
+                        <b>Folder not found</b>
+                    </span>
+                </div>
                 <h4 v-else-if="assetStatus==='error'">
                     Failed to load asset list
                 </h4>
@@ -44,9 +60,13 @@
                     <v-list class="asset-list">
                         <v-list-item v-for="asset in assetList" :key="asset.name">
                             <template v-slot:prepend>
-                                <v-avatar :color="asset.type==='dir'?'secondary': asset.image ? 'surface-variant': 'primary'" rounded="sm">
+                                <v-avatar
+                                    :color="asset.type==='dir'?'secondary': asset.image ? 'surface-variant': 'primary'"
+                                    rounded="sm">
                                     <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
-                                    <v-img v-else-if="asset.image" :src="'https://assets.mcasset.cloud' + asset.path + '?height=40'" :aspect-ratio="1"  >
+                                    <v-img v-else-if="asset.image"
+                                           :src="'https://assets.mcasset.cloud' + asset.path + '?height=40'"
+                                           :aspect-ratio="1">
                                         <template #placeholder>
                                              <span class="text-uppercase extension-icon">
                                               <code>{{ asset.extension }}</code>
@@ -191,4 +211,18 @@ const githubUrl = computed(() => {
 const dirDownloadUrl = computed(() => {
     return 'https://download-directory.github.io/?url=' + githubUrl.value;
 });
+
+const versionRequested = ref(false);
+const showRequestedNotice = ref(false);
+const requestVersion = async () => {
+    if (!props.version) return;
+    if (!isNotFound.value) return;
+    if (versionRequested.value) return;
+    versionRequested.value = true;
+    const res = await $fetch(`https://assets.mcasset.cloud/${ props.version }/request`, {
+        method: 'POST'
+    });
+    console.log(res);
+    showRequestedNotice.value = true;
+}
 </script>

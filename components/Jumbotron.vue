@@ -12,7 +12,7 @@
     filter: blur(2px);
 }
 
-.jumbotron h1, span {
+.jumbotron > h1, .jumbotron > span {
     text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
 }
 </style>
