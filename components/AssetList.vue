@@ -46,7 +46,7 @@
                             <template v-slot:prepend>
                                 <v-avatar :color="asset.type==='dir'?'secondary': asset.image ? 'surface-variant': 'primary'" rounded="sm">
                                     <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
-                                    <v-img v-else-if="asset.image" :src="'https://assets.mcasset.cloud' + asset.path" :aspect-ratio="1"  >
+                                    <v-img v-else-if="asset.image" :src="'https://assets.mcasset.cloud' + asset.path + '?height=40'" :aspect-ratio="1"  >
                                         <template #placeholder>
                                              <span class="text-uppercase extension-icon">
                                               <code>{{ asset.extension }}</code>
