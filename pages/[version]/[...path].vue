@@ -4,7 +4,9 @@
     <Suspense>
         <NuxtPage/>
         <template #fallback>
-            <v-skeleton-loader type="card"/>
+            <div style="min-height: 100vh">
+                <v-skeleton-loader type="card"/>
+            </div>
         </template>
     </Suspense>
 </template>
