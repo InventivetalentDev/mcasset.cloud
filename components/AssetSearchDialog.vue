@@ -12,7 +12,7 @@
         </template>
 
         <template v-slot:default="{ isActive }">
-            <v-card title="Search">
+            <v-card title="Search" :subtitle="pathPrefix ? 'in ' + pathPrefix : ''">
                 <v-card-text>
                     <v-row dense>
                         <v-col cols="12">
@@ -70,11 +70,16 @@ import MiniSearch, { type SearchResult } from 'minisearch'
 
 const props = defineProps<{
     version: string,
+    path: string[]
 }>();
 
 const assetIndexPath = computed<string>(() => {
     return props.version + '/_index.json';
 });
+
+const pathPrefix = computed(() => {
+    return props.path.length > 0 ? props.path.join('/') + '/' : '';
+})
 
 const {
     data: assetIndex,
@@ -103,7 +108,6 @@ const miniSearch = computed(() => {
         fields: ['path'],
         storeFields: ['path', 'type', 'size', 'href', 'dir'],
         idField: 'path',
-
     });
     search.addAll(assetIndexList.value);
     return search;
@@ -117,7 +121,14 @@ const updateSearch = useDebounceFn(() => {
     // searchResults.value = searchAssets();
     const search = miniSearch.value;
     if (!search) return;
-    searchResults.value = search.search(query.value);
+    searchResults.value = search.search(query.value, {
+        filter: (result) => {
+            if (props.path.length <= 0) {
+                return true;
+            }
+            return result.path.startsWith(pathPrefix.value);
+        }
+    });
 }, 300);
 
 // const searchAssets = () => {

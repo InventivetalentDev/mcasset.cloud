@@ -15,7 +15,7 @@
                 </h3>
             </v-col>
             <v-col cols="4" md="auto" class="pt-3 pb-0">
-                <AssetSearchDialog :version="version"/>
+                <AssetSearchDialog :version="version" :path="path"/>
             </v-col>
             <v-spacer/>
             <v-col class="text-end" cols="12" md="auto">
