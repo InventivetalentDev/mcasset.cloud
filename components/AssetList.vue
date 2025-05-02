@@ -8,7 +8,7 @@
 <template>
     <v-col>
         <v-row>
-            <v-col class="pb-0" cols="12" md="auto">
+            <v-col class="pb-0" cols="6" md="auto">
                 <h3>
                     <BackBtn/>
                     <code>{{ dirName }}/</code>
