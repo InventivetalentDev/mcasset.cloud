@@ -1,3 +1,8 @@
+<style>
+.search-results .v-list-item-title {
+    direction: rtl; /* force overflow ellipses to be on the left */
+}
+</style>
 <template>
     <v-dialog max-width="800">
         <template v-slot:activator="{ props: activatorProps }">
@@ -27,7 +32,7 @@
                     </v-row>
                     <v-row>
                         <v-col>
-                            <v-list density="compact" lines="one">
+                            <v-list density="compact" lines="one" class="search-results">
                                 <v-list-item v-if="searchResults.length === 0">
                                     <template v-slot:title>
                                         <span class="text-center">No results found</span>
