@@ -36,7 +36,7 @@
                                 <v-list-item v-for="result in searchResults" :key="result.path">
                                     <template v-slot:title>
                                         <NuxtLink :to="result.href">
-                                            <code>{{ result.path }}</code> {{ result.score }}
+                                            <code>{{ result.path }}</code>
                                         </NuxtLink>
                                     </template>
                                     <template v-slot:append>
