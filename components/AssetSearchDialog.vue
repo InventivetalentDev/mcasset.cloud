@@ -1,6 +1,8 @@
 <style>
-.search-results .v-list-item-title {
-    direction: rtl; /* force overflow ellipses to be on the left */
+@media (max-width: 800px) {
+    .search-results .v-list-item-title {
+        direction: rtl; /* force overflow ellipses to be on the left */
+    }
 }
 </style>
 <template>
