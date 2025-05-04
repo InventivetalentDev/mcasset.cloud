@@ -98,6 +98,7 @@ import { useAssetPath } from "~/composables/useAssetPath";
 import { useAsyncData, useLazyAsyncData } from "#app";
 import BackBtn from "~/components/BackBtn.vue";
 import { useScrollStore } from "~/stores/scroll";
+import { useAssets } from "~/query/assets";
 
 const props = defineProps<{
     version: string,
@@ -128,15 +129,26 @@ onMounted(() => {
     console.log(assetKey);
 })
 
+// const {
+//     data: assetListRaw,
+//     error: assetError,
+//     status: assetStatus
+// } = await useLazyAsyncData('asset-list-' + props.version, async () => {
+//     return await $fetch('https://assets.mcasset.cloud/' + assetListPath.value, {
+//         responseType: 'json'
+//     })
+// });
+
 const {
-    data: assetIndex,
+    asset: assetState,
+    path: assetPath,
+    data: assetListRaw,
     error: assetError,
     status: assetStatus
-} = await useLazyAsyncData('asset-list-' + props.version, async () => {
-    return await $fetch('https://assets.mcasset.cloud/' + assetListPath.value, {
-        responseType: 'json'
-    })
-})
+} = useAssets();
+watch(assetListPath, (p) => {
+    assetPath.value = p;
+}, {immediate: true})
 
 const metaTitle = computed(() => {
     if (!dirName.value || dirName.value?.length < 1) return null;
@@ -167,9 +179,9 @@ const isNotFound = computed(() => {
 });
 
 const assetList = computed(() => {
-    if (!assetIndex.value) return [];
-    console.log(assetIndex.value)
-    const {directories, files} = (assetIndex.value as AssetList);
+    if (!assetListRaw.value) return [];
+    console.log(assetListRaw.value)
+    const {directories, files} = (assetListRaw.value as AssetList);
     return [
         ...(directories || []).map(dir => ({
             type: 'dir',
@@ -202,13 +214,13 @@ watch([assetList, assetListEl], ([listVal, elVal]) => {
 
 
 const fileCount = computed(() => {
-    if (!assetIndex.value) return 0;
-    const {directories, files} = (assetIndex.value as AssetList);
+    if (!assetListRaw.value) return 0;
+    const {directories, files} = (assetListRaw.value as AssetList);
     return (files || []).length;
 });
 const dirCount = computed(() => {
-    if (!assetIndex.value) return 0;
-    const {directories, files} = (assetIndex.value as AssetList);
+    if (!assetListRaw.value) return 0;
+    const {directories, files} = (assetListRaw.value as AssetList);
     return (directories || []).length;
 });
 
