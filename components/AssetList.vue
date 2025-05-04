@@ -57,7 +57,7 @@
                     <v-skeleton-loader type="list-item-avatar@8"/>
                 </div>
                 <div v-else>
-                    <v-list class="asset-list">
+                    <v-list class="asset-list" @scroll="storeScroll" ref="asset-list">
                         <v-list-item v-for="asset in assetList" :key="asset.name">
                             <template v-slot:prepend>
                                 <v-avatar
@@ -97,6 +97,7 @@ import type { AssetList } from "~/types/assets";
 import { useAssetPath } from "~/composables/useAssetPath";
 import { useAsyncData, useLazyAsyncData } from "#app";
 import BackBtn from "~/components/BackBtn.vue";
+import { useScrollStore } from "~/stores/scroll";
 
 const props = defineProps<{
     version: string,
@@ -104,6 +105,8 @@ const props = defineProps<{
     baseVersion?: string,
     compareWith?: string
 }>();
+
+const scrollStore = useScrollStore();
 
 const assetDir = useAssetPath(props.version, props.path);
 const assetDirWithCompare = useAssetPath(props.baseVersion, props.path, props.compareWith);
@@ -118,6 +121,8 @@ const assetListPath = computed<string>(() => {
 const assetKey = computed(() => {
     return 'asset-list-' + assetListPath.value;
 })
+
+const assetListEl = useTemplateRef('asset-list');
 
 onMounted(() => {
     console.log(assetKey);
@@ -189,6 +194,13 @@ const getExtension = (fileName: string) => {
     return parts[parts.length - 1];
 };
 
+watch([assetList, assetListEl], ([listVal, elVal]) => {
+    if (listVal && elVal) {
+        elVal.$el.scrollTop = scrollStore.assetListScroll[props.path.join('_')] || 0;
+    }
+});
+
+
 const fileCount = computed(() => {
     if (!assetIndex.value) return 0;
     const {directories, files} = (assetIndex.value as AssetList);
@@ -224,5 +236,10 @@ const requestVersion = async () => {
     });
     console.log(res);
     showRequestedNotice.value = true;
+}
+
+const storeScroll = (event) => {
+    const target = event.target;
+    scrollStore.assetListScroll[props.path.join('_')] = target.scrollTop;
 }
 </script>
