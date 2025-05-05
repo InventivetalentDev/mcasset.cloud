@@ -65,6 +65,7 @@
                                     rounded="sm">
                                     <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
                                     <v-img v-else-if="asset.image"
+                                           style="image-rendering: pixelated"
                                            :src="'https://assets.mcasset.cloud' + asset.path + '?height=40'"
                                            :aspect-ratio="1">
                                         <template #placeholder>
