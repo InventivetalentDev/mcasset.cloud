@@ -58,7 +58,7 @@
                 </div>
                 <div v-else>
                     <v-list class="asset-list" @scroll="storeScroll" ref="asset-list">
-                        <v-virtual-scroll :items="assetList">
+                        <v-virtual-scroll :items="assetList" min-height="200" item-height="48">
                             <template #default="{item:asset}">
                                 <v-list-item>
                                     <template v-slot:prepend>
