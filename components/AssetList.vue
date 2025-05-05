@@ -58,35 +58,40 @@
                 </div>
                 <div v-else>
                     <v-list class="asset-list" @scroll="storeScroll" ref="asset-list">
-                        <v-list-item v-for="asset in assetList" :key="asset.name">
-                            <template v-slot:prepend>
-                                <v-avatar
-                                    :color="asset.type==='dir'?'secondary': asset.image ? 'surface-variant': 'primary'"
-                                    rounded="sm">
-                                    <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
-                                    <v-img v-else-if="asset.image"
-                                           style="image-rendering: pixelated"
-                                           :src="'https://assets.mcasset.cloud' + asset.path + '?height=40'"
-                                           :aspect-ratio="1">
-                                        <template #placeholder>
+                        <v-virtual-scroll :items="assetList">
+                            <template #default="{item:asset}">
+                                <v-list-item>
+                                    <template v-slot:prepend>
+                                        <v-avatar
+                                            :color="asset.type==='dir'?'secondary': asset.image ? 'surface-variant': 'primary'"
+                                            rounded="sm">
+                                            <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
+                                            <v-img v-else-if="asset.image"
+                                                   style="image-rendering: pixelated"
+                                                   :src="'https://assets.mcasset.cloud' + asset.path + '?height=40'"
+                                                   :aspect-ratio="1">
+                                                <template #placeholder>
                                              <span class="text-uppercase extension-icon">
                                               <code>{{ asset.extension }}</code>
                                             </span>
-                                        </template>
-                                    </v-img>
-                                    <span v-else-if="asset.extension?.length<=4" class="text-uppercase extension-icon">
+                                                </template>
+                                            </v-img>
+                                            <span v-else-if="asset.extension?.length<=4"
+                                                  class="text-uppercase extension-icon">
                                       <code>{{ asset.extension }}</code>
                                     </span>
-                                    <v-icon v-else>mdi-file</v-icon>
-                                </v-avatar>
+                                            <v-icon v-else>mdi-file</v-icon>
+                                        </v-avatar>
+                                    </template>
+                                    <template v-slot:title>
+                                        <NuxtLink :to="asset.path" prefetch prefetch-on="interaction"
+                                                  class="text-decoration-none">
+                                            <code>{{ asset.name }}</code>
+                                        </NuxtLink>
+                                    </template>
+                                </v-list-item>
                             </template>
-                            <template v-slot:title>
-                                <NuxtLink :to="asset.path" prefetch prefetch-on="interaction"
-                                          class="text-decoration-none">
-                                    <code>{{ asset.name }}</code>
-                                </NuxtLink>
-                            </template>
-                        </v-list-item>
+                        </v-virtual-scroll>
                     </v-list>
                 </div>
             </v-col>
