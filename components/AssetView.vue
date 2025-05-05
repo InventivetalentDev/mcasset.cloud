@@ -92,7 +92,7 @@ const props = defineProps<{
 
 const assetDir = useAssetPath(props.version, props.path);
 const assetPathParts = useAssetPathParts(props.version, props.path);
-const assetRawUrl = computed(() => 'https://assets.mcasset.cloud/' + assetDir.value);
+const assetRawUrl = computed(() => 'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/' + assetDir.value);
 const assetName = computed(() => {
     return props.path[props.path.length - 1];
 });
@@ -152,7 +152,7 @@ const {
     error: assetContentError,
     execute: assetContentExecute,
 } = await useLazyAsyncData('asset-content-' + assetDir.value, async () => {
-    return await $fetch(cdnUrl.value, {
+    return await $fetch(assetRawUrl.value, {
         responseType: 'blob'
     });
 }, {immediate: false});
@@ -168,7 +168,7 @@ const {
     status: assetContentHeadersStatus,
     error: assetContentHeadersError
 } = await useLazyAsyncData('asset-content-head-' + assetDir.value, async () => {
-    return $fetch.raw(cdnUrl.value, {
+    return $fetch.raw(assetRawUrl.value, {
         method: 'HEAD',
 
     }).then(r => r.headers)
