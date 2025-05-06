@@ -277,7 +277,7 @@ useHead({
     link: [
         {
             rel: 'canonical',
-            href: `https://mcasset.cloud/${ assetDir }`
+            href: computed(() => `https://mcasset.cloud/${ assetDir.value }`)
         }
     ],
     script: [
