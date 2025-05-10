@@ -68,7 +68,7 @@
                                             <v-icon v-if="asset.type==='dir'">mdi-folder</v-icon>
                                             <v-img v-else-if="asset.image"
                                                    style="image-rendering: pixelated"
-                                                   :src="'https://assets.mcasset.cloud' + asset.path + '?height=40'"
+                                                   :src="'https://assets.mcasset.cloud' + asset.pathNoCompare + '?height=40'"
                                                    :aspect-ratio="1">
                                                 <template #placeholder>
                                              <span class="text-uppercase extension-icon">
@@ -116,9 +116,10 @@ const props = defineProps<{
 const scrollStore = useScrollStore();
 
 const assetDir = useAssetPath(props.version, props.path);
-const assetDirWithCompare = useAssetPath(props.baseVersion, props.path, props.compareWith);
+const baseAssetDir = useAssetPath(props.baseVersion, props.path);
+const baseAssetDirWithCompare = useAssetPath(props.baseVersion, props.path, props.compareWith);
 const assetPathParts = useAssetPathParts(props.version, props.path);
-const assetPathPartsWithCompare = useAssetPathParts(props.baseVersion, props.path, props.compareWith);
+const baseAssetPathPartsWithCompare = useAssetPathParts(props.baseVersion, props.path, props.compareWith);
 
 const dirName = computed(() => {
     return props.path[props.path.length - 1];
@@ -200,19 +201,19 @@ const ldJsonContent = computed(() => {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": metaTitle.value,
-        "url": `https://mcasset.cloud/${ assetDirWithCompare.value }`,
+        "url": `https://mcasset.cloud/${ baseAssetDirWithCompare.value }`,
         "description": metaDescription.value
         //TODO: date published
     });
 });
 const ldBreadcrumbContent = computed(() => {
     const items = [];
-    for (let i = 0; i < assetPathPartsWithCompare.value.length; i++) {
+    for (let i = 0; i < baseAssetPathPartsWithCompare.value.length; i++) {
         items.push({
             "@type": "ListItem",
             "position": i + 1,
-            "name": assetPathPartsWithCompare.value[i],
-            "item": `https://mcasset.cloud/${ assetPathPartsWithCompare.value.slice(0, i + 1).join('/') }`
+            "name": baseAssetPathPartsWithCompare.value[i],
+            "item": `https://mcasset.cloud/${ baseAssetPathPartsWithCompare.value.slice(0, i + 1).join('/') }`
         });
     }
     return JSON.stringify({
@@ -225,7 +226,7 @@ useHead({
     link: [
         {
             rel: 'canonical',
-            href: computed(() => `https://mcasset.cloud/${ assetDirWithCompare.value }`)
+            href: computed(() => `https://mcasset.cloud/${ baseAssetDirWithCompare.value }`)
         }
     ],
     script: [
@@ -268,14 +269,18 @@ const assetList = computed(() => {
         ...(directories || []).map(dir => ({
             type: 'dir',
             name: dir,
-            path: `/${ assetDirWithCompare.value }/${ dir }`,
+            path: `/${ baseAssetDirWithCompare.value }/${ dir }`,
+            pathWithCompare: `/${ baseAssetDirWithCompare.value }/${ dir }`,
+            pathNoCompare: `/${ assetDir.value }/${ dir }`,
             extension: null,
             image: false
         })),
         ...(files || []).map(file => ({
             type: 'file',
             name: file,
-            path: `/${ assetDirWithCompare.value }/${ file }`,
+            path: `/${ baseAssetDirWithCompare.value }/${ file }`,
+            pathWithCompare: `/${ baseAssetDirWithCompare.value }/${ file }`,
+            pathNoCompare: `/${ assetDir.value }/${ file }`,
             extension: getExtension(file),
             image: getExtension(file) === 'png'
         }))
