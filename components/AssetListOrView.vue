@@ -1,7 +1,8 @@
 <template>
     <v-row v-if="assetIsFile">
-        <AssetView :version="version" :path="path"/>
-        <AssetView v-if="compareWith" :version="compareWith" :path="path"/>
+        <AssetView :version="version" :path="path" :base-version="version" :compare-with="compareWith"/>
+        <AssetView v-if="compareWith" :version="compareWith" :path="path" :base-version="version"
+                   :compare-with="compareWith"/>
     </v-row>
     <v-row v-else>
         <AssetList :version="version" :path="path" :base-version="version" :compare-with="compareWith"/>

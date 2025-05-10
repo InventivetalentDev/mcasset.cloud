@@ -160,7 +160,13 @@ watch(assetListPath, (p) => {
 
 const metaTitle = computed(() => {
     if (!dirName.value || dirName.value?.length < 1) return null;
-    return dirName.value + "/ - " + props.version;
+    let title = dirName.value + "/ - ";
+    if (props.compareWith) {
+        title += props.baseVersion + " vs " + props.compareWith;
+    } else {
+        title += props.version;
+    }
+    return title;
 });
 const metaDescription = computed(() => {
     let meta = '';
@@ -172,7 +178,12 @@ const metaDescription = computed(() => {
     meta += 'Minecraft ';
     meta += dirName.value;
     meta += ' assets for version ';
-    meta += props.version;
+    if (props.compareWith) {
+        meta += props.baseVersion;
+        meta += ' with ' + props.compareWith;
+    } else {
+        meta += props.version;
+    }
     meta += ' via mcasset.cloud';
     return meta;
 })

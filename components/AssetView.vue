@@ -87,11 +87,16 @@ import TextContent from "~/components/TextContent.vue";
 
 const props = defineProps<{
     version: string,
-    path: string[]
+    path: string[],
+    baseVersion?: string,
+    compareWith?: string
 }>();
 
 const assetDir = useAssetPath(props.version, props.path);
+const assetDirWithCompare = useAssetPath(props.baseVersion, props.path, props.compareWith);
 const assetPathParts = useAssetPathParts(props.version, props.path);
+const assetPathPartsWithCompare = useAssetPathParts(props.baseVersion, props.path, props.compareWith);
+
 const assetRawUrl = computed(() => 'https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/' + assetDir.value);
 const assetName = computed(() => {
     return props.path[props.path.length - 1];
@@ -236,10 +241,22 @@ const ogAudio = computed(() => {
     return undefined;
 });
 const metaTitle = computed(() => {
-    return assetName.value + " - " + props.version;
+    let title = assetName.value + " - ";
+    if (props.compareWith) {
+        title += props.baseVersion + " vs " + props.compareWith;
+    } else {
+        title += props.version;
+    }
+    return title;
 });
 const metaDescription = computed(() => {
-    let meta = 'View Minecraft ';
+    let meta = '';
+    if (props.compareWith) {
+        meta += 'Compare ';
+    } else {
+        meta += 'View ';
+    }
+    meta += 'Minecraft ';
     if (isImage.value) {
         meta += 'image asset';
     } else if (isAudio.value) {
@@ -252,7 +269,12 @@ const metaDescription = computed(() => {
         meta += 'asset file';
     }
     meta += ' ' + assetName.value;
-    meta += ' from version ' + props.version;
+    if (props.compareWith) {
+        meta += ' from version ' + props.baseVersion;
+        meta += ' with ' + props.compareWith;
+    } else {
+        meta += ' from version ' + props.version;
+    }
     meta += ' via mcasset.cloud';
     return meta;
 })
@@ -272,7 +294,7 @@ const ldJsonContent = computed(() => {
         "@context": "https://schema.org",
         "@type": "WebPage",
         "name": metaTitle.value,
-        "url": `https://mcasset.cloud/${ assetDir.value }`,
+        "url": `https://mcasset.cloud/${ assetDirWithCompare.value }`,
         "description": metaDescription.value,
         "image": ogImage.value
         //TODO: date published
@@ -280,12 +302,12 @@ const ldJsonContent = computed(() => {
 });
 const ldBreadcrumbContent = computed(() => {
     const items = [];
-    for (let i = 0; i < assetPathParts.value.length; i++) {
+    for (let i = 0; i < assetPathPartsWithCompare.value.length; i++) {
         items.push({
             "@type": "ListItem",
             "position": i + 1,
-            "name": assetPathParts.value[i],
-            "item": `https://mcasset.cloud/${ assetPathParts.value.slice(0, i + 1).join('/') }`
+            "name": assetPathPartsWithCompare.value[i],
+            "item": `https://mcasset.cloud/${ assetPathPartsWithCompare.value.slice(0, i + 1).join('/') }`
         });
     }
     return JSON.stringify({
@@ -299,7 +321,7 @@ useHead({
     link: [
         {
             rel: 'canonical',
-            href: computed(() => `https://mcasset.cloud/${ assetDir.value }`)
+            href: computed(() => `https://mcasset.cloud/${ assetDirWithCompare.value }`)
         }
     ],
     script: [
