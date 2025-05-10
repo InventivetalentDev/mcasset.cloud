@@ -238,10 +238,31 @@ const ogAudio = computed(() => {
 const metaTitle = computed(() => {
     return assetName.value + " - " + props.version;
 });
+const metaDescription = computed(() => {
+    let meta = 'View Minecraft ';
+    if (isImage.value) {
+        meta += 'image asset';
+    } else if (isAudio.value) {
+        meta += 'audio asset';
+    } else if (isJson.value) {
+        meta += 'json asset';
+    } else if (isText.value) {
+        meta += 'text asset';
+    } else {
+        meta += 'asset file';
+    }
+    meta += ' ' + assetName.value;
+    meta += ' from version ' + props.version;
+    meta += ' via mcasset.cloud';
+    return meta;
+})
 useSeoMeta({
     title: metaTitle,
     ogTitle: metaTitle,
     twitterTitle: metaTitle,
+    description: metaDescription,
+    ogDescription: metaDescription,
+    twitterDescription: metaDescription,
     ogImage: ogImage,
     ogAudio: ogAudio,
 });
@@ -252,6 +273,7 @@ const ldJsonContent = computed(() => {
         "@type": "WebPage",
         "name": metaTitle.value,
         "url": `https://mcasset.cloud/${ assetDir.value }`,
+        "description": metaDescription.value,
         "image": ogImage.value
         //TODO: date published
     });
