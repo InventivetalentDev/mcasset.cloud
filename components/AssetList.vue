@@ -100,7 +100,7 @@
 </template>
 <script setup lang="ts">
 import type { AssetList } from "~/types/assets";
-import { useAssetPath } from "~/composables/useAssetPath";
+import { useAssetPath, useAssetPathParts } from "~/composables/useAssetPath";
 import { useAsyncData, useLazyAsyncData } from "#app";
 import BackBtn from "~/components/BackBtn.vue";
 import { useScrollStore } from "~/stores/scroll";
@@ -117,6 +117,8 @@ const scrollStore = useScrollStore();
 
 const assetDir = useAssetPath(props.version, props.path);
 const assetDirWithCompare = useAssetPath(props.baseVersion, props.path, props.compareWith);
+const assetPathParts = useAssetPathParts(props.version, props.path);
+const assetPathPartsWithCompare = useAssetPathParts(props.baseVersion, props.path, props.compareWith);
 
 const dirName = computed(() => {
     return props.path[props.path.length - 1];
@@ -160,10 +162,73 @@ const metaTitle = computed(() => {
     if (!dirName.value || dirName.value?.length < 1) return null;
     return dirName.value + "/ - " + props.version;
 });
+const metaDescription = computed(() => {
+    let meta = '';
+    if (props.compareWith) {
+        meta += 'Compare ';
+    } else {
+        meta += 'Browse ';
+    }
+    meta += 'Minecraft ';
+    meta += dirName.value;
+    meta += ' assets for version ';
+    meta += props.version;
+    meta += ' via mcasset.cloud';
+    return meta;
+})
 useSeoMeta({
     title: metaTitle,
     ogTitle: metaTitle,
-    twitterTitle: metaTitle
+    twitterTitle: metaTitle,
+    description: metaDescription,
+    ogDescription: metaDescription,
+    twitterDescription: metaDescription
+})
+const ldJsonContent = computed(() => {
+    return JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        "name": metaTitle.value,
+        "url": `https://mcasset.cloud/${ assetDirWithCompare.value }`,
+        "description": metaDescription.value
+        //TODO: date published
+    });
+});
+const ldBreadcrumbContent = computed(() => {
+    const items = [];
+    for (let i = 0; i < assetPathPartsWithCompare.value.length; i++) {
+        items.push({
+            "@type": "ListItem",
+            "position": i + 1,
+            "name": assetPathPartsWithCompare.value[i],
+            "item": `https://mcasset.cloud/${ assetPathPartsWithCompare.value.slice(0, i + 1).join('/') }`
+        });
+    }
+    return JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": items
+    })
+})
+useHead({
+    link: [
+        {
+            rel: 'canonical',
+            href: computed(() => `https://mcasset.cloud/${ assetDirWithCompare.value }`)
+        }
+    ],
+    script: [
+        {
+            type: 'application/ld+json',
+            'data-ld-id': 'browser-webpage',
+            innerHTML: ldJsonContent
+        },
+        {
+            type: 'application/ld+json',
+            'data-ld-id': 'browser-breadcrumb',
+            innerHTML: ldBreadcrumbContent
+        }
+    ]
 })
 
 // const {
