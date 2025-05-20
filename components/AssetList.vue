@@ -60,7 +60,7 @@
                     <v-list class="asset-list" @scroll="storeScroll" ref="asset-list">
                         <v-virtual-scroll :items="assetList" min-height="200" item-height="48">
                             <template #default="{item:asset}">
-                                <v-list-item>
+                                <v-list-item :to="asset.path">
                                     <template v-slot:prepend>
                                         <v-avatar
                                             :color="asset.type==='dir'?'secondary': asset.image ? 'surface-variant': 'primary'"
@@ -78,13 +78,14 @@
                                             </v-img>
                                             <span v-else-if="asset.extension?.length<=4"
                                                   class="text-uppercase extension-icon">
-                                      <code>{{ asset.extension }}</code>
-                                    </span>
+                                              <code>{{ asset.extension }}</code>
+                                            </span>
                                             <v-icon v-else>mdi-file</v-icon>
                                         </v-avatar>
                                     </template>
                                     <template v-slot:title>
-                                        <NuxtLink :to="asset.path" prefetch prefetch-on="interaction"
+                                        <NuxtLink :to="asset.path"
+                                                  prefetch prefetch-on="interaction"
                                                   class="text-decoration-none">
                                             <code>{{ asset.name }}</code>
                                         </NuxtLink>
@@ -322,6 +323,11 @@ const githubUrl = computed(() => {
 const dirDownloadUrl = computed(() => {
     return 'https://download-directory.github.io/?url=' + githubUrl.value;
 });
+
+const router = useRouter();
+const goToPath = (path: string) => {
+    router.push({path})
+}
 
 const versionRequested = ref(false);
 const showRequestedNotice = ref(false);
