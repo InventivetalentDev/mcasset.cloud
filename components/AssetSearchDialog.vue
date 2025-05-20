@@ -19,7 +19,17 @@
         </template>
 
         <template v-slot:default="{ isActive }">
-            <v-card title="Search" :subtitle="pathPrefix ? 'in ' + pathPrefix : ''">
+            <v-card>
+                <template #title>Search</template>
+                <template #subtitle v-if="pathPrefix">
+                    <span v-if="globalSearch">Everywhere</span>
+                    <span v-else>In {{ pathPrefix }}</span>
+                    <a href="#"
+                       @click.prevent="globalSearch=!globalSearch"
+                       class="mx-2 text-decoration-none text-white">
+                        <v-icon icon="mdi-swap-horizontal"></v-icon>
+                    </a>
+                </template>
                 <v-card-text>
                     <v-row dense>
                         <v-col cols="12">
@@ -86,7 +96,8 @@ const assetIndexPath = computed<string>(() => {
 
 const pathPrefix = computed(() => {
     return props.path.length > 0 ? props.path.join('/') + '/' : '';
-})
+});
+const globalSearch = ref(false);
 
 const {
     data: assetIndex,
@@ -133,10 +144,17 @@ const updateSearch = useDebounceFn(() => {
             if (props.path.length <= 0) {
                 return true;
             }
+            if (globalSearch.value) {
+                return true;
+            }
             return result.path.startsWith(pathPrefix.value);
         }
     });
 }, 300);
+
+watch(globalSearch, () => {
+    updateSearch();
+})
 
 // const searchAssets = () => {
 //     const query_ = query.value.toLowerCase();
