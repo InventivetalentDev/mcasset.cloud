@@ -1,4 +1,4 @@
-import type {VersionManifest} from "~/types";
+import type { VersionManifest } from "~/types";
 
 export const useVersionManifest = async () => {
     const {
@@ -8,6 +8,8 @@ export const useVersionManifest = async () => {
         return await $fetch<VersionManifest>('https://assets.mcasset.cloud/manifest.json', {
             responseType: 'json'
         });
+    }, {
+        getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
     });
 
     const versions = computed(() => {
