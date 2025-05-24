@@ -185,6 +185,8 @@ const {
             });
             return json;
         });
+}, {
+    getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
 });
 
 const contentSizeBytes = computed(() => {

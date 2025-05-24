@@ -38,6 +38,8 @@ const {
     return await $fetch<AvailableVersions>('https://assets.mcasset.cloud/versions.json', {
         responseType: 'json'
     })
+}, {
+    getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
 });
 const availableVersionNames = computed<string[]>(() => {
     return availableVersions.value?.versions?.map(version => version.name) || [];

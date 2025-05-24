@@ -107,6 +107,8 @@ const {
     return await $fetch<AssetIndex>('https://assets.mcasset.cloud/' + assetIndexPath.value, {
         responseType: 'json'
     })
+}, {
+    getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
 });
 
 type AssetIndexEntryWithMeta = AssetIndexEntry & { href?: string; dir?: string; };
