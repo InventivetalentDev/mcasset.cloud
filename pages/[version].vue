@@ -19,18 +19,10 @@
     </v-container>
 </template>
 <script setup lang="ts">
-import { useVersionManifest } from "~/query/misc";
-import VersionSelect from "~/components/VersionSelect.vue";
 import { useRouter } from "#app";
 import { useVersionPath } from "~/composables/useVersionPath";
 
 const router = useRouter();
-
-
-const {
-    data: versions,
-    versionManifest
-} = useVersionManifest();
 
 const {version, path} = useVersionPath();
 // watch(version, () => {

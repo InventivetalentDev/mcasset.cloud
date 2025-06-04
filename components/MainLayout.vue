@@ -19,11 +19,7 @@
   </v-row>
 </template>
 <script setup lang="ts">
-import {useVersionManifest} from "~/query/misc";
-import VersionSelect from "~/components/VersionSelect.vue";
 import {useRouter} from "#app";
-import AssetListOrView from "~/components/AssetListOrView.vue";
-import BreadcrumbsNav from "~/components/BreadcrumbsNav.vue";
 import {useVersionPath} from "~/composables/useVersionPath";
 import VersionCard from "~/components/VersionCard.vue";
 
