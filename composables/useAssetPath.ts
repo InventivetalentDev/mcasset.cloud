@@ -6,8 +6,8 @@ export const useAssetPathParts = (version: string | ComputedRef<string>, path: s
     const c = unref(compare);
     return computed(() => {
         if (!v || !p) return [];
-        let v1 = v.replace(/ /g, '_');
-        let c1 = c ? c.replace(/ /g, '_') : '';
+        let v1 = v.replace(/_/g, '__').replace(/ /g, '_');
+        let c1 = c ? c.replace(/_/g, '__').replace(/ /g, '_') : '';
         if (c1) {
             v1 = `${ v1 }...${ c1 }`;
         }
