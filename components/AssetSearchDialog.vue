@@ -176,7 +176,8 @@ watch(globalSearch, () => {
 watch(model, (newValue) => {
     if (!newValue) {
         router.push({
-            query: {}
+            query: {},
+            replace: true
         });
     } else {
         // if (route.query?.search) {
