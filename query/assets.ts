@@ -6,7 +6,8 @@ export const useAssets = defineQuery(() => {
         key: () => ['assets', path.value],
         query: async () => {
             return await $fetch('https://assets.mcasset.cloud/' + path.value, {
-                responseType: responseType.value
+                responseType: responseType.value,
+                ignoreResponseError: true
             });
         },
         enabled: () => !!path.value,
