@@ -6,7 +6,7 @@
 }
 </style>
 <template>
-    <v-dialog max-width="800">
+    <v-dialog v-model="model" max-width="800">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn
                 v-bind="activatorProps"
@@ -84,11 +84,17 @@ import { useLazyAsyncData } from "#app";
 import { useDebounceFn } from "@vueuse/core";
 import type { AssetIndex, AssetIndexEntry } from "~/types/assets";
 import MiniSearch, { type SearchResult } from 'minisearch'
+import { useRoute } from "#vue-router";
 
 const props = defineProps<{
     version: string,
     path: string[]
 }>();
+
+const model = defineModel();
+
+const router = useRouter();
+const route = useRoute();
 
 const assetIndexPath = computed<string>(() => {
     return props.version + '/_index.json';
@@ -140,6 +146,15 @@ const searchResults = ref<(SearchResult & AssetIndexEntryWithMeta)[]>([]);
 const updateSearch = useDebounceFn(() => {
     // searchResults.value = searchAssets();
     const search = miniSearch.value;
+    if (model.value) {
+        router.push({
+            query: {
+                search: query.value,
+                global: (globalSearch.value || props.path.length <= 0) ? '1' : '0'
+            },
+            replace: true
+        });
+    }
     if (!search) return;
     searchResults.value = search.search(query.value, {
         filter: (result) => {
@@ -156,6 +171,28 @@ const updateSearch = useDebounceFn(() => {
 
 watch(globalSearch, () => {
     updateSearch();
+})
+
+watch(model, (newValue) => {
+    if (!newValue) {
+        router.push({
+            query: {}
+        });
+    } else {
+        // if (route.query?.search) {
+        //     query.value = route.query.search as string;
+        //     globalSearch.value = route.query.global === '1' || props.path.length <= 0;
+        // }
+    }
+})
+
+onMounted(() => {
+    if (route.query?.search) {
+        model.value = true;
+        query.value = route.query.search as string;
+        globalSearch.value = route.query.global === '1' || props.path.length <= 0;
+        updateSearch();
+    }
 })
 
 // const searchAssets = () => {

@@ -15,7 +15,7 @@
                 </h3>
             </v-col>
             <v-col cols="4" md="auto" class="pt-3 pb-0">
-                <AssetSearchDialog :version="version" :path="path"/>
+                <AssetSearchDialog v-model="searchDialog" :version="version" :path="path"/>
             </v-col>
             <v-spacer/>
             <v-col class="text-end" cols="12" md="auto">
@@ -102,10 +102,11 @@
 <script setup lang="ts">
 import type { AssetList } from "~/types/assets";
 import { useAssetPath, useAssetPathParts } from "~/composables/useAssetPath";
-import { useAsyncData, useLazyAsyncData } from "#app";
+import { useAsyncData, useLazyAsyncData, useRouter } from "#app";
 import BackBtn from "~/components/BackBtn.vue";
 import { useScrollStore } from "~/stores/scroll";
 import { useAssets } from "~/query/assets";
+import { useRoute } from "#vue-router";
 
 const props = defineProps<{
     version: string,
@@ -135,6 +136,7 @@ const assetKey = computed(() => {
 
 const assetListEl = useTemplateRef('asset-list');
 
+const searchDialog = ref(false);
 onMounted(() => {
     console.log(assetKey);
 })
