@@ -15,7 +15,7 @@
                 </div>
             </template>
         </Suspense>
-        <NewWebsiteBanner/>
+<!--        <NewWebsiteBanner/>-->
     </v-container>
 </template>
 <script setup lang="ts">
