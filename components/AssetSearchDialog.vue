@@ -140,12 +140,9 @@ const searchResults = ref<(SearchResult & AssetIndexEntryWithMeta)[]>([]);
 const dialogOpen = ref(false);
 
 const handleKeyDown = (event: KeyboardEvent) => {
-  const isInput = event.target instanceof HTMLInputElement ||
-                 event.target instanceof HTMLTextAreaElement;
-
-  if ((event.ctrlKey || event.metaKey) && event.key === 'k' && !isInput) {
+  if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
     event.preventDefault();
-    dialogOpen.value = true;
+    dialogOpen.value = dialogOpen.value ? false : true;
 
     setTimeout(() => {
       const searchInput = document.querySelector('#search-input');
