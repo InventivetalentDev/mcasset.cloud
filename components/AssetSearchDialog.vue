@@ -34,6 +34,7 @@
                     <v-row dense>
                         <v-col cols="12">
                             <v-text-field
+                                id="search-input"
                                 label="Query"
                                 v-model="query"
                                 @keyup="updateSearch"
@@ -145,6 +146,13 @@ const handleKeyDown = (event: KeyboardEvent) => {
   if ((event.ctrlKey || event.metaKey) && event.key === 'k' && !isInput) {
     event.preventDefault();
     dialogOpen.value = true;
+
+    setTimeout(() => {
+      const searchInput = document.querySelector('#search-input');
+      if (searchInput) {
+        searchInput.focus();
+      }
+    }, 200);
   }
 };
 
