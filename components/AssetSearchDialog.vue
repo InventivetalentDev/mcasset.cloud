@@ -6,7 +6,7 @@
 }
 </style>
 <template>
-    <v-dialog max-width="800">
+    <v-dialog v-model="dialogOpen" max-width="800">
         <template v-slot:activator="{ props: activatorProps }">
             <v-btn
                 v-bind="activatorProps"
@@ -136,6 +136,25 @@ const miniSearch = computed(() => {
 
 const query = ref<string>('');
 const searchResults = ref<(SearchResult & AssetIndexEntryWithMeta)[]>([]);
+const dialogOpen = ref(false);
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  const isInput = event.target instanceof HTMLInputElement ||
+                 event.target instanceof HTMLTextAreaElement;
+
+  if ((event.ctrlKey || event.metaKey) && event.key === 'k' && !isInput) {
+    event.preventDefault();
+    dialogOpen.value = true;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
 
 const updateSearch = useDebounceFn(() => {
     // searchResults.value = searchAssets();
