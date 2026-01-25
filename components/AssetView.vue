@@ -45,9 +45,14 @@ img.zoomed {
                        prepend-icon="mdi-download">Download File
                 </v-btn>
                 <v-btn
-                    variant="outlined" size="small" color="secondary" class="mx-1"
+                    v-if="isImage"
+                    variant="outlined"
+                    size="small"
+                    color="secondary"
+                    class="mx-1"
                     @click="sizeModalOpen = true"
-                    prepend-icon="mdi-image-size-select-large">Other size
+                    prepend-icon="mdi-image-size-select-large">
+                    Other sizes
                 </v-btn>
             </v-col>
         </v-row>
