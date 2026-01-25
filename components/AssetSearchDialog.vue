@@ -34,7 +34,7 @@
                     <v-row dense>
                         <v-col cols="12">
                             <v-text-field
-                                id="search-input"
+                                ref="searchInput"
                                 label="Query"
                                 v-model="query"
                                 @keyup="updateSearch"
@@ -136,18 +136,18 @@ const miniSearch = computed(() => {
 
 
 const query = ref<string>('');
+const searchInput = ref<HTMLInputElement|null>(null);
 const searchResults = ref<(SearchResult & AssetIndexEntryWithMeta)[]>([]);
 const dialogOpen = ref(false);
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if ((event.ctrlKey || event.metaKey) && event.key === 'k') {
     event.preventDefault();
-    dialogOpen.value = dialogOpen.value ? false : true;
+    dialogOpen.value = !dialogOpen.value;
 
     setTimeout(() => {
-      const searchInput = document.querySelector('#search-input');
-      if (searchInput) {
-        searchInput.focus();
+      if (searchInput.value) {
+        searchInput.value.focus();
       }
     }, 200);
   }
