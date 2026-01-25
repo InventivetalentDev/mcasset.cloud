@@ -14,23 +14,16 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn @click="close" variant="outline">Cancel</v-btn>
+        <v-btn @click="close" variant="text">Cancel</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  modelValue: Boolean
-})
+const show = defineModel<boolean>()
 
-const emit = defineEmits(['update:modelValue', 'select'])
-
-const show = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value)
-})
+const emit = defineEmits(['select'])
 
 const sizes = [32, 64, 128, 256, 512, 1024]
 

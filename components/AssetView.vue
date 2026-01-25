@@ -392,10 +392,10 @@ const downloadFile = async () => {
     URL.revokeObjectURL(url);
 };
 
-const resizeImageToTargetSize = (img, targetSize) => {
+const resizeImageToTargetSize = (img: HTMLImageElement, targetSize: number): Promise<HTMLCanvasElement> => {
     return new Promise((resolve) => {
         const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d')!;
         const maxDimension = Math.max(img.width, img.height);
         const minDimension = Math.min(img.width, img.height);
 
@@ -414,8 +414,6 @@ const resizeImageToTargetSize = (img, targetSize) => {
         canvas.height = finalHeight;
 
         ctx.imageSmoothingEnabled = false;
-        ctx.webkitImageSmoothingEnabled = false;
-        ctx.mozImageSmoothingEnabled = false;
         ctx.drawImage(img, 0, 0, finalWidth, finalHeight);
 
         resolve(canvas);
@@ -435,6 +433,7 @@ const downloadResizedImage = async (targetSize: number) => {
             const resizedCanvas = await resizeImageToTargetSize(img, targetSize);
 
             resizedCanvas.toBlob((blob) => {
+                if (!blob) return;
                 const url = URL.createObjectURL(blob);
                 const el = document.createElement('a');
                 el.href = url;
