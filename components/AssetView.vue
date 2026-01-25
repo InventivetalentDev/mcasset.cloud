@@ -44,6 +44,11 @@ img.zoomed {
                        @click.prevent="downloadFile"
                        prepend-icon="mdi-download">Download File
                 </v-btn>
+                <v-btn
+                    variant="outlined" size="small" color="secondary" class="mx-1"
+                    @click="sizeModalOpen = true"
+                    prepend-icon="mdi-image-size-select-large">Other size
+                </v-btn>
             </v-col>
         </v-row>
         <v-row>
@@ -75,6 +80,11 @@ img.zoomed {
                 </div>
             </v-col>
         </v-row>
+
+        <SizeSelectionModal
+            v-model="sizeModalOpen"
+            @select="handleSizeSelection"
+        />
     </v-col>
 </template>
 <script setup lang="ts">
@@ -84,6 +94,7 @@ import type { VersionManifest } from "~/types";
 import BackBtn from "~/components/BackBtn.vue";
 // import BlobAsText from "~/components/BlobAsText.vue";
 import TextContent from "~/components/TextContent.vue";
+import SizeSelectionModal from "~/components/SizeSelectionModal.vue";
 
 const props = defineProps<{
     version: string,
@@ -381,6 +392,68 @@ const downloadFile = async () => {
     URL.revokeObjectURL(url);
 };
 
+const resizeImageToTargetSize = (img: HTMLImageElement, targetSize: number): Promise<HTMLCanvasElement> => {
+    return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d')!;
+        const maxDimension = Math.max(img.width, img.height);
+        const minDimension = Math.min(img.width, img.height);
+
+        let scale = targetSize / maxDimension;
+        const scaledMax = maxDimension * scale;
+        const scaledMin = minDimension * scale;
+
+        if (scaledMax > 1024) {
+            scale = 1024 / maxDimension;
+        }
+
+        const finalWidth = Math.round(img.width * scale);
+        const finalHeight = Math.round(img.height * scale);
+
+        canvas.width = finalWidth;
+        canvas.height = finalHeight;
+
+        ctx.imageSmoothingEnabled = false;
+        ctx.drawImage(img, 0, 0, finalWidth, finalHeight);
+
+        resolve(canvas);
+    });
+};
+
+const downloadResizedImage = async (targetSize: number) => {
+    if (assetContentStatus.value !== 'success') {
+        await assetContentExecute();
+    }
+
+    try {
+        const imgUrl = URL.createObjectURL(assetContent.value);
+        const img = new Image();
+
+        img.onload = async () => {
+            const resizedCanvas = await resizeImageToTargetSize(img, targetSize);
+
+            resizedCanvas.toBlob((blob) => {
+                if (!blob) return;
+                const url = URL.createObjectURL(blob);
+                const el = document.createElement('a');
+                el.href = url;
+                el.download = `resized_${targetSize}_${assetName.value}`;
+                document.body.appendChild(el);
+                el.click();
+                document.body.removeChild(el);
+                URL.revokeObjectURL(url);
+            }, 'image/png');
+
+            URL.revokeObjectURL(imgUrl);
+        };
+
+        img.src = imgUrl;
+    } catch (error) {
+        console.error('Resize failed:', error);
+        alert('Resize failed. Please try again.');
+    }
+}
+
 const isNotFound = computed(() => {
     if (!assetContentError.value) return false;
     return assetContentError.value.statusCode === 404;
@@ -389,5 +462,11 @@ const isNotFound = computed(() => {
 const zoomed = ref(true);
 const toggleZoom = () => {
     zoomed.value = !zoomed.value;
+};
+
+const sizeModalOpen = ref(false);
+
+const handleSizeSelection = async (size: number) => {
+    await downloadResizedImage(size);
 };
 </script>
