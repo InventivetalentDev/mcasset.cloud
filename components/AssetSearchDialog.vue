@@ -15,6 +15,9 @@
                 class=""
             >
                 Search
+                <template #append>
+                    <v-hotkey keys="ctrl+k" variant="tonal" platform="auto"/>
+                </template>
             </v-btn>
         </template>
 
