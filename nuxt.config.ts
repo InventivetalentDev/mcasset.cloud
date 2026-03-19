@@ -4,7 +4,9 @@ const CACHE_VARIES = ['host', 'accept-encoding', 'user-agent', 'sec-ch-viewport-
 
 export default defineNuxtConfig({
     compatibilityDate: '2024-11-01',
-    devtools: {enabled: true},
+    devtools: {
+        enabled: true
+    },
     ssr: true,
     nitro: {
         debug: process.env.NODE_ENV === 'development'
@@ -23,7 +25,7 @@ export default defineNuxtConfig({
         '@/plugins/ssr-debug',
     ],
     routeRules: {
-        '/': {redirect: {to: '/latest', statusCode: 301}},
+        '/': { redirect: { to: '/latest', statusCode: 301 } },
 
         '/**': {
             isr: 60 * 60,
