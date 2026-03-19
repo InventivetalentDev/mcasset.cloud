@@ -11,8 +11,14 @@
     </v-row>
     <v-row class="text-right">
         <v-col>
-            <a href="https://forms.gle/1P7vMomYP16zC5ix5" target="_blank">Give Feedback
-                <v-icon icon="mdi-open-in-new"></v-icon>
+            <a href="https://forms.gle/1P7vMomYP16zC5ix5" target="_blank">
+                Give Feedback
+                <v-icon icon="mdi-open-in-new"/>
+            </a>
+            or
+            <a href="https://ko-fi.com/inventivetalent" target="_blank">
+                Buy me a Coffee
+                <v-icon icon="mdi-open-in-new"/>
             </a>
         </v-col>
     </v-row>
