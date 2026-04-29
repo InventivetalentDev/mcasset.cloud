@@ -6,18 +6,23 @@
                         v-model="model"
                         :clearable="compare"
                         hide-details>
-
+            <template #prepend-item>
+                <v-list-item prepend-icon="mdi-package" title="Latest Release" density="compact" @click="useLatestRelease"/>
+                <v-list-item prepend-icon="mdi-test-tube" title="Latest Snapshot" density="compact" @click="useLatestSnapshot"/>
+                <v-divider/>
+                <div class="px-4 py-1" @click.stop>
+                    <v-switch v-model="settings.showSnapshots" label="Show Snapshots" density="compact" color="primary" hide-details/>
+                </div>
+                <v-divider/>
+            </template>
         </v-autocomplete>
-        <div class="px-2 text-center">
-            <a @click.prevent="useLatestRelease" href="/latest">Latest Release</a> | <a
-            @click.prevent="useLatestSnapshot" href="/snapshot">Latest Snapshot</a>
-        </div>
     </div>
 </template>
 <script setup lang="ts">
 import type { AvailableVersions, ManifestVersion, VersionManifest } from "~/types";
 import { useAsyncData, useLazyAsyncData, useRouter } from "#app";
 import { useVersionManifest } from "~/composables/useVersionManifest";
+import { useSettingsStore } from "~/stores/settings";
 
 const props = defineProps<{
     compare?: boolean
@@ -49,8 +54,16 @@ const isAvailable = (version: string) => {
     return availableVersionNames.value?.includes(version);
 }
 
+const settings = useSettingsStore();
+
+const model = defineModel<string>({required: true});
+
 const items = computed(() => {
-    const mapped = (versions.value || []).map(v => ({
+    const all = versions.value || [];
+    const filtered = !settings.showSnapshots
+        ? all.filter(v => v.type === 'release' || v.id === model.value)
+        : all;
+    return filtered.map(v => ({
         id: v.id,
         title: v.id,
         props: {
@@ -59,16 +72,7 @@ const items = computed(() => {
             appendIcon: isAvailable(v.id) ? null : 'mdi-close',
         }
     }));
-    // if (props.compare) {
-    //     mapped.unshift({
-    //         id: 'none',
-    //         title: 'None',
-    //     });
-    // }
-    return mapped;
 });
-
-const model = defineModel<string>({required: true});
 watch(model, () => {
     console.log("version changed");
     resolveLatest();
@@ -81,7 +85,6 @@ watch(manifest, () => {
 
 const useLatestRelease = () => {
     const latest = manifest.value?.versions?.find((version) => version.id === latestRelease.value);
-    console.log(latest)
     if (latest) {
         model.value = latest.id;
     }
