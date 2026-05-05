@@ -14,7 +14,7 @@
                     <a href="https://github.com/InventivetalentDev/mcasset.cloud" target="_blank">GitHub</a><br/>
                     <a href="https://yeleha.co/discord" target="_blank">Discord</a><br/>
                     <a href="https://www.patreon.com/inventivetalent" target="_blank">Patreon</a><br/>
-                    <a href="https://ko-fi.com/inventivetalent" target="_blank">Buy me a Coffee</a><br/>
+                    <a href="https://github.com/sponsors/InventivetalentDev" target="_blank">Sponsor on GitHub</a><br/>
                       <a href="https://classic.mcasset.cloud?utm_source=website_v2&utm_medium=link&utm_campaign=footer_link">Classic
                                 Website</a><br/>
                 </v-col>

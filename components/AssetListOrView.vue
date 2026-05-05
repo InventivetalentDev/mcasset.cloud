@@ -16,8 +16,8 @@
                 <v-icon icon="mdi-open-in-new"/>
             </a>
             or
-            <a href="https://ko-fi.com/inventivetalent" target="_blank">
-                Buy me a Coffee
+            <a href="https://github.com/sponsors/InventivetalentDev" target="_blank">
+                Sponsor on GitHub
                 <v-icon icon="mdi-open-in-new"/>
             </a>
         </v-col>
