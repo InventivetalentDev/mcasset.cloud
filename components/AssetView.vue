@@ -67,13 +67,11 @@ img.zoomed {
                 </div>
                 <div v-else>
                     <v-sheet color="grey-darken-3" class="pa-2 asset-sheet">
-                        <div v-if="contentTooLarge || forceRaw">
+                        <AudioPlayer v-if="isAudio" :src="assetRawUrl"/>
+                        <div v-else-if="contentTooLarge || forceRaw">
                             <a :href="cdnUrl" target="_blank">View Raw</a>
                         </div>
                         <img v-else-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
-                        <audio v-else-if="isAudio" :src="assetRawUrl" controls>
-                            Your browser does not support the audio element.
-                        </audio>
                         <div v-else>
                             <span v-if="contentSizeBytes<=0"><i>Empty File</i></span>
                             <!--                            <BlobAsText :blob="assetContent"/>-->
@@ -100,6 +98,7 @@ import BackBtn from "~/components/BackBtn.vue";
 // import BlobAsText from "~/components/BlobAsText.vue";
 import TextContent from "~/components/TextContent.vue";
 import SizeSelectionModal from "~/components/SizeSelectionModal.vue";
+import AudioPlayer from "~/components/AudioPlayer.vue";
 
 const props = defineProps<{
     version: string,
