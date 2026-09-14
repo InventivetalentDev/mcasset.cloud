@@ -18,11 +18,6 @@
                             Hosted by <a href="https://cloudflare.com" target="_blank">Cloudflare</a> Workers
                         </v-col>
                     </v-row>
-                    <v-row class="text-left text-medium-emphasis text-body-2">
-                        <v-col>
-                            <span style="font-size: small">More projects: <span class="pageref">...</span></span>
-                        </v-col>
-                    </v-row>
                 </v-col>
                 <v-col cols="12" md="6">
                     <a href="https://github.com/InventivetalentDev/mcasset.cloud" target="_blank">GitHub</a><br/>
@@ -44,6 +39,7 @@
                     <div class="my-1">Made by <a
                         href="https://inventivetalent.org"
                         target="_blank">inventivetalent</a></div>
+                    <span style="font-size: small">More projects: <span class="pageref">...</span></span>
                 </v-col>
                 <v-col class="text-right">
                     Not affiliated with Minecraft / Mojang AB / Microsoft.
