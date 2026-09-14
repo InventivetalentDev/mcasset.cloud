@@ -1,3 +1,12 @@
+<style>
+.pageref a {
+    text-decoration: none;
+}
+
+.pageref-link {
+    margin-left: 2px;
+}
+</style>
 <template>
     <v-footer>
         <v-container>
@@ -6,7 +15,12 @@
                     <v-row class="my-1 text-medium-emphasis text-body-2">
                         <v-col cols="6" md="2">
                             <v-img src="/img/cf-logo-v-rgb.png" style="margin-top:-8px;margin-bottom:2px"/>
-                            Hosted by <a href="https://cloudflare.com" target="_blank">Cloudflare</a> Workers and Pages
+                            Hosted by <a href="https://cloudflare.com" target="_blank">Cloudflare</a> Workers
+                        </v-col>
+                    </v-row>
+                    <v-row class="text-left text-medium-emphasis text-body-2">
+                        <v-col>
+                            <span style="font-size: small">More projects: <span class="pageref">...</span></span>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -15,8 +29,8 @@
                     <a href="https://yeleha.co/discord" target="_blank">Discord</a><br/>
                     <a href="https://www.patreon.com/inventivetalent" target="_blank">Patreon</a><br/>
                     <a href="https://github.com/sponsors/InventivetalentDev" target="_blank">Sponsor on GitHub</a><br/>
-                      <a href="https://classic.mcasset.cloud?utm_source=website_v2&utm_medium=link&utm_campaign=footer_link">Classic
-                                Website</a><br/>
+                    <a href="https://classic.mcasset.cloud?utm_source=website_v2&utm_medium=link&utm_campaign=footer_link">Classic
+                        Website</a><br/>
                 </v-col>
             </v-row>
             <v-divider class="my-2"/>
@@ -39,4 +53,9 @@
     </v-footer>
 </template>
 <script setup lang="ts">
+useHead({
+    script: [
+        {src: 'https://pageref.inventive.workers.dev/script.js?max=5', async: true}
+    ]
+})
 </script>
