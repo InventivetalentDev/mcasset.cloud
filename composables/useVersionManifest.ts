@@ -9,6 +9,9 @@ export const useVersionManifest = async () => {
             responseType: 'json'
         });
     }, {
+        // Only needed to populate the version dropdown on the client. The manifest is ~260 KB
+        // of JSON; fetching, parsing and serialising it on every server render is wasted CPU.
+        server: false,
         getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
     });
 
