@@ -37,6 +37,7 @@
                                 ref="searchInput"
                                 label="Query"
                                 v-model="query"
+                                :loading="assetStatus === 'pending'"
                                 @keyup="updateSearch"
                                 @change="updateSearch"
                                 hide-details
@@ -100,15 +101,21 @@ const pathPrefix = computed(() => {
 });
 const globalSearch = ref(false);
 
+// The full version index is a multi-megabyte JSON file (~23k entries) and is only needed
+// once somebody actually opens the search dialog. It must never be fetched during SSR:
+// it used to be fetched, parsed and serialised into the payload on every page render.
 const {
     data: assetIndex,
     error: assetError,
-    status: assetStatus
+    status: assetStatus,
+    execute: loadAssetIndex
 } = await useLazyAsyncData('asset-index-' + props.version, async () => {
     return await $fetch<AssetIndex>('https://assets.mcasset.cloud/' + assetIndexPath.value, {
         responseType: 'json'
     })
 }, {
+    server: false,
+    immediate: false,
     getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
 });
 
@@ -139,6 +146,11 @@ const query = ref<string>('');
 const searchInput = ref<HTMLInputElement|null>(null);
 const searchResults = ref<(SearchResult & AssetIndexEntryWithMeta)[]>([]);
 const dialogOpen = ref(false);
+watch(dialogOpen, (open) => {
+    if (open && !assetIndex.value && assetStatus.value !== 'pending') {
+        loadAssetIndex();
+    }
+});
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if ((event.ctrlKey || event.metaKey) && event.key === 'k') {

@@ -264,7 +264,6 @@ const isNotFound = computed(() => {
 
 const assetList = computed(() => {
     if (!assetListRaw.value) return [];
-    console.log(assetListRaw.value)
     const {directories, files} = (assetListRaw.value as AssetList);
     return [
         ...(directories || []).map(dir => ({

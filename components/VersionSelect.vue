@@ -44,6 +44,7 @@ const {
         responseType: 'json'
     })
 }, {
+    server: false,
     getCachedData: (key, nuxtApp) => nuxtApp.payload.data[key] || nuxtApp.static.data[key]
 });
 const availableVersionNames = computed<string[]>(() => {
