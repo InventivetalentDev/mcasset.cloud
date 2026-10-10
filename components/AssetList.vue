@@ -76,6 +76,8 @@
                                             </span>
                                                 </template>
                                             </v-img>
+                                            <SoundPreviewButton v-else-if="asset.audio"
+                                                                :src="'https://assets.mcasset.cloud' + asset.pathNoCompare"/>
                                             <span v-else-if="asset.extension?.length<=4"
                                                   class="text-uppercase extension-icon">
                                               <code>{{ asset.extension }}</code>
@@ -106,6 +108,7 @@ import { useAsyncData, useLazyAsyncData } from "#app";
 import BackBtn from "~/components/BackBtn.vue";
 import { useScrollStore } from "~/stores/scroll";
 import { useAssets } from "~/query/assets";
+import { useSoundPreview } from "~/composables/useSoundPreview";
 
 const props = defineProps<{
     version: string,
@@ -273,7 +276,8 @@ const assetList = computed(() => {
             pathWithCompare: `/${ baseAssetDirWithCompare.value }/${ dir }`,
             pathNoCompare: `/${ assetDir.value }/${ dir }`,
             extension: null,
-            image: false
+            image: false,
+            audio: false
         })),
         ...(files || []).map(file => ({
             type: 'file',
@@ -282,7 +286,8 @@ const assetList = computed(() => {
             pathWithCompare: `/${ baseAssetDirWithCompare.value }/${ file }`,
             pathNoCompare: `/${ assetDir.value }/${ file }`,
             extension: getExtension(file),
-            image: getExtension(file) === 'png'
+            image: getExtension(file) === 'png',
+            audio: getExtension(file) === 'ogg'
         }))
     ];
 });
@@ -341,6 +346,10 @@ const requestVersion = async () => {
     console.log(res);
     showRequestedNotice.value = true;
 }
+
+// Don't let an inline preview keep playing once the user leaves this folder
+const {stop: stopSoundPreview} = useSoundPreview();
+onBeforeUnmount(stopSoundPreview);
 
 const storeScroll = (event) => {
     const target = event.target;

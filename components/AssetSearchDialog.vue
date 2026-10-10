@@ -63,6 +63,8 @@
                             <li><code>in:textures/item</code> &mdash; only inside folders matching this path</li>
                             <li>Prefix a filter with <code>-</code> to exclude, e.g. <code>-ext:json</code></li>
                         </ul>
+                        Click the <v-icon icon="mdi-play" size="x-small"/> button next to a sound to listen to it
+                        without opening it.
                     </div>
 
                     <div class="d-flex flex-wrap align-center ga-1 mt-2">
@@ -121,7 +123,8 @@
                                             <code class="text-uppercase extension-icon">{{ result.ext }}</code>
                                         </template>
                                     </v-img>
-                                    <v-icon v-else-if="result.ext === 'ogg'">mdi-music-note</v-icon>
+                                    <SoundPreviewButton v-else-if="result.ext === 'ogg'"
+                                                        :src="`https://assets.mcasset.cloud/${ version }/${ result.path }`"/>
                                     <code v-else-if="result.ext && result.ext.length <= 4"
                                           class="text-uppercase extension-icon">{{ result.ext }}</code>
                                     <v-icon v-else>mdi-file</v-icon>
@@ -167,6 +170,7 @@ import {
     searchAssets,
     toSearchableAssets
 } from "~/composables/assetSearch";
+import { useSoundPreview } from "~/composables/useSoundPreview";
 
 const props = defineProps<{
     version: string,
@@ -251,11 +255,17 @@ watch(searchResults, () => {
     visibleCount.value = PAGE_SIZE;
 });
 
+const {stop: stopSoundPreview} = useSoundPreview();
+
 watch(dialogOpen, (open) => {
     if (open && !assetIndex.value && assetStatus.value !== 'pending') {
         loadAssetIndex();
     }
+    if (!open) {
+        stopSoundPreview();
+    }
 });
+onBeforeUnmount(stopSoundPreview);
 
 const linkTo = (path: string) => `/${ props.version }/${ path }`;
 
