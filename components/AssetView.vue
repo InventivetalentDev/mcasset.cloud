@@ -32,6 +32,15 @@ img.zoomed {
                     <v-icon icon="mdi-magnify-plus-outline"/>
                 </v-btn>
             </v-col>
+            <v-col v-if="mineRender" cols="12" md="auto">
+                <v-btn-toggle v-model="show3d" mandatory density="compact" variant="outlined">
+                    <v-btn :value="false" prepend-icon="mdi-code-json">JSON</v-btn>
+                    <v-btn :value="true" prepend-icon="mdi-cube-outline">
+                        3D
+                        <v-chip size="x-small" color="primary" variant="flat" class="ms-2">New</v-chip>
+                    </v-btn>
+                </v-btn-toggle>
+            </v-col>
             <v-spacer/>
             <v-col class="text-end" cols="12" md="auto">
                 <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl" target="_blank"
@@ -71,6 +80,8 @@ img.zoomed {
                         <div v-else-if="contentTooLarge || forceRaw">
                             <a :href="cdnUrl" target="_blank">View Raw</a>
                         </div>
+                        <MineRenderPreview v-else-if="show3d && mineRender" :version="version"
+                                           :target="mineRender" :content="assetContent"/>
                         <img v-else-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
                         <div v-else>
                             <span v-if="contentSizeBytes<=0"><i>Empty File</i></span>
@@ -99,6 +110,8 @@ import BackBtn from "~/components/BackBtn.vue";
 import TextContent from "~/components/TextContent.vue";
 import SizeSelectionModal from "~/components/SizeSelectionModal.vue";
 import AudioPlayer from "~/components/AudioPlayer.vue";
+import MineRenderPreview from "~/components/MineRenderPreview.vue";
+import { mineRenderTarget } from "~/composables/mineRenderEmbed";
 
 const props = defineProps<{
     version: string,
@@ -106,6 +119,9 @@ const props = defineProps<{
     baseVersion?: string,
     compareWith?: string
 }>();
+
+const mineRender = computed(() => mineRenderTarget(props.path));
+const show3d = ref(false);
 
 const assetDir = useAssetPath(props.version, props.path);
 const assetDirWithCompare = useAssetPath(props.baseVersion, props.path, props.compareWith);
