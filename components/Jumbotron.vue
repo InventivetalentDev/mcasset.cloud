@@ -12,8 +12,16 @@
     filter: blur(2px);
 }
 
-.jumbotron > h1, .jumbotron > span {
-    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+/* darken the panorama so the light title text stays readable on bright backgrounds (snow, sky, etc.) */
+.jumbotron .v-card__image::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+}
+
+.jumbotron h1, .jumbotron h1 + span {
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8), 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 </style>
 <template>
