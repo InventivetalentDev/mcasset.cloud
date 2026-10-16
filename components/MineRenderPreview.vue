@@ -9,18 +9,23 @@
                       ]"
                       density="compact" hide-details/>
         </div>
-        <v-skeleton-loader v-if="!resolvedVersion" type="image"/>
-        <iframe v-else :src="embedUrl" :title="target.id" loading="lazy"/>
+        <div ref="container" class="minerender-view">
+            <v-progress-linear v-if="pending" indeterminate color="primary" class="position-absolute top-0"/>
+            <div v-else-if="error" class="position-absolute w-100 h-100 d-flex align-center justify-center">
+                Couldn't render this asset in 3D.
+            </div>
+        </div>
     </div>
 </template>
 <script setup lang="ts">
+import type { SceneObjectDefinition } from "minerender/browser";
+import type { MineRenderViewer } from "~/composables/mineRenderViewer";
 import { blockStateProperties } from "~/composables/mineRenderEmbed";
 import type { BlockStateProperty, MineRenderTarget } from "~/composables/mineRenderEmbed";
 import { escapeVersion } from "~/composables/useAssetPath";
 import { useVersionManifest } from "~/composables/useVersionManifest";
 
 const props = defineProps<{ version: string, target: MineRenderTarget, content?: unknown }>();
-const EMBED_URL = 'https://beta.minerender.org/embed/';
 const {latestRelease, latestSnapshot} = await useVersionManifest();
 const resolvedVersion = computed(() => {
     if (props.version === 'latest') return latestRelease.value;
@@ -49,25 +54,60 @@ watch([() => props.target, () => props.content], async ([target, content], _, on
     selection.value = result.defaults;
 }, {immediate: true});
 
-const embedUrl = computed(() => {
-    if (!resolvedVersion.value) return '';
-    let subject = props.target.id;
+const definition = computed<SceneObjectDefinition>(() => {
     if (props.target.param === 'block') {
-        const pairs = properties.value
+        const state = Object.fromEntries(properties.value
             .filter(property => selection.value[property.name])
-            .map(property => `${property.name}=${selection.value[property.name]}`);
-        if (pairs.length) subject += `[${pairs.join(',')}]`;
+            .map(property => [property.name, selection.value[property.name]]));
+        return {id: 'preview', type: 'block', asset: props.target.id, ...(Object.keys(state).length ? {state} : {})};
     }
-    const params = new URLSearchParams({[props.target.param]: subject, version: escapeVersion(resolvedVersion.value)});
-    return `${EMBED_URL}?${params}`;
+    return {id: 'preview', type: props.target.param, asset: props.target.id};
+});
+
+const container = ref<HTMLElement | null>(null);
+const pending = ref(true);
+const error = ref(false);
+let viewer: MineRenderViewer | undefined;
+let started = false;
+let unmounted = false;
+let stopDefinitionWatch: (() => void) | undefined;
+
+onMounted(() => {
+    watch(resolvedVersion, async version => {
+        if (!version || started) return;
+        started = true;
+        if (!import.meta.client) return;
+        try {
+            const { createMineRenderViewer } = await import("~/composables/mineRenderViewer");
+            if (unmounted) return;
+            viewer = createMineRenderViewer(container.value!, escapeVersion(version));
+        } catch {
+            error.value = true;
+            pending.value = false;
+            return;
+        }
+        stopDefinitionWatch = watch(definition, async value => {
+            try {
+                await viewer!.show(value);
+                error.value = false;
+            } catch {
+                error.value = true;
+            } finally {
+                pending.value = false;
+            }
+        }, {immediate: true});
+    }, {immediate: true});
+});
+
+onBeforeUnmount(() => {
+    unmounted = true;
+    stopDefinitionWatch?.();
+    viewer?.dispose();
 });
 </script>
 <style scoped>
-iframe {
-    /* The embed declares no color scheme. Matching it keeps the iframe transparent on the dark theme instead of white. */
-    color-scheme: normal;
-    border: 0;
-    display: block;
+.minerender-view {
+    position: relative;
     width: 100%;
     height: min(60vh, 480px);
 }

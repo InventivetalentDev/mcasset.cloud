@@ -120,7 +120,8 @@ const props = defineProps<{
     compareWith?: string
 }>();
 
-const mineRender = computed(() => mineRenderTarget(props.path));
+// MineRender loads one asset version per page, so the compare view cannot show both versions in 3D.
+const mineRender = computed(() => props.compareWith ? null : mineRenderTarget(props.path));
 const show3d = ref(false);
 
 const assetDir = useAssetPath(props.version, props.path);
