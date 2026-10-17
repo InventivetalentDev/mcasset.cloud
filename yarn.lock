@@ -6133,9 +6133,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"minerender@npm:2.1.0-alpha.138":
-  version: 2.1.0-alpha.138
-  resolution: "minerender@npm:2.1.0-alpha.138"
+"minerender@npm:2.1.0-alpha.139":
+  version: 2.1.0-alpha.139
+  resolution: "minerender@npm:2.1.0-alpha.139"
   dependencies:
     "@inventivetalent/loading-cache": "npm:^1.0.0"
     "@inventivetalent/time": "npm:^1.0.4"
@@ -6160,7 +6160,7 @@ __metadata:
       optional: true
     gl:
       optional: true
-  checksum: 10c0/faaa0505680b027ad9a87e0b933ceb8271a22fb42e2268cea257bd89ad3044286023dc13c42b8190f696389c56a8a16556ecd20a9a58e6539af8b373aff2ed5c
+  checksum: 10c0/04600a08c266bb7cdc468bd1fad9b0265a5539b4a4a83e57b4b143c801c56c1e0b27326ea2b8ca600f68dd4a971d152fbb2872c75fff1478ccf6f38de62eb3c7
   languageName: node
   linkType: hard
 
@@ -6702,7 +6702,7 @@ __metadata:
     "@pinia/nuxt": "npm:^0.11.0"
     "@types/three": "npm:^0"
     "@vueuse/core": "npm:^13.1.0"
-    minerender: "npm:2.1.0-alpha.138"
+    minerender: "npm:2.1.0-alpha.139"
     minisearch: "npm:^7.1.2"
     nuxt: "npm:^4.4.2"
     pinia: "npm:^3.0.4"
