@@ -1,8 +1,11 @@
-export type MineRenderTarget = { param: 'block' | 'item' | 'model', id: string };
+export type MineRenderTarget = { param: 'block' | 'item' | 'model' | 'structure', id: string };
 export type BlockStateProperty = { name: string, values: string[], optional: boolean };
 
 export const mineRenderTarget = (path: string[]): MineRenderTarget | null => {
     const file = path[path.length - 1];
+    if (path[0] === 'data' && (path[2] === 'structure' || path[2] === 'structures') && path.length >= 4 && file?.endsWith('.nbt')) {
+        return {param: 'structure', id: `${path[1]}:${path.slice(3).join('/').slice(0, -4)}`};
+    }
     if (path[0] !== 'assets' || !file?.endsWith('.json') || file.startsWith('_')) return null;
     const ns = path[1];
     const rest = path.slice(2);

@@ -34,7 +34,9 @@ img.zoomed {
             </v-col>
             <v-col v-if="mineRender" cols="12" md="auto">
                 <v-btn-toggle v-model="show3d" mandatory density="compact" variant="outlined">
-                    <v-btn :value="false" prepend-icon="mdi-code-json">JSON</v-btn>
+                    <v-btn :value="false" :prepend-icon="mineRender?.param === 'structure' ? 'mdi-file-code-outline' : 'mdi-code-json'">
+                        {{ mineRender?.param === 'structure' ? 'NBT' : 'JSON' }}
+                    </v-btn>
                     <v-btn :value="true" prepend-icon="mdi-cube-outline">
                         3D
                         <v-chip size="x-small" color="primary" variant="flat" class="ms-2">New</v-chip>
@@ -77,11 +79,15 @@ img.zoomed {
                 <div v-else>
                     <v-sheet color="grey-darken-3" class="pa-2 asset-sheet">
                         <AudioPlayer v-if="isAudio" :src="assetRawUrl"/>
-                        <div v-else-if="contentTooLarge || forceRaw">
-                            <a :href="cdnUrl" target="_blank">View Raw</a>
-                        </div>
                         <MineRenderPreview v-else-if="show3d && mineRender" :version="version"
                                            :target="mineRender" :content="assetContent"/>
+                        <div v-else-if="contentTooLarge || forceRaw" class="d-flex flex-wrap justify-center ga-2 py-8">
+                            <v-btn v-if="mineRender" color="primary" variant="flat" prepend-icon="mdi-cube-outline"
+                                   @click="show3d = true">View in 3D
+                            </v-btn>
+                            <v-btn variant="outlined" :href="cdnUrl" target="_blank" append-icon="mdi-open-in-new">View Raw
+                            </v-btn>
+                        </div>
                         <img v-else-if="isImage" :src="assetRawUrl" :alt="assetName" :class="{'zoomed': zoomed}"/>
                         <div v-else>
                             <span v-if="contentSizeBytes<=0"><i>Empty File</i></span>

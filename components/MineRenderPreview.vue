@@ -14,6 +14,7 @@
             <div v-else-if="error" class="position-absolute w-100 h-100 d-flex align-center justify-center">
                 Couldn't render this asset in 3D.
             </div>
+            <a class="minerender-credit" href="https://minerender.org" target="_blank" rel="noopener">MineRender</a>
         </div>
     </div>
 </template>
@@ -54,7 +55,8 @@ watch([() => props.target, () => props.content], async ([target, content], _, on
     selection.value = result.defaults;
 }, {immediate: true});
 
-const definition = computed<SceneObjectDefinition>(() => {
+const definition = computed<SceneObjectDefinition | null>(() => {
+    if (props.target.param === 'structure') return null;
     if (props.target.param === 'block') {
         const state = Object.fromEntries(properties.value
             .filter(property => selection.value[property.name])
@@ -86,7 +88,22 @@ onMounted(() => {
             pending.value = false;
             return;
         }
-        stopDefinitionWatch = watch(definition, async value => {
+        stopDefinitionWatch = props.target.param === 'structure' ? watch(() => props.content, async value => {
+            if (!(value instanceof Blob)) {
+                error.value = true;
+                pending.value = false;
+                return;
+            }
+            try {
+                await viewer!.showStructure(value);
+                error.value = false;
+            } catch {
+                error.value = true;
+            } finally {
+                pending.value = false;
+            }
+        }, {immediate: true}) : watch(definition, async value => {
+            if (!value) return;
             try {
                 await viewer!.show(value);
                 error.value = false;
@@ -110,5 +127,24 @@ onBeforeUnmount(() => {
     position: relative;
     width: 100%;
     height: min(60vh, 480px);
+}
+
+/* Same credit link the MineRender embed shows. */
+.minerender-credit {
+    position: absolute;
+    bottom: 6px;
+    right: 8px;
+    z-index: 1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    color: #fff;
+    background: #1b1d2299;
+    font-size: 11px;
+    text-decoration: none;
+}
+
+.minerender-credit:hover, .minerender-credit:focus-visible {
+    background: #1b1d22;
+    text-decoration: underline;
 }
 </style>
