@@ -51,6 +51,10 @@ img.zoomed {
                 <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="githubUrl"
                        target="_blank" prepend-icon="mdi-github" append-icon="mdi-open-in-new">GitHub
                 </v-btn>
+                <v-btn v-if="isCopyable" variant="outlined" size="small" color="secondary" class="mx-1"
+                       :disabled="!textContent" @click="copy()"
+                       :prepend-icon="copied ? 'mdi-check' : 'mdi-content-copy'">{{ copied ? 'Copied' : 'Copy' }}
+                </v-btn>
                 <v-btn variant="outlined" size="small" color="secondary" class="mx-1" :href="cdnUrl"
                        @click.prevent="downloadFile"
                        prepend-icon="mdi-download">Download File
@@ -118,6 +122,7 @@ import SizeSelectionModal from "~/components/SizeSelectionModal.vue";
 import AudioPlayer from "~/components/AudioPlayer.vue";
 import MineRenderPreview from "~/components/MineRenderPreview.vue";
 import { mineRenderTarget } from "~/composables/mineRenderEmbed";
+import { useClipboard } from "@vueuse/core";
 
 const props = defineProps<{
     version: string,
@@ -261,12 +266,19 @@ const asText = (blob: Blob) => {
     });
 };
 
-const textContent = computed(() => {
-    if (assetContent.value instanceof Blob) {
-        return asText(assetContent.value);
-    }
-    return '';
+// Same files that render as text below.
+const isCopyable = computed(() => {
+    return !isImage.value && !isAudio.value && !forceRaw.value && !contentTooLarge.value;
 });
+
+// Read the text as soon as the file loads. Browsers only allow clipboard writes during the click,
+// so the click handler must not wait on anything before it copies.
+const textContent = ref('');
+watch(assetContent, async (blob) => {
+    textContent.value = blob instanceof Blob && isCopyable.value ? await asText(blob) : '';
+}, {immediate: true});
+
+const {copy, copied} = useClipboard({source: textContent, legacy: true});
 
 const ogImage = computed(() => {
     if (isImage.value) {
