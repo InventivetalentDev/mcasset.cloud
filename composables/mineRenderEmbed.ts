@@ -1,5 +1,26 @@
-export type MineRenderTarget = { param: 'block' | 'item' | 'model' | 'structure', id: string };
+import type { ArmorSlot } from "minerender/browser";
+
+/** `armor` is the equipment asset and slot an armor item puts on a player. */
+export type MineRenderTarget = { param: 'block' | 'item' | 'model' | 'structure', id: string, armor?: ArmorTarget };
+export type ArmorTarget = { slot: ArmorSlot, asset: string };
 export type BlockStateProperty = { name: string, values: string[], optional: boolean };
+
+const ARMOR_SLOTS: Record<string, ArmorSlot> = {helmet: 'head', chestplate: 'chest', leggings: 'legs', boots: 'feet'};
+// Equipment assets whose name is not the item's prefix; the rest (leather, iron, copper, ...) match it.
+const ARMOR_ASSETS: Record<string, string> = {golden: 'gold', turtle: 'turtle_scute'};
+
+const armorTarget = (ns: string, item: string): ArmorTarget | undefined => {
+    const match = /^([a-z0-9_]+)_(helmet|chestplate|leggings|boots)$/.exec(item);
+    if (!match) return undefined;
+    return {slot: ARMOR_SLOTS[match[2]], asset: `${ns}:${ARMOR_ASSETS[match[1]] ?? match[1]}`};
+};
+
+/** Whether an equipment asset has the layer a player wears in this slot; vanilla uses the inner texture only for leggings. */
+export const hasArmorLayer = (json: unknown, slot: ArmorSlot): boolean => {
+    const layers = (json as { layers?: Record<string, unknown> } | null)?.layers;
+    const layer = layers?.[slot === 'legs' ? 'humanoid_leggings' : 'humanoid'];
+    return Array.isArray(layer) && layer.length > 0;
+};
 
 export const mineRenderTarget = (path: string[]): MineRenderTarget | null => {
     const file = path[path.length - 1];
@@ -11,9 +32,13 @@ export const mineRenderTarget = (path: string[]): MineRenderTarget | null => {
     const rest = path.slice(2);
     const name = file.slice(0, -5);
     if (rest.length === 2 && rest[0] === 'blockstates') return {param: 'block', id: `${ns}:${name}`};
-    if (rest.length === 2 && rest[0] === 'items') return {param: 'item', id: `${ns}:${name}`};
+    if (rest.length === 2 && rest[0] === 'items') {
+        const armor = armorTarget(ns, name);
+        return {param: 'item', id: `${ns}:${name}`, ...(armor && {armor})};
+    }
     if (rest[0] === 'models' && (rest[1] === 'block' || rest[1] === 'item') && rest.length >= 3) {
-        return {param: 'model', id: `${ns}:${rest.slice(1).join('/').slice(0, -5)}`};
+        const armor = rest[1] === 'item' && rest.length === 3 ? armorTarget(ns, name) : undefined;
+        return {param: 'model', id: `${ns}:${rest.slice(1).join('/').slice(0, -5)}`, ...(armor && {armor})};
     }
     return null;
 };

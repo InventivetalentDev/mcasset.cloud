@@ -9,6 +9,11 @@
                       ]"
                       density="compact" hide-details/>
         </div>
+        <v-btn-toggle v-if="armorAvailable" v-model="view" mandatory density="compact" variant="outlined" class="mb-2">
+            <v-btn value="item" prepend-icon="mdi-cube-outline">Item</v-btn>
+            <v-btn value="armor" prepend-icon="mdi-shield-outline">Armor</v-btn>
+            <v-btn value="worn" prepend-icon="mdi-human">Worn</v-btn>
+        </v-btn-toggle>
         <div ref="container" class="minerender-view">
             <v-progress-linear v-if="pending" indeterminate color="primary" class="position-absolute top-0"/>
             <div v-else-if="error" class="position-absolute w-100 h-100 d-flex align-center justify-center">
@@ -21,7 +26,7 @@
 <script setup lang="ts">
 import type { SceneObjectDefinition } from "minerender/browser";
 import type { MineRenderViewer } from "~/composables/mineRenderViewer";
-import { blockStateProperties } from "~/composables/mineRenderEmbed";
+import { blockStateProperties, hasArmorLayer } from "~/composables/mineRenderEmbed";
 import type { BlockStateProperty, MineRenderTarget } from "~/composables/mineRenderEmbed";
 import { escapeVersion } from "~/composables/useAssetPath";
 import { useVersionManifest } from "~/composables/useVersionManifest";
@@ -55,8 +60,38 @@ watch([() => props.target, () => props.content], async ([target, content], _, on
     selection.value = result.defaults;
 }, {immediate: true});
 
+// Armor also shows as the worn piece, alone or on a player, when its equipment asset exists (1.21.4+).
+// view stays null until that check settles, so the first render is already the armor piece.
+const armorAvailable = ref(false);
+const view = ref<'item' | 'armor' | 'worn' | null>(null);
+
+watch([() => props.target.armor, resolvedVersion], async ([armor, version], _, onCleanup) => {
+    armorAvailable.value = false;
+    view.value = armor ? null : 'item';
+    if (!armor || !version || !import.meta.client) return;
+    let cancelled = false;
+    onCleanup(() => { cancelled = true; });
+    const [ns, name] = armor.asset.split(':');
+    const available = await $fetch(`https://assets.mcasset.cloud/${escapeVersion(version)}/assets/${ns}/equipment/${name}.json`, {
+        responseType: 'json'
+    }).then(json => hasArmorLayer(json, armor.slot), () => false);
+    if (cancelled) return;
+    armorAvailable.value = available;
+    view.value = available ? 'armor' : 'item';
+}, {immediate: true});
+
+// The armor piece alone is the worn armor with every player mesh hidden; the armor hangs off the part groups, not the meshes.
+const PLAYER_PARTS = ['head', 'body', 'rightArm', 'leftArm', 'rightLeg', 'leftLeg',
+    'hat', 'jacket', 'rightSleeve', 'leftSleeve', 'rightTrousers', 'leftTrousers'];
+
 const definition = computed<SceneObjectDefinition | null>(() => {
-    if (props.target.param === 'structure') return null;
+    if (props.target.param === 'structure' || view.value === null) return null;
+    if (view.value !== 'item' && props.target.armor) {
+        return {
+            id: 'preview', type: 'skin', armor: {[props.target.armor.slot]: props.target.armor.asset},
+            ...(view.value === 'armor' && {hiddenParts: PLAYER_PARTS})
+        };
+    }
     if (props.target.param === 'block') {
         const state = Object.fromEntries(properties.value
             .filter(property => selection.value[property.name])
@@ -108,10 +143,16 @@ onMounted(() => {
                 await viewer!.show(value);
                 error.value = false;
             } catch {
+                // MineRender has no player model for versions without an entity model dataset, such as snapshots,
+                // so show the item instead.
+                if (value.type === 'skin') {
+                    armorAvailable.value = false;
+                    view.value = 'item';
+                    return;
+                }
                 error.value = true;
-            } finally {
-                pending.value = false;
             }
+            pending.value = false;
         }, {immediate: true});
     }, {immediate: true});
 });
