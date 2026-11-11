@@ -34,6 +34,8 @@
                     <v-btn variant="text" href="https://legal.inventivetalent.org/imprint">Imprint</v-btn>
                     <v-btn variant="text" href="https://legal.inventivetalent.org/privacy">Privacy</v-btn>
                     <v-btn variant="text" href="https://legal.inventivetalent.org/terms">Terms</v-btn>
+                    <!-- Opens Google's consent message in GDPR regions, the cookie banner's settings elsewhere -->
+                    <v-btn variant="text" data-cookieconsent-action="settings">Cookie settings</v-btn>
                 </v-col>
                 <v-col class="text-center">
                     <div class="my-1">Made by <a
