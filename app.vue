@@ -38,14 +38,15 @@ useHead({
     }
   ],
   script: [
-    {
-      src: '//cdn.cookie-script.com/s/78e7a161e0aab723429cad3e34a13db5.js',
-      tagPosition: 'head'
-    },
+    // Google Analytics stays blocked (type text/plain) until the "performance" category is granted, by the
+    // banner or, in GDPR regions, by Google's consent message. The cookie consent library (loaded in the SSR head,
+    // see nuxt.config.ts) then runs both tags in order: no `async` on the loader, so the inline config waits for it.
+    // Client-only on purpose: blocked tags in SSR output could run a second time after hydration.
     {
       src: 'https://www.googletagmanager.com/gtag/js?id=G-BMM1E58V7M',
-      async: true,
-      'data-cookie-consent': 'tracking',
+      type: 'text/plain',
+      'data-cookiescript': 'accepted',
+      'data-cookiecategory': 'performance',
       tagPosition: 'head'
     },
     {
@@ -56,7 +57,9 @@ useHead({
 
             gtag('config', 'G-BMM1E58V7M');
             `,
-      'data-cookie-consent': 'tracking',
+      type: 'text/plain',
+      'data-cookiescript': 'accepted',
+      'data-cookiecategory': 'performance',
       tagPosition: 'head'
     },
     {

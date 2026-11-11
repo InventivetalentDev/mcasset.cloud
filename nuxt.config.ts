@@ -3,6 +3,7 @@
 import { createRequire } from 'node:module'
 import type { Plugin } from 'vite'
 import { nodePolyfills } from 'vite-plugin-node-polyfills'
+import { cookieConsentCss, cookieConsentInit } from './config/cookie-consent'
 
 const polyfillRequire = createRequire(createRequire(import.meta.url).resolve('vite-plugin-node-polyfills'))
 
@@ -28,6 +29,19 @@ export default defineNuxtConfig({
         enabled: true
     },
     ssr: true,
+    app: {
+        head: {
+            // Cookie consent: plain blocking scripts at the top of the SSR <head>, so Google Consent Mode defaults are
+            // in dataLayer before any Google tag (GA and AdSense are added later on the client). See config/cookie-consent.ts.
+            style: [
+                { innerHTML: cookieConsentCss }
+            ],
+            script: [
+                { src: '/js/cookie-consent.min.js', tagPriority: 'critical' },
+                { innerHTML: cookieConsentInit, tagPriority: 'critical' }
+            ]
+        }
+    },
     nitro: {
         debug: process.env.NODE_ENV === 'development'
     },
