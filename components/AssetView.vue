@@ -72,7 +72,8 @@ img.zoomed {
             </v-col>
         </v-row>
         <v-row>
-            <v-col class="pt-0">
+            <!-- min-width: 0 lets wide content (long text lines, the 3D canvas) shrink instead of pushing the aside to a new line. -->
+            <v-col class="pt-0" style="min-width: 0">
                 <h4 v-if="isNotFound">File Not Found</h4>
                 <h4 v-else-if="assetContentStatus==='error'">
                     Failed to load file content
@@ -103,6 +104,8 @@ img.zoomed {
                     </v-sheet>
                 </div>
             </v-col>
+            <!-- Column beside the file content, e.g. an ad. Outside the loading states so it doesn't pop in later. -->
+            <slot name="aside"/>
         </v-row>
 
         <SizeSelectionModal

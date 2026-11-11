@@ -1,11 +1,20 @@
 <template>
+    <!-- The side ad goes beside the first list or file only; compare mode shows two side by side and needs the width. -->
     <v-row v-if="assetIsFile">
-        <AssetView :version="version" :path="path" :base-version="version" :compare-with="compareWith"/>
+        <AssetView :version="version" :path="path" :base-version="version" :compare-with="compareWith">
+            <template v-if="!compareWith" #aside>
+                <AdSideRail ad-slot="3709706250"/>
+            </template>
+        </AssetView>
         <AssetView v-if="compareWith" :version="compareWith" :path="path" :base-version="version"
                    :compare-with="compareWith"/>
     </v-row>
     <v-row v-else>
-        <AssetList :version="version" :path="path" :base-version="version" :compare-with="compareWith"/>
+        <AssetList :version="version" :path="path" :base-version="version" :compare-with="compareWith">
+            <template v-if="!compareWith" #aside>
+                <AdSideRail ad-slot="3709706250"/>
+            </template>
+        </AssetList>
         <AssetList v-if="compareWith" :version="compareWith" :path="path" :base-version="version"
                    :compare-with="compareWith"/>
     </v-row>
