@@ -15,11 +15,25 @@
                 Give Feedback
                 <v-icon icon="mdi-open-in-new"/>
             </a>
-            or
-            <a href="https://github.com/sponsors/InventivetalentDev" target="_blank">
-                Sponsor on GitHub
-                <v-icon icon="mdi-open-in-new"/>
-            </a>
+            <span class="mx-2 text-medium-emphasis">·</span>
+            <v-tooltip location="top" interactive open-on-click :close-delay="200">
+                <template #activator="{ props: activatorProps }">
+                    <button type="button" class="support-trigger" v-bind="activatorProps">
+                        <v-icon icon="mdi-heart" color="red" size="small"/>
+                        Support this Project
+                    </button>
+                </template>
+                <div class="support-links">
+                    <a href="https://ko-fi.com/inventivetalent" target="_blank" rel="noopener">
+                        <v-icon icon="mdi-coffee" size="small"/>
+                        Buy me a Coffee
+                    </a>
+                    <a href="https://github.com/sponsors/InventivetalentDev" target="_blank" rel="noopener">
+                        <v-icon icon="mdi-github" size="small"/>
+                        Sponsor on GitHub
+                    </a>
+                </div>
+            </v-tooltip>
         </v-col>
     </v-row>
 </template>
@@ -37,3 +51,27 @@ const assetIsFile = computed(() => {
     return props.path.length > 0 && props.path[props.path.length - 1].includes('.');
 });
 </script>
+<style scoped>
+.support-trigger {
+    color: LinkText;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.support-links {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 2px 0;
+}
+
+.support-links a {
+    color: inherit;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.support-links a:hover {
+    text-decoration: underline;
+}
+</style>

@@ -103,4 +103,12 @@ export default defineNuxtConfig({
             },
         }
     },
+    ignore: [
+        '**/extensions/**',
+        '**/uploads/**',
+        '**/database/**',
+        '**/node_modules/**',
+        '**/.git/**',
+        '**/dist/**',
+    ],
 })
