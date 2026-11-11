@@ -1,9 +1,4 @@
 <style scoped>
-.side-rail-ad {
-    position: sticky;
-    top: 16px;
-}
-
 .side-rail-ad-box {
     background-color: rgba(var(--v-theme-on-surface), 0.04);
     border-radius: 4px;
@@ -11,8 +6,10 @@
 }
 </style>
 <template>
-    <!-- The column is shown on lg+ by CSS only, so the server render and the first client render match. -->
-    <v-col v-if="!dismissed && !blocked && !unfilled" cols="auto" class="d-none d-lg-block">
+    <!-- A column beside the list or file content inside the browser card (the "aside" slot of AssetList/AssetView).
+         It is shown on lg+ by CSS only, so the server render and the first client render match. -->
+    <!-- ps-6 widens the gap to the clickable list rows to 36px, matching the gap below the header buttons. -->
+    <v-col v-if="!dismissed && !blocked && !unfilled" cols="auto" class="d-none d-lg-block pt-0 ps-6">
         <div class="side-rail-ad" :style="{width: `${ width }px`}">
             <!-- The label and close button sit above the ad so they never cover it. -->
             <div class="d-flex align-center text-caption text-medium-emphasis mb-1">
@@ -48,7 +45,7 @@ const {$gtag} = useNuxtApp();
 const {lgAndUp} = useDisplay();
 const isDev = useRuntimeConfig().public.isDev;
 
-// Kept in useState so the rail stays hidden on later pages; MainLayout remounts on every folder click.
+// Kept in useState so the rail stays hidden on later pages; the page remounts on every folder click.
 const dismissed = useState('side-rail-ad-dismissed', () => false);
 const dismiss = () => {
     dismissed.value = true;

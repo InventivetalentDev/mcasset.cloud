@@ -9,8 +9,6 @@
     <v-col>
       <AssetBrowserCard v-if="version" :version="version" v-model:compare-with="compare" :path="path||[]"/>
     </v-col>
-    <!-- Compare mode shows two lists side by side and needs the full width. -->
-    <AdSideRail v-if="!compare" ad-slot="3709706250"/>
   </v-row>
   <v-row class="mt-1" style="min-height: 30vh">
     <v-col>
