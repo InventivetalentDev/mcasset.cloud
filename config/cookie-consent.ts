@@ -1,4 +1,4 @@
-// Configuration for the self-hosted cookie consent banner (cookie-script-diy, public/js/cookie-consent.min.js).
+// Configuration for the self-hosted cookie consent banner (public/js/cookie-consent.min.js).
 // nuxt.config.ts serialises this object into an inline <script> in the SSR <head>, so it must stay plain JSON:
 // strings, numbers, booleans, arrays and objects only (no functions, no RegExp).
 //
